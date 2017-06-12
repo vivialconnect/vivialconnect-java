@@ -1,0 +1,56 @@
+{
+  "phone_numbers": [
+    {
+      "account_id": 10130, 
+      "active": true, 
+      "address_requirements": null, 
+      "capabilities": {
+        "mms": true, 
+        "sms": true, 
+        "voice": true
+      }, 
+      "city": "DOVER", 
+      "date_created": "2017-07-06T00:05:43+00:00", 
+      "date_modified": "2017-07-23T22:40:57+00:00", 
+      "id": 131, 
+      "incoming_text_fallback_method": null, 
+      "incoming_text_fallback_url": null, 
+      "incoming_text_method": null, 
+      "incoming_text_url": "https://bar.foo/callback", 
+      "lata": null, 
+      "name": "(302) 213-6859", 
+      "phone_number": "+13022136859", 
+      "phone_number_type": "local", 
+      "rate_center": "DOVER", 
+      "region": "DE", 
+      "status_text_url": null, 
+      "voice_forwarding_number": null
+    }, 
+    {
+      "account_id": 10130, 
+      "active": true, 
+      "address_requirements": null, 
+      "capabilities": {
+        "mms": true, 
+        "sms": true, 
+        "voice": true
+      }, 
+      "city": "ANGOLA", 
+      "date_created": "2017-07-24T04:35:26+00:00", 
+      "date_modified": "2017-07-24T04:35:26+00:00", 
+      "id": 137, 
+      "incoming_text_fallback_method": null, 
+      "incoming_text_fallback_url": null, 
+      "incoming_text_method": null, 
+      "incoming_text_url": null, 
+      "lata": null, 
+      "name": "(302) 231-2733", 
+      "phone_number": "+13022312733", 
+      "phone_number_type": "local", 
+      "rate_center": "ANGOLA", 
+      "region": "DE", 
+      "status_text_url": null, 
+      "voice_forwarding_number": null
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "phone_numbers": [
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-5778", 
+      "phone_number": "+13022735778", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-5793", 
+      "phone_number": "+13022735793", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-5879", 
+      "phone_number": "+13022735879", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-5887", 
+      "phone_number": "+13022735887", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-5991", 
+      "phone_number": "+13022735991", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-8088", 
+      "phone_number": "+13022738088", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-8176", 
+      "phone_number": "+13022738176", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-8189", 
+      "phone_number": "+13022738189", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-8210", 
+      "phone_number": "+13022738210", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }, 
+    {
+      "city": "NEWARK", 
+      "lata": null, 
+      "name": "(302) 273-8533", 
+      "phone_number": "+13022738533", 
+      "phone_number_type": "local", 
+      "rate_center": "NEWARK", 
+      "region": "DE"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "users": [
+    {
+      "account_id": 1, 
+      "active": true, 
+      "date_created": "2017-11-15T17:45:16+00:00", 
+      "date_modified": "2017-11-15T17:45:16+00:00", 
+      "email": "system@moosetalk.net", 
+      "first_name": "System", 
+      "id": 1, 
+      "last_name": null, 
+      "roles": [
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "System role", 
+          "id": 1, 
+          "name": "System", 
+          "role_type": "system"
+        }, 
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "Administrator role", 
+          "id": 2, 
+          "name": "SiteAdministrator", 
+          "role_type": "system"
+        }, 
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "Account administrator role", 
+          "id": 3, 
+          "name": "AccountAdministrator", 
+          "role_type": "client"
+        }, 
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "User role", 
+          "id": 4, 
+          "name": "User", 
+          "role_type": "client"
+        }
+      ], 
+      "timezone": "UTC", 
+      "username": "system@moosetalk.net", 
+      "verified": true
+    }, 
+    {
+      "account_id": 1, 
+      "active": true, 
+      "date_created": "2017-11-15T17:45:16+00:00", 
+      "date_modified": "2017-11-15T17:45:16+00:00", 
+      "email": "siteadmin@moosetalk.net", 
+      "first_name": "SiteAdministrator", 
+      "id": 2, 
+      "last_name": null, 
+      "roles": [
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "Administrator role", 
+          "id": 2, 
+          "name": "SiteAdministrator", 
+          "role_type": "system"
+        }, 
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "User role", 
+          "id": 4, 
+          "name": "User", 
+          "role_type": "client"
+        }
+      ], 
+      "timezone": "UTC", 
+      "username": "siteadmin@moosetalk.net", 
+      "verified": true
+    }, 
+    {
+      "account_id": 1, 
+      "active": true, 
+      "date_created": "2017-11-15T17:45:16+00:00", 
+      "date_modified": "2017-11-15T17:45:16+00:00", 
+      "email": "accountadmin@moosetalk.net", 
+      "first_name": "AccountAdministrator", 
+      "id": 3, 
+      "last_name": null, 
+      "roles": [
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "Account administrator role", 
+          "id": 3, 
+          "name": "AccountAdministrator", 
+          "role_type": "client"
+        }, 
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "User role", 
+          "id": 4, 
+          "name": "User", 
+          "role_type": "client"
+        }
+      ], 
+      "timezone": "UTC", 
+      "username": "accountadmin@moosetalk.net", 
+      "verified": true
+    }, 
+    {
+      "account_id": 1, 
+      "active": true, 
+      "date_created": "2017-11-15T17:45:16+00:00", 
+      "date_modified": "2017-11-15T17:45:16+00:00", 
+      "email": "user@moosetalk.net", 
+      "first_name": "User", 
+      "id": 4, 
+      "last_name": null, 
+      "roles": [
+        {
+          "active": true, 
+          "date_created": "2017-11-15T17:45:16+00:00", 
+          "date_modified": "2017-11-15T17:45:16+00:00", 
+          "description": "User role", 
+          "id": 4, 
+          "name": "User", 
+          "role_type": "client"
+        }
+      ], 
+      "timezone": "UTC", 
+      "username": "user@moosetalk.net", 
+      "verified": true
+    }
+  ]
+}

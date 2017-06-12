@@ -1,0 +1,63 @@
+{
+  "account": {
+    "active": true, 
+    "company_name": "Newtech SRL", 
+    "contacts": [
+      {
+        "account_id": 10130, 
+        "active": true, 
+        "address1": null, 
+        "address2": null, 
+        "address3": null, 
+        "city": "Santo Domingo", 
+        "company_name": "Newtech SRL", 
+        "contact_type": "main", 
+        "country": "Dominican Republic", 
+        "date_created": "2017-07-05T22:46:13+00:00", 
+        "date_modified": "2017-07-12T23:49:23+00:00", 
+        "email": "carlos.gonzalez@newtechsa.com", 
+        "fax": null, 
+        "first_name": "Carlos", 
+        "id": 141, 
+        "last_name": "Gonz\u00e1lez", 
+        "mobile_phone": "8097567237", 
+        "postal_code": null, 
+        "state": null, 
+        "title": "Software Engineer", 
+        "work_phone": null
+      }
+    ], 
+    "date_created": "2017-07-05T22:46:13+00:00", 
+    "date_modified": "2017-07-17T21:10:51+00:00", 
+    "id": 10130, 
+    "services": [
+      {
+        "active": true, 
+        "date_created": "2016-09-30T23:42:58+00:00", 
+        "date_modified": "2016-09-30T23:42:58+00:00", 
+        "description": "SMS service", 
+        "id": 1, 
+        "name": "sms", 
+        "service_type": "client"
+      }, 
+      {
+        "active": true, 
+        "date_created": "2016-09-30T23:42:58+00:00", 
+        "date_modified": "2016-09-30T23:42:58+00:00", 
+        "description": "Account service", 
+        "id": 2, 
+        "name": "accounts", 
+        "service_type": "client"
+      }, 
+      {
+        "active": true, 
+        "date_created": "2016-09-30T23:42:58+00:00", 
+        "date_modified": "2016-09-30T23:42:58+00:00", 
+        "description": "Public service", 
+        "id": 3, 
+        "name": "public", 
+        "service_type": "client"
+      }
+    ]
+  }
+}

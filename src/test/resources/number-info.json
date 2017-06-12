@@ -1,0 +1,26 @@
+{
+  "number_info": {
+    "carrier": {
+      "capabilities": {
+        "deactivation_files": false, 
+        "device_lookup_api": false, 
+        "location_data": false, 
+        "mms_connection_status": false, 
+        "mms_dr": false, 
+        "sms_connection_status": true, 
+        "sms_fteu": false, 
+        "sms_handset_dr": false, 
+        "uaprof_in_mms_dr": false
+      }, 
+      "country": "US", 
+      "name": "Republic Wireless"
+    }, 
+    "date_created": "2017-07-06T23:38:27+00:00", 
+    "date_modified": "2017-07-06T23:38:27+00:00", 
+    "device": {
+      "error": "15012- Device lookup is not supported by this carrier.", 
+      "model": null
+    }, 
+    "phone_number": "13022136859"
+  }
+}

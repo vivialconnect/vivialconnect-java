@@ -1,0 +1,85 @@
+{
+  "last_key": "", 
+  "log_items": [
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.received", 
+      "aggregate_key": "hours", 
+      "log_count": 2, 
+      "log_timestamp": 2017111518, 
+      "log_type": "message.received"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.sending", 
+      "aggregate_key": "hours", 
+      "log_count": 1, 
+      "log_timestamp": 2017111518, 
+      "log_type": "message.sending"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.queued", 
+      "aggregate_key": "hours", 
+      "log_count": 2, 
+      "log_timestamp": 2017111518, 
+      "log_type": "message.queued"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.delivered", 
+      "aggregate_key": "hours", 
+      "log_count": 2, 
+      "log_timestamp": 2017111518, 
+      "log_type": "message.delivered"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.received", 
+      "aggregate_key": "hours", 
+      "log_count": 1, 
+      "log_timestamp": 2017111517, 
+      "log_type": "message.received"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-number.purchased", 
+      "aggregate_key": "hours", 
+      "log_count": 2, 
+      "log_timestamp": 2017111517, 
+      "log_type": "number.purchased"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-number.create", 
+      "aggregate_key": "hours", 
+      "log_count": 2, 
+      "log_timestamp": 2017111517, 
+      "log_type": "number.create"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.queued", 
+      "aggregate_key": "hours", 
+      "log_count": 1, 
+      "log_timestamp": 2017111517, 
+      "log_type": "message.queued"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-user.login_success", 
+      "aggregate_key": "hours", 
+      "log_count": 1, 
+      "log_timestamp": 2017111517, 
+      "log_type": "user.login_success"
+    }, 
+    {
+      "account_id": "1", 
+      "account_id_log_type": "1-message.delivered", 
+      "aggregate_key": "hours", 
+      "log_count": 1, 
+      "log_timestamp": 2017111517, 
+      "log_type": "message.delivered"
+    }
+  ]
+}

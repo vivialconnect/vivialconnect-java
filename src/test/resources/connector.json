@@ -1,0 +1,36 @@
+{
+  "connector":
+  {
+    "account_id": 1, 
+    "active": true, 
+    "callbacks": [
+      {
+        "date_created": "2017-11-20T15:16:12+00:00", 
+        "date_modified": "2017-11-20T15:16:12+00:00", 
+        "event_type": "incoming", 
+        "message_type": "text", 
+        "method": "POST", 
+        "url": "http://4123acf2.ngrok.io"
+      }, 
+      {
+        "date_created": "2017-11-20T15:16:12+00:00", 
+        "date_modified": "2017-11-20T15:16:12+00:00", 
+        "event_type": "incoming_fallback", 
+        "message_type": "text", 
+        "method": "POST", 
+        "url": "http://4123acf2.ngrok.io"
+      }
+    ], 
+    "date_created": "2017-11-20T15:16:12+00:00", 
+    "date_modified": "2017-11-20T15:16:12+00:00", 
+    "id": 2, 
+    "more_numbers": false, 
+    "name": "Receiver", 
+    "phone_numbers": [
+      {
+        "phone_number": "+14022048756", 
+        "phone_number_id": 5
+      }
+    ]
+  }
+}

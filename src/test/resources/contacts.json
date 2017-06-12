@@ -1,0 +1,50 @@
+{
+  "contacts": [
+    {
+      "account_id": 2, 
+      "active": true, 
+      "address1": null, 
+      "address2": null, 
+      "address3": null, 
+      "city": null, 
+      "company_name": "Stark Industries", 
+      "contact_type": "main", 
+      "country": null, 
+      "date_created": "2017-11-15T18:39:35+00:00", 
+      "date_modified": "2017-11-15T18:39:35+00:00", 
+      "email": "ironman@stark.com", 
+      "fax": null, 
+      "first_name": "Tony", 
+      "id": 1, 
+      "last_name": "Stark", 
+      "mobile_phone": "1431407347", 
+      "postal_code": null, 
+      "state": null, 
+      "title": null, 
+      "work_phone": null
+    },
+    {
+      "account_id": 3, 
+      "active": true, 
+      "address1": null, 
+      "address2": null, 
+      "address3": null, 
+      "city": null, 
+      "company_name": "Asgard Holdings, Ltd.", 
+      "contact_type": "main", 
+      "country": null, 
+      "date_created": "2017-11-15T18:39:35+00:00", 
+      "date_modified": "2017-11-15T18:39:35+00:00", 
+      "email": "thor@asgard.com", 
+      "fax": null, 
+      "first_name": "Thor", 
+      "id": 1, 
+      "last_name": "Odinsson", 
+      "mobile_phone": "1234567890", 
+      "postal_code": null, 
+      "state": null, 
+      "title": null, 
+      "work_phone": null
+    }
+  ]
+}
