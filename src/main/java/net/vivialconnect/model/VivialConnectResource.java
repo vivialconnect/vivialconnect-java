@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SimpleTimeZone;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -175,46 +177,6 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
 
-    /* private static <T> T jerseyRequest(URL endpoint, RequestMethod method, Map<String, String> headers,
-                                       Map<String, String> queryParams, String body, Class<T> clazz){
-        VivialRESTClient client = new VivialRESTClient(VivialConnectClient.apiBaseUrl);
-        RequestBuilder builder = client.request().path("accounts/10128/messages.json");
-
-	for (String headerName : headers.keySet()){
-            String headerValue = headers.get(headerName);
-            builder.header(headerName, headerValue);
-	}
-
-	try{
-            String response = "null";
-
-            switch(method) {
-		case GET:
-                    if (queryParams != null){
-                        for (String key : queryParams.keySet()){
-                            String value = queryParams.get(key);
-                            builder.queryParam(key, value);
-			}
-                    }
-
-                    response = builder.get(String.class);
-		break;
-		case POST:
-                    response = builder.post(String.class, body);
-		break;
-		default:
-                break;
-            }
-
-            System.out.println(response);
-	}catch (Exception e){
-            e.printStackTrace();
-	}
-
-        return null;
-    } */
-
-
     private static URL createEndpoint(String url, RequestMethod method,
                                       Map<String, String> queryParams) throws MalformedURLException{
 
@@ -310,10 +272,12 @@ public abstract class VivialConnectResource implements Serializable {
 
     private static void setBody(HttpURLConnection connection, String body) throws IOException {
         if (requestSupportsBody(connection.getRequestMethod()) && body != null && !body.isEmpty()) {
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(body);
-            outputStream.flush();
-            outputStream.close();
+          DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+          BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+          outputStream.write(body);
+          outputStream.flush();
+          outputStream.close();
+          wr.close();
         }
     }
 

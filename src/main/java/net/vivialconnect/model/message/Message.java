@@ -164,7 +164,6 @@ public class Message extends VivialConnectResource{
     public Message send() throws VivialConnectException{
         Message sentMessage = request(RequestMethod.POST, classURL(Message.class), jsonBody(), null, Message.class);
         updateObjectState(sentMessage);
-        
         return this;
     }
     
@@ -457,8 +456,7 @@ public class Message extends VivialConnectResource{
      * @param body the body of the message
      */
     public void setBody(String body){
-        /* Escape Non-ASCII characters in order to support things like emojis and Chinese characters */
-        this.body = StringUtils.escapeNonAsciiCharacters(body);
+        this.body = body;
     }
 
 
