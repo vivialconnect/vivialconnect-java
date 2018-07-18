@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.net.Proxy;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
