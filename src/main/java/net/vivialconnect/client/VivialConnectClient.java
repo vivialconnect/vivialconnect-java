@@ -1,5 +1,8 @@
 package net.vivialconnect.client;
 
+import java.net.Proxy;
+
+
 public final class VivialConnectClient {
 
     private static int accountId;
@@ -8,6 +11,8 @@ public final class VivialConnectClient {
     private static String apiSecret;
 
     private static String apiBaseUrl = "https://api.vivialconnect.net/api/v1.0";
+
+    private static Proxy proxy = null;
 
     private VivialConnectClient() {
 
@@ -86,5 +91,13 @@ public final class VivialConnectClient {
 
     private static IllegalArgumentException createIllegalArgumentException(String argName) {
         return new IllegalArgumentException(String.format("'%s' param is not valid", argName));
+    }
+
+    public static void setProxy(Proxy proxy) {
+        VivialConnectClient.proxy = proxy;
+    }
+
+    public static Proxy getProxy() {
+        return proxy;
     }
 }
