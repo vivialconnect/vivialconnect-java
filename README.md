@@ -36,6 +36,13 @@ __Initialize Client:__ Needed before attempting to use any resource.
 VivialConnectClient.init(123456, my-api-key, my-api-secret);
 ```
 
+__(optional)Set Proxy:__ If you need to setup a proxy:
+
+```java
+Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 9000));
+VivialConnectClient.setProxy(proxy);
+```
+
 __Search for and buying a number:__ 
 
 ```java
