@@ -18,7 +18,7 @@ Include the following dependency into your pom.xml:
 <dependency>
   <groupId>vivialconnect</groupId>
   <artifactId>vivialconnect-java</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
 </dependency>
 ```
 ### Manual Installation
@@ -34,6 +34,13 @@ __Initialize Client:__ Needed before attempting to use any resource.
 
 ```java
 VivialConnectClient.init(123456, my-api-key, my-api-secret);
+```
+
+__(optional) Set Proxy:__ If you need to setup a proxy:
+
+```java
+Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 9000));
+VivialConnectClient.setProxy(proxy);
 ```
 
 __Search for and buying a number:__ 

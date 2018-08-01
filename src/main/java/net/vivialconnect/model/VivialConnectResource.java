@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.net.Proxy;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -250,16 +251,27 @@ public abstract class VivialConnectResource implements Serializable {
         }
     }
 
+  private static HttpURLConnection prepareConnection(URL endpoint, RequestMethod method) throws IOException {
+    Proxy proxy = VivialConnectClient.getProxy();
 
-    private static HttpURLConnection prepareConnection(URL endpoint, RequestMethod method) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) endpoint.openConnection();
-        connection.setRequestMethod(method.name());
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-
-        return connection;
+    HttpURLConnection connection = null;
+    if (proxy == null) {
+      connection = (HttpURLConnection) endpoint.openConnection();
+    } else {
+      /* If we call this method, this preempts the systems proxy settings, if any.
+       * We do the call this way so that if the user sets the proxy using the
+       * System.setProperty("http.proxyHost", "something"), it's respected.
+       */
+        connection = (HttpURLConnection) endpoint.openConnection(proxy);
     }
+
+    connection.setRequestMethod(method.name());
+    connection.setUseCaches(false);
+    connection.setDoInput(true);
+    connection.setDoOutput(true);
+
+    return connection;
+  }
 
 
     private static void setHeaders(HttpURLConnection connection, Map<String, String> headers) {
