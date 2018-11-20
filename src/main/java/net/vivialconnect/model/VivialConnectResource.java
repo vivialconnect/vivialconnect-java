@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -180,19 +181,19 @@ public abstract class VivialConnectResource implements Serializable {
 
     private static URL createEndpoint(String url, RequestMethod method,
                                       Map<String, String> queryParams) throws MalformedURLException{
-
-        if (method == RequestMethod.GET && queryParams != null && !queryParams.isEmpty()){
-            StringBuilder urlBuilder = new StringBuilder(url).append("?");
-            for (String key : queryParams.keySet()){
-                String value = queryParams.get(key);
-
-                urlBuilder.append(key).append("=").append(value).append("&");
-            }
-
-            url = urlBuilder.deleteCharAt(urlBuilder.length() - 1).toString();
-        }
-
-        return new URL(url);
+         if (method == RequestMethod.GET && queryParams != null && !queryParams.isEmpty()){
+              StringBuilder urlBuilder = new StringBuilder(url).append("?");
+              for (String key : queryParams.keySet()){
+                   try {
+                        String value = URLEncoder.encode(queryParams.get(key), "UTF-8");
+                        urlBuilder.append(key).append("=").append(value).append("&");
+                   } catch(UnsupportedEncodingException e) {
+                        throw new MalformedURLException(e.getMessage());
+                   }
+              }
+              url = urlBuilder.deleteCharAt(urlBuilder.length() - 1).toString();
+         }
+         return new URL(url);
     }
 
 
