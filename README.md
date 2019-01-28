@@ -74,14 +74,15 @@ Message message = Message.getMessageById(86962);
 
 qParams are managed by this library using a `Map<String, String>`. Every resource that supports query parameters will have an overload method that takes a Map.
 
-__Retrieve a list messages sent with a limit of 5:__
+__Retrieve a list of the 5 most recent messages:__
 ```java
 Map<String, String> queryParams = new HashMap<String, String>();
+queryParams.put("order", "sent desc");
 queryParams.put("limit", "5");
 List<Message> messages = Message.getMessages(queryParams);
 ```
 
-__Retrieve a list of available numbers with a limit of 2:__
+__Retrieve a 2 available numbers from US area code 302:__
 ```java
 Map<String, String> queryParams = new HashMap<String, String>();
 queryParams.put("limit", "2");
