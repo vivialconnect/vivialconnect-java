@@ -2,6 +2,7 @@ package net.vivialconnect.model.message;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +12,7 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.util.StringUtils;
+import net.vivialconnect.model.message.*;
 
 @JsonRootName(value = "message")
 public class Message extends VivialConnectResource{
@@ -63,6 +65,8 @@ public class Message extends VivialConnectResource{
      */
     @JsonProperty("to_number")
     private String toNumber;
+
+    private List<String> toNumbers;
 
     /**
      * One of the following:
@@ -136,6 +140,9 @@ public class Message extends VivialConnectResource{
      */
     private List<String> mediaUrls;
 
+    @JsonProperty("bulk_id")
+    private String bulkId;
+
     static {
         classesWithoutRootValue.add(MessageCollection.class);
         classesWithoutRootValue.add(AttachmentCollection.class);
@@ -189,11 +196,26 @@ public class Message extends VivialConnectResource{
         this.priceCurrency = sentMessage.getPriceCurrency();
         this.sent = sentMessage.getSent();
         this.status = sentMessage.getStatus();
+        this.bulkId = sentMessage.getBulkId();
     }
     
     
     private String jsonBody(){
-        JsonBodyBuilder builder = JsonBodyBuilder.forClass(Message.class);
+        return jsonBody(Message.class);
+    }
+
+    private String jsonBody(Class clazz){
+
+        JsonBodyBuilder builder;
+
+        if(clazz != null){
+           builder = JsonBodyBuilder.forClass(clazz);
+        }
+        else{
+           builder = JsonBodyBuilder.emptyJson();
+        }
+
+
         if (hasMediaUrls()){
             builder.addParamPair("media_urls", mediaUrls);
         }
@@ -202,12 +224,15 @@ public class Message extends VivialConnectResource{
             builder.addParamPair("connector_id", connectorId);
         }
 
+        if (toNumbers != null && !toNumbers.isEmpty()){
+            builder.addParamPair("to_numbers", toNumbers);
+        }
+
         return builder.addParamPair("from_number", this.fromNumber)
                       .addParamPair("to_number", this.toNumber)
                       .addParamPair("body", this.body)
                       .build();
     }
-
 
     private boolean hasMediaUrls(){
         return this.mediaUrls != null && !this.mediaUrls.isEmpty();
@@ -280,6 +305,27 @@ public class Message extends VivialConnectResource{
      */
     public List<Attachment> getAttachments() throws VivialConnectException{
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments", this.getId())), null, null, AttachmentCollection.class).getAttachments();
+    }
+
+    public BulkInfo sendBulk() throws VivialConnectException{
+        return request(RequestMethod.POST, classURLWithSuffix(Message.class, "bulk"),jsonBody(null), null, BulkInfo.class);
+    }
+
+    public static BulkInfoCollection getBulks() throws VivialConnectException{
+        return getBulks(1);
+    }
+
+    public static BulkInfoCollection getBulks(int page) throws VivialConnectException{
+        Map<String,String> queryParams = new HashMap<String,String>();
+        queryParams.put("page", String.valueOf(page));
+
+        return request(RequestMethod.GET, classURLWithSuffix(Message.class, "bulk"), null, queryParams, BulkInfoCollection.class);
+    }
+
+
+    public static List<Message> getBulk(String bulkId) throws VivialConnectException{
+        String bulkIdPath = String.format("bulk/%s",bulkId);
+        return request(RequestMethod.GET, classURLWithSuffix(Message.class, bulkIdPath), null, null, MessageCollection.class).getMessages();
     }
 
     /**
@@ -529,4 +575,21 @@ public class Message extends VivialConnectResource{
     public void setMediaUrls(List<String> mediaUrls){
         this.mediaUrls = mediaUrls;
     }
+
+    public List<String> getToNumbers() {
+        return toNumbers;
+    }
+
+    public void setToNumbers(List<String> toNumbers) {
+        this.toNumbers = toNumbers;
+    }
+
+    public String getBulkId() {
+        return bulkId;
+    }
+
+    public void setBulkId(String bulkId) {
+        this.bulkId = bulkId;
+    }
+
 }

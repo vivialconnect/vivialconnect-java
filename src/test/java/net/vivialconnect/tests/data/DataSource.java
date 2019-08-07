@@ -10,6 +10,8 @@ import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.number.AssociatedNumber;
 import net.vivialconnect.model.number.AvailableNumber;
 import net.vivialconnect.model.number.NumberInfo;
@@ -161,4 +163,13 @@ public interface DataSource {
 
     int phoneNumberCount(int connectorId) throws VivialConnectException;
 
+
+    //Bulk
+
+    BulkInfo sendBulk(Message message) throws VivialConnectException;
+
+    BulkInfoCollection getCreatedBulks() throws VivialConnectException;
+    
+    List<Message> getBulk(String bulkId) throws VivialConnectException;
+    
 }

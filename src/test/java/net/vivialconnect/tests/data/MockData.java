@@ -25,6 +25,8 @@ import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.MessageCollection;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.AttachmentCollection;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.number.AssociatedNumber;
 import net.vivialconnect.model.number.AvailableNumber;
 import net.vivialconnect.model.number.Number;
@@ -733,4 +735,20 @@ public class MockData implements DataSource {
 
         return 0;
     }
+
+    @Override
+    public BulkInfo sendBulk(Message message){
+        return loadFixture("bulk-created", BulkInfo.class,false);
+    }
+
+    @Override
+    public BulkInfoCollection getCreatedBulks() {
+        return loadFixture("bulks", BulkInfoCollection.class,false);
+    }
+
+    @Override
+    public List<Message> getBulk(String bulkId) throws VivialConnectException {
+        return loadFixture("bulk", MessageCollection.class,false).getMessages();
+    }
+    
 }
