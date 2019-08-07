@@ -66,6 +66,10 @@ public class Message extends VivialConnectResource{
     @JsonProperty("to_number")
     private String toNumber;
 
+    /**
+     * List of Phone numbers to send messages through Bulk Send.
+     * The numbers can be either domestic (US/CA) or international numbers, but not a mix of both.
+     */
     private List<String> toNumbers;
 
     /**
@@ -140,6 +144,9 @@ public class Message extends VivialConnectResource{
      */
     private List<String> mediaUrls;
 
+    /**
+     * ID of the bulk to which this message belongs.
+     */
     @JsonProperty("bulk_id")
     private String bulkId;
 
