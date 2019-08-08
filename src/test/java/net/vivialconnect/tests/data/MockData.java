@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.vivialconnect.model.message.*;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -21,12 +22,6 @@ import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.account.ContactCollection;
 import net.vivialconnect.model.error.VivialConnectException;
-import net.vivialconnect.model.message.Message;
-import net.vivialconnect.model.message.MessageCollection;
-import net.vivialconnect.model.message.Attachment;
-import net.vivialconnect.model.message.AttachmentCollection;
-import net.vivialconnect.model.message.BulkInfo;
-import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.number.AssociatedNumber;
 import net.vivialconnect.model.number.AvailableNumber;
 import net.vivialconnect.model.number.Number;
@@ -35,7 +30,6 @@ import net.vivialconnect.model.number.NumberInfo;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
-import net.vivialconnect.model.log.Log;
 import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.connector.Connector;
 import net.vivialconnect.model.connector.ConnectorCollection;
@@ -737,8 +731,13 @@ public class MockData implements DataSource {
     }
 
     @Override
-    public BulkInfo sendBulk(Message message){
+    public BulkInfo sendBulk(BulkMessage message){
         return loadFixture("bulk-created", BulkInfo.class,false);
+    }
+
+    @Override
+    public BulkInfo sendBulkWithoutNumbers(BulkMessage bulkMessage) throws VivialConnectException {
+        throw new VivialConnectException();
     }
 
     @Override
