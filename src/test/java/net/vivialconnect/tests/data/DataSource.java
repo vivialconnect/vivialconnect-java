@@ -6,14 +6,16 @@ import java.util.Date;
 
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
-import net.vivialconnect.model.user.User;
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkMessage;
+import net.vivialconnect.model.message.BulkInfoCollection;
+import net.vivialconnect.model.user.User;
+import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.number.AssociatedNumber;
 import net.vivialconnect.model.number.AvailableNumber;
 import net.vivialconnect.model.number.NumberInfo;
-import net.vivialconnect.model.log.Log;
 import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.connector.Connector;
 import net.vivialconnect.model.connector.Callback;
@@ -161,4 +163,15 @@ public interface DataSource {
 
     int phoneNumberCount(int connectorId) throws VivialConnectException;
 
+
+    //Bulk
+
+    BulkInfo sendBulk(BulkMessage bulkMessage) throws VivialConnectException;
+
+    BulkInfo sendBulkWithoutNumbers(BulkMessage bulkMessage) throws VivialConnectException;
+
+    BulkInfoCollection getCreatedBulks() throws VivialConnectException;
+    
+    List<Message> getBulk(String bulkId) throws VivialConnectException;
+    
 }
