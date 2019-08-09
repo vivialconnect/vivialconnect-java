@@ -1,35 +1,42 @@
 package net.vivialconnect.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkInfoCollection;
+import net.vivialconnect.model.message.BulkMessage;
+
+import org.junit.Test;
+import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.number.AssociatedNumber;
 
 public class MessageTest extends BaseTestCase {
 
-    private static final String TO_NUMBER = "+18099667830";
     private static final String MESSAGE_BODY = "Message from Vivial Connect Test Suite";
 
     @Test
     public void test_send_message_with_attachments() throws VivialConnectException, InterruptedException {
-        AssociatedNumber number = getDataSource().getAssociatedNumbers().get(0);
-        String fromNumber = number.getPhoneNumber();
+        List<AssociatedNumber> numbers = getDataSource().getAssociatedNumbers();
+        AssociatedNumber fromNumberAssociated = numbers.get(0);
+        AssociatedNumber toNumberAssociated = numbers.get(1);
+
+        String fromNumber = fromNumberAssociated.getPhoneNumber();
+        String toNumber = toNumberAssociated.getPhoneNumber();
 
         Message message = new Message();
         message.setFromNumber(fromNumber);
-        message.setToNumber(TO_NUMBER);
+        message.setToNumber(toNumber);
         message.setBody(MESSAGE_BODY);
         message.addMediaUrl("https://code.org/images/apple-touch-icon-precomposed.png");
 
@@ -41,7 +48,7 @@ public class MessageTest extends BaseTestCase {
         assertNotNull(message.getDateCreated());
         assertEquals(MESSAGE_BODY, message.getBody());
         assertEquals(fromNumber, message.getFromNumber());
-        assertEquals(TO_NUMBER, message.getToNumber());
+        assertEquals(toNumber, message.getToNumber());
         assertEquals("local_mms", message.getMessageType());
         assertNotEquals("delivered", message.getStatus());
 
@@ -102,6 +109,58 @@ public class MessageTest extends BaseTestCase {
         assertNotNull(message.getDateModified().getTime());
     }
 
+    @Test
+    public void test_create_bulk_message() throws VivialConnectException{
+
+        List<AssociatedNumber> numbers = getDataSource().getAssociatedNumbers();
+        String fromNumber = numbers.get(0).getPhoneNumber();
+        List<String> bulkSendNumberList = new ArrayList<String>();
+
+        for(AssociatedNumber number: numbers.subList(1, numbers.size())){
+            bulkSendNumberList.add(number.getPhoneNumber());
+        }
+
+        BulkMessage bulkMessage = new BulkMessage();
+
+        bulkMessage.setFromNumber(fromNumber);
+        bulkMessage.setBody("Testing Bulk send...");
+        bulkMessage.setToNumbers(bulkSendNumberList);
+
+        BulkInfo bulkInfo = getDataSource().sendBulk(bulkMessage);
+
+        assertNotNull(bulkInfo);
+        assertNotNull(bulkInfo.getBulkId());
+            
+    }
+
+    @Test
+    public void test_get_bulks_sent() throws VivialConnectException{
+
+        BulkInfoCollection bulksSent = getDataSource().getCreatedBulks();
+        List<BulkInfo> bulks = bulksSent.getBulkList();
+        String someBulkId = bulks.get(0).getBulkId();
+
+        List<Message> bulkMessages = getBulkMessages(someBulkId);
+
+        assertNotNull(bulkMessages);
+        assertTrue("Bulks count is zero", bulksSent.getCount() > 0);
+        assertTrue("Bulk pages is zero", bulksSent.getPages() > 0);
+        assertFalse("Bulk message list is empty", bulkMessages.isEmpty());
+
+        for(Message message: bulkMessages){
+            assertNotNull(String.format("Message %d has a null bulk ID",message.getId()),message.getBulkId());
+        }
+    }
+
+    @Test(expected = VivialConnectException.class)
+    public void test_send_bulk_empty_to_numbers() throws VivialConnectException {
+
+        BulkMessage bulkMessage = new BulkMessage();
+        bulkMessage.setBody("Testing Bulk send...");
+
+        getDataSource().sendBulkWithoutNumbers(bulkMessage);
+    }
+
     private List<Message> getMessages() throws VivialConnectException {
         return getMessages(null);
     }
@@ -124,5 +183,9 @@ public class MessageTest extends BaseTestCase {
 
     private void redactMessage(Message message) throws VivialConnectException {
         getDataSource().redactMessage(message);
+    }
+
+    private List<Message> getBulkMessages(String bulkId) throws VivialConnectException {
+        return getDataSource().getBulk(bulkId);
     }
 }

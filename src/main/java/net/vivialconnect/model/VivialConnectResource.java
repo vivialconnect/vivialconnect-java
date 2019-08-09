@@ -39,6 +39,8 @@ import net.vivialconnect.model.error.ErrorMessage;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.util.CryptoUtils;
 import net.vivialconnect.util.ReflectionUtils;
 import net.vivialconnect.util.ProjectProperties;
@@ -56,6 +58,9 @@ public abstract class VivialConnectResource implements Serializable {
 
     static {
         classesWithoutRootValue.add(ResourceCount.class);
+        classesWithoutRootValue.add(BulkInfo.class);
+        classesWithoutRootValue.add(BulkInfoCollection.class);
+
     }
 
     protected enum RequestMethod{

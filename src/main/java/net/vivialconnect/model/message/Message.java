@@ -1,16 +1,16 @@
 package net.vivialconnect.model.message;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
-import net.vivialconnect.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @JsonRootName(value = "message")
 public class Message extends VivialConnectResource{
@@ -136,6 +136,12 @@ public class Message extends VivialConnectResource{
      */
     private List<String> mediaUrls;
 
+    /**
+     * ID of the bulk to which this message belongs.
+     */
+    @JsonProperty("bulk_id")
+    private String bulkId;
+
     static {
         classesWithoutRootValue.add(MessageCollection.class);
         classesWithoutRootValue.add(AttachmentCollection.class);
@@ -189,9 +195,10 @@ public class Message extends VivialConnectResource{
         this.priceCurrency = sentMessage.getPriceCurrency();
         this.sent = sentMessage.getSent();
         this.status = sentMessage.getStatus();
+        this.bulkId = sentMessage.getBulkId();
     }
-    
-    
+
+
     private String jsonBody(){
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Message.class);
         if (hasMediaUrls()){
@@ -529,4 +536,13 @@ public class Message extends VivialConnectResource{
     public void setMediaUrls(List<String> mediaUrls){
         this.mediaUrls = mediaUrls;
     }
+
+    public String getBulkId() {
+        return bulkId;
+    }
+
+    public void setBulkId(String bulkId) {
+        this.bulkId = bulkId;
+    }
+
 }

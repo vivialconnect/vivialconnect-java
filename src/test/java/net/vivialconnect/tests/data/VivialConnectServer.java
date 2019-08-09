@@ -10,6 +10,9 @@ import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
+import net.vivialconnect.model.message.BulkInfo;
+import net.vivialconnect.model.message.BulkInfoCollection;
+import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.number.AssociatedNumber;
 import net.vivialconnect.model.number.AvailableNumber;
 import net.vivialconnect.model.number.Number;
@@ -360,4 +363,24 @@ public class VivialConnectServer implements DataSource {
     public int phoneNumberCount(int connectorId) throws VivialConnectException {
         return PhoneNumber.count(connectorId);
     }
+
+    @Override
+    public BulkInfo sendBulk(BulkMessage bulkMessage) throws VivialConnectException {
+        return bulkMessage.send();
+    }
+
+    @Override
+    public BulkInfo sendBulkWithoutNumbers(BulkMessage bulkMessage) throws VivialConnectException {
+        return bulkMessage.send();
+    }
+
+    @Override
+    public BulkInfoCollection getCreatedBulks() throws VivialConnectException {
+        return BulkMessage.getBulksCreated();
+    }
+
+    @Override
+    public List<Message> getBulk(String bulkId) throws VivialConnectException{
+        return BulkMessage.getBulk(bulkId);
+	}
 }

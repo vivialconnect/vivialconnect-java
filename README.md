@@ -18,7 +18,7 @@ Include the following dependency into your pom.xml:
 <dependency>
   <groupId>vivialconnect</groupId>
   <artifactId>vivialconnect-java</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
 </dependency>
 ```
 ### Manual Installation
