@@ -1,14 +1,11 @@
 package net.vivialconnect.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.vivialconnect.model.error.VivialConnectException;
@@ -144,7 +141,8 @@ public class NumberTest extends BaseTestCase {
         assertTrue(getDataSource().delete(boughtNumber));
     }
 
-    @Test
+    @Ignore("Purchase phone numbers with area_code is not enabled in the API")
+    @Test()
     public void test_buy_local_number() throws VivialConnectException {
         int numbersToTry = 5;
 

@@ -8,6 +8,7 @@ import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.error.VivialConnectException;
+import net.vivialconnect.model.format.EmptyJson;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
@@ -34,7 +35,16 @@ class AdminUser extends User {
         if (attributes != null) {
             builder = builder.addParams(attributes);
         }
-        return request(RequestMethod.POST, classURL(User.class), builder.build(), null, User.class);
+
+        User user = new User();
+        EmptyJson response = request(RequestMethod.POST, classURLWithSuffix(User.class,"register"), builder.build(), null, EmptyJson.class);
+
+        if(response != null){
+            List<User> users = getUsers();
+            user = users.get(users.size() - 1);
+        }
+
+        return user;
     }
 }
 
