@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.vivialconnect.model.connector.*;
 import net.vivialconnect.model.message.*;
 import org.apache.commons.io.IOUtils;
 
@@ -31,12 +32,6 @@ import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
 import net.vivialconnect.model.log.LogCollection;
-import net.vivialconnect.model.connector.Connector;
-import net.vivialconnect.model.connector.ConnectorCollection;
-import net.vivialconnect.model.connector.Callback;
-import net.vivialconnect.model.connector.PhoneNumber;
-import net.vivialconnect.model.connector.ConnectorWithCallbacks;
-import net.vivialconnect.model.connector.ConnectorWithPhoneNumbers;
 
 public class MockData implements DataSource {
 
@@ -686,6 +681,20 @@ public class MockData implements DataSource {
     }
 
     @Override
+    public ConnectorWithPhoneNumbers updateConnectorWithPhoneNumbers(Connector connector) throws VivialConnectException {
+         ConnectorWithPhoneNumbers connectorWithPhoneNumbers = getPhoneNumbers(connector.getId());
+
+         connector.setPages(connectorWithPhoneNumbers.getPages());
+         connector.setNextPage(connectorWithPhoneNumbers.getNextPage());
+         connector.setPreviousPage(connectorWithPhoneNumbers.getPreviousPage());
+         connector.setPhoneNumbers(connectorWithPhoneNumbers.getPhoneNumbers());
+         connector.setPhoneNumbersCount(connectorWithPhoneNumbers.getPhoneNumbersCount());
+
+         return connector;
+    }
+
+
+    @Override
     public ConnectorWithPhoneNumbers deleteAllPhoneNumbers(Connector conn) throws VivialConnectException {
         Integer id = Integer.valueOf(conn.getId());
         if (connectorNumbers.containsKey(id)) {
@@ -717,7 +726,36 @@ public class MockData implements DataSource {
 
     @Override
     public ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException {
-        return getConnectorById(connectorId);
+        return getPhoneNumbers(connectorId,1);
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException {
+
+        ConnectorPaginatedPhoneNumbers paginatedConnector;
+        Connector connector;
+
+        if(page == 2){
+            paginatedConnector = loadFixture("connector-numbers-pg2", ConnectorPaginatedPhoneNumbers.class,false);
+            connector = paginatedConnector.getConnector();
+            connector.setCurrentPage(2);
+        }else{
+            paginatedConnector = loadFixture("connector-numbers-pg1", ConnectorPaginatedPhoneNumbers.class,false);
+            connector = paginatedConnector.getConnector();
+            connector.setCurrentPage(1);
+        }
+
+        return connector;
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers previousPage(Connector connector) throws VivialConnectException {
+        return getPhoneNumbers(connector.getId(),1);
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers nextPage(Connector connector) throws VivialConnectException {
+        return getPhoneNumbers(connector.getId(),2);
     }
 
     @Override

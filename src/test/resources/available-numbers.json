@@ -1,94 +1,604 @@
 {
   "phone_numbers": [
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-5778", 
-      "phone_number": "+13022735778", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9834",
+      "phone_number": "+15039129834",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-5793", 
-      "phone_number": "+13022735793", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9835",
+      "phone_number": "+15039129835",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-5879", 
-      "phone_number": "+13022735879", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9837",
+      "phone_number": "+15039129837",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-5887", 
-      "phone_number": "+13022735887", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9844",
+      "phone_number": "+15039129844",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-5991", 
-      "phone_number": "+13022735991", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9846",
+      "phone_number": "+15039129846",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-8088", 
-      "phone_number": "+13022738088", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9897",
+      "phone_number": "+15039129897",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-8176", 
-      "phone_number": "+13022738176", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9926",
+      "phone_number": "+15039129926",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-8189", 
-      "phone_number": "+13022738189", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9964",
+      "phone_number": "+15039129964",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-8210", 
-      "phone_number": "+13022738210", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
-    }, 
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9981",
+      "phone_number": "+15039129981",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
     {
-      "city": "NEWARK", 
-      "lata": null, 
-      "name": "(302) 273-8533", 
-      "phone_number": "+13022738533", 
-      "phone_number_type": "local", 
-      "rate_center": "NEWARK", 
-      "region": "DE"
+      "city": "GRESHAM",
+      "lata": null,
+      "name": "(503) 912-9987",
+      "phone_number": "+15039129987",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "GRESHAM",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-0718",
+      "phone_number": "+15039170718",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-0813",
+      "phone_number": "+15039170813",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-0895",
+      "phone_number": "+15039170895",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4079",
+      "phone_number": "+15039174079",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4081",
+      "phone_number": "+15039174081",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4093",
+      "phone_number": "+15039174093",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4096",
+      "phone_number": "+15039174096",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4116",
+      "phone_number": "+15039174116",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4118",
+      "phone_number": "+15039174118",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4156",
+      "phone_number": "+15039174156",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4436",
+      "phone_number": "+15039174436",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4452",
+      "phone_number": "+15039174452",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4457",
+      "phone_number": "+15039174457",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4470",
+      "phone_number": "+15039174470",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4478",
+      "phone_number": "+15039174478",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4482",
+      "phone_number": "+15039174482",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4492",
+      "phone_number": "+15039174492",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4505",
+      "phone_number": "+15039174505",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4509",
+      "phone_number": "+15039174509",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4523",
+      "phone_number": "+15039174523",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4527",
+      "phone_number": "+15039174527",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4529",
+      "phone_number": "+15039174529",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4530",
+      "phone_number": "+15039174530",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4531",
+      "phone_number": "+15039174531",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4532",
+      "phone_number": "+15039174532",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4535",
+      "phone_number": "+15039174535",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4537",
+      "phone_number": "+15039174537",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4538",
+      "phone_number": "+15039174538",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4539",
+      "phone_number": "+15039174539",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4557",
+      "phone_number": "+15039174557",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4561",
+      "phone_number": "+15039174561",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4570",
+      "phone_number": "+15039174570",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4572",
+      "phone_number": "+15039174572",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4573",
+      "phone_number": "+15039174573",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4579",
+      "phone_number": "+15039174579",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4582",
+      "phone_number": "+15039174582",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4585",
+      "phone_number": "+15039174585",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4591",
+      "phone_number": "+15039174591",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4609",
+      "phone_number": "+15039174609",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4612",
+      "phone_number": "+15039174612",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4613",
+      "phone_number": "+15039174613",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4614",
+      "phone_number": "+15039174614",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4619",
+      "phone_number": "+15039174619",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4625",
+      "phone_number": "+15039174625",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4626",
+      "phone_number": "+15039174626",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4628",
+      "phone_number": "+15039174628",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4641",
+      "phone_number": "+15039174641",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4642",
+      "phone_number": "+15039174642",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4643",
+      "phone_number": "+15039174643",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
+    },
+    {
+      "city": "DALLAS",
+      "lata": null,
+      "name": "(503) 917-4651",
+      "phone_number": "+15039174651",
+      "phone_number_type": "local",
+      "price": 0.5,
+      "rate_center": "DALLAS",
+      "region": "OR"
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "connector": {
+    "date_modified": "2019-08-21T17:52:26+00:00",
+    "phone_numbers": [
+      {
+        "phone_number": "+15039174613",
+        "phone_number_id": 21615
+      },
+      {
+        "phone_number": "+15039174614",
+        "phone_number_id": 21616
+      }
+    ]
+  },
+  "count": 52,
+  "next": null,
+  "pages": 2,
+  "previous": 1
+}

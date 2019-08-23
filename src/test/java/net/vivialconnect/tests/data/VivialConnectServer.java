@@ -350,6 +350,11 @@ public class VivialConnectServer implements DataSource {
     }
 
     @Override
+    public ConnectorWithPhoneNumbers updateConnectorWithPhoneNumbers(Connector connector) throws VivialConnectException {
+        return updateAssociatedPhoneNumbers(connector);
+    }
+
+    @Override
     public ConnectorWithPhoneNumbers deleteAllPhoneNumbers(Connector connector) throws VivialConnectException {
         return connector.deleteAllPhoneNumbers();
     }
@@ -367,6 +372,23 @@ public class VivialConnectServer implements DataSource {
     @Override
     public ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException {
         return PhoneNumber.getPhoneNumbers(connectorId);
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException {
+        return PhoneNumber.getPhoneNumbers(connectorId,page);
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers previousPage(Connector connector) throws VivialConnectException {
+        connector.previousPage();
+        return connector;
+    }
+
+    @Override
+    public ConnectorWithPhoneNumbers nextPage(Connector connector) throws VivialConnectException {
+        connector.nextPage();
+        return connector;
     }
 
     @Override

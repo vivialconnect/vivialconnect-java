@@ -1,9 +1,8 @@
 package net.vivialconnect.model.connector;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -61,8 +60,24 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     @JsonProperty("more_numbers")
     private boolean moreNumbers;
 
+    @JsonIgnore
+    private int pages;
+
+    @JsonIgnore
+    private int count;
+
+    @JsonIgnore
+    private int nextPage;
+
+    @JsonIgnore
+    private int previousPage;
+
+    @JsonIgnore
+    private int currentPage = 1;
+
     static {
         classesWithoutRootValue.add(ConnectorCollection.class);
+        classesWithoutRootValue.add(ConnectorPaginatedPhoneNumbers.class);
     }
 
     /**
@@ -213,6 +228,66 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
         return dateModified;
     }
 
+    @Override
+    public int getPhoneNumbersCount() {
+        return count;
+    }
+
+    public void setPhoneNumbersCount(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public int nextPage() throws VivialConnectException {
+
+        if (currentPage < pages)
+            currentPage++;
+
+        ConnectorWithPhoneNumbers connector = paginate(currentPage);
+        mergePhoneNumberFields(connector);
+
+        return currentPage;
+    }
+
+    @Override
+    public int previousPage() throws VivialConnectException {
+
+        if (currentPage > 1)
+            currentPage--;
+
+        ConnectorWithPhoneNumbers connector = paginate(currentPage);
+        mergePhoneNumberFields(connector);
+
+        return currentPage;
+
+    }
+
+    @Override
+    public int getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(int next) {
+        this.nextPage = next;
+    }
+
+    @Override
+    public int getPreviousPage() {
+        return previousPage;
+    }
+
+    public void setPreviousPage(int previous) {
+        this.previousPage = previous;
+    }
+
+    @Override
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
 
     public void setDateModified(Date dateModified){
         this.dateModified = dateModified;
@@ -511,10 +586,10 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                                                  .addParamPair("phone_numbers", phoneNumbers);
 
-        Connector connectorWithPhoneNumbers = request(RequestMethod.POST, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                                                builder.build(), null, Connector.class);
-        mergePhoneNumberFields(connectorWithPhoneNumbers);
-        
+        ConnectorWithPhoneNumbers connector = request(RequestMethod.POST, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+                                                                                                                builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+        mergePhoneNumberFields(connector);
+
         return this;
     }
 
@@ -546,9 +621,9 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                                                  .addParamPair("phone_numbers", phoneNumbers);
 
-        Connector connectorWithPhoneNumbers = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                                                 builder.build(), null, Connector.class);
-        mergePhoneNumberFields(connectorWithPhoneNumbers);
+        ConnectorWithPhoneNumbers connector  = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+                                                                                                                 builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+        mergePhoneNumberFields(connector);
         
         return this;
     }
@@ -599,23 +674,49 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                                                  .addParamPair("phone_numbers", phoneNumbers);
 
-        return request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                    builder.build(), null, Connector.class);
+        ConnectorWithPhoneNumbers connector = request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+                                                                                    builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+        mergePhoneNumberFields(connector);
+
+        return this;
     }
 
 
     private void mergePhoneNumberFields(ConnectorWithPhoneNumbers connectorWithPhoneNumbers){
+
         this.dateModified = connectorWithPhoneNumbers.getDateModified();
         this.phoneNumbers = connectorWithPhoneNumbers.getPhoneNumbers();
+        this.count = connectorWithPhoneNumbers.getPhoneNumbersCount();
+        this.previousPage = connectorWithPhoneNumbers.getPreviousPage();
+        this.nextPage = connectorWithPhoneNumbers.getNextPage();
+        this.pages = connectorWithPhoneNumbers.getPages();
+
     }
 
+    private ConnectorWithPhoneNumbers paginate(int toPage) throws VivialConnectException {
+        Map<String,String> queryParams = new HashMap<String,String>();
+        queryParams.put("page",String.valueOf(toPage));
+
+        ConnectorWithPhoneNumbers connector  = request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+                null, queryParams, ConnectorPaginatedPhoneNumbers.class).getConnector();
+
+        return connector;
+    }
 
     public boolean isMoreNumbers(){
 		return moreNumbers;
 	}
-    
-    
+
     public void setMoreNumbers(boolean moreNumbers){
 		this.moreNumbers = moreNumbers;
 	}
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
 }
