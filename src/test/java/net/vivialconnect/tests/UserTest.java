@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.vivialconnect.model.user.User;
@@ -42,36 +43,42 @@ public class UserTest extends BaseTestCase {
     }
 
     @Test
-    public void test_create_and_delete_user() throws VivialConnectException {
+    public void test_create_user() throws VivialConnectException {
+
+        List<User> users = getDataSource().getUsers();
+
+        int someUserId = users.get(0).getAccountId();
+
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("account_id", 1);
+        attributes.put("account_id", someUserId);
         attributes.put("username", "someUser");
         attributes.put("first_name", "Jake");
         attributes.put("last_name", "User");
         attributes.put("email", "test@user2.com");
         attributes.put("password", "moosetalk470");
+        attributes.put("role", "AccountAdministrator");
 
         User newUser = getDataSource().createUser(attributes);
 
-        assertEquals(newUser.getAccountId(), 1);
+        assertEquals(newUser.getAccountId(), someUserId);
         assertEquals(newUser.getEmail(), "test@user2.com");
 
         assertTrue(getDataSource().deleteUser(newUser));
+
     }
 
-    // Disabled until User.changePassword works
+     @Ignore("Disabled until User.changePassword works")
+     @Test
+     public void test_update_user_password() throws VivialConnectException {
+         List<User> users = getDataSource().getUsers();
+         User user = users.get(0);
 
-    // @Test
-    // public void test_update_user_password() throws VivialConnectException {
-    //     List<User> users = getDataSource().getUsers();
-    //     User user = users.get(0);
+         boolean passwordChanged;
 
-    //     boolean passwordChanged;
-
-    //     passwordChanged = getDataSource().updateUserPassword(user, "moosetalk470", "sO4_p12Qan");
-    //     assertTrue(passwordChanged);
-    //     // Change back
-    //     passwordChanged = getDataSource().updateUserPassword(user, "sO4_p12Qan", "moosetalk470");
-    //     assertTrue(passwordChanged);
-    // }
+         passwordChanged = getDataSource().updateUserPassword(user, "moosetalk470", "sO4_p12Qan");
+         assertTrue(passwordChanged);
+         // Change back
+         passwordChanged = getDataSource().updateUserPassword(user, "sO4_p12Qan", "moosetalk470");
+         assertTrue(passwordChanged);
+     }
 }

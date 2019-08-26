@@ -12,6 +12,7 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
+import net.vivialconnect.model.format.EmptyJson;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
 @JsonRootName("user")
@@ -68,6 +69,7 @@ public class User extends VivialConnectResource{
     private List<Role> roles;
 
     static {
+        classesWithoutRootValue.add(EmptyJson.class);
         classesWithoutRootValue.add(UserCollection.class);
     }
     

@@ -6,6 +6,9 @@ import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonRootName("phone_number")
 public class PhoneNumber extends VivialConnectResource{
 
@@ -30,7 +33,18 @@ public class PhoneNumber extends VivialConnectResource{
 
 
     public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException{
-        return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", connectorId)), null, null, Connector.class);
+        return  getPhoneNumbers(connectorId,1);
+    }
+
+    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException{
+
+        Map<String,String> pageParam = new HashMap<String, String>();
+        pageParam.put("page",String.valueOf(page));
+
+        ConnectorWithPhoneNumbers connector = request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", connectorId)), null, pageParam,
+                ConnectorPaginatedPhoneNumbers.class).getConnector();
+
+        return connector;
     }
 
 

@@ -100,7 +100,6 @@ public abstract class VivialConnectResource implements Serializable {
                                                   resourceName);
     }
 
-
     protected static <T> T request(VivialConnectResource.RequestMethod method,
                                    String url, String body, Map<String, String> queryParams,
 			           Class<T> responseClass) throws VivialConnectException{
@@ -236,7 +235,6 @@ public abstract class VivialConnectResource implements Serializable {
                                   .append(signature)
                                   .toString();
     }
-
 
     private static <T> T request(URL endpoint, VivialConnectResource.RequestMethod method, Map<String, String> headers,
                                     Map<String, String> queryParams, String body, Class<T> responseClass)
