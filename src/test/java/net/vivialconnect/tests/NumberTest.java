@@ -4,7 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.vivialconnect.model.number.Number;
+import net.vivialconnect.model.number.TagCollection;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -226,4 +231,69 @@ public class NumberTest extends BaseTestCase {
         AssociatedNumber number = getDataSource().getNumberById(getDataSource().getAssociatedNumbers().get(0).getId());
         assertEquals(number.getPhoneNumber().substring(1), getDataSource().numberLookup(number).getPhoneNumber());
     }
+
+    @Test
+    public void test_tags_update() throws VivialConnectException {
+
+        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        Map<String, String> testTags = new HashMap<String, String>();
+
+        for (int i = 1; i < 4; i++) {
+            testTags.put(String.format("test%d", i), String.format("tag%d", i));
+        }
+
+        TagCollection tagCollection = number.updateTags(testTags);
+        Map<String, String> tags = tagCollection.getTags();
+
+        assertEquals(tags.get("test1"), "tag1");
+        assertEquals(tags.get("test2"), "tag2");
+        assertEquals(tags.get("test3"), "tag3");
+
+    }
+
+    @Test(expected = VivialConnectException.class)
+    public void test_invalid_tags_update_quantity() throws VivialConnectException {
+
+        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        Map<String, String> testTags = new HashMap<String, String>();
+
+        for (int i = 1; i < 9; i++) {
+            testTags.put(String.format("test%d", i), String.format("tag%d", i));
+        }
+
+        number.updateTags(testTags);
+
+    }
+
+    @Test(expected = VivialConnectException.class)
+    public void test_tag_with_invalid_key_length() throws VivialConnectException{
+        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+
+        Map<String, String> invalidTagContent  = new HashMap<String, String>();
+        invalidTagContent.put("UnnecesaryVeryLongTagName","Something...");
+
+        TagCollection invalidTag = new TagCollection();
+        invalidTag.setTags(invalidTagContent);
+
+        number.updateTags(invalidTagContent);
+
+    }
+
+    @Test(expected = VivialConnectException.class)
+    public void test_tags_with_invalid_value_length() throws VivialConnectException{
+
+        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        String longTagValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                "Pellentesque commodo elit eget magna luctus, ullamcorper iaculis sapien pharetra." +
+                " Quisque faucibus, urna id fringilla cursus, tellus eros rutrum purus, sit amet fringilla augue nulla vel massa." +
+                " Donec in tortor commodo ipsum efficitur volutpat quis a nisl." +
+                " Quisque mattis ante sed sapien laoreet molestie. Praesent varius tortor at enim tincidunt lobortis ut at urna.";
+        Map<String, String> invalidTagContent = new HashMap<String, String>();
+        invalidTagContent.put("tag_key", longTagValue);
+
+        number.updateTags(invalidTagContent);
+    }
+
+
+
 }

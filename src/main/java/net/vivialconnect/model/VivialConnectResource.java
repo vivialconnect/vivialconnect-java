@@ -72,6 +72,10 @@ public abstract class VivialConnectResource implements Serializable {
         return String.format("%ss/%s.json", singleClassURL(clazz), suffix);
     }
 
+    protected static String classURLWithResourceSuffix(Class<?> clazz, String value, String resourceName){
+        return String.format("%ss/%s/%s.json", singleClassURL(clazz),value, resourceName);
+    }
+
 
     protected static String classURL(Class<?> clazz){
         return String.format("%ss.json", singleClassURL(clazz));

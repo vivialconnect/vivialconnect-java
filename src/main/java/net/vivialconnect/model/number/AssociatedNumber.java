@@ -1,6 +1,8 @@
 package net.vivialconnect.model.number;
 
 import java.util.Date;
+import java.util.Map;
+
 import net.vivialconnect.model.error.VivialConnectException;
 
 public interface AssociatedNumber extends INumber{
@@ -90,4 +92,6 @@ public interface AssociatedNumber extends INumber{
 
 
     void setRateCenter(String rateCenter);
+
+    TagCollection updateTags(Map<String, String> tags) throws VivialConnectException;
 }

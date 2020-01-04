@@ -131,8 +131,12 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     @JsonProperty("connector_id")
     private int connectorId;
 
+    @JsonProperty("tags")
+    private Map<String, String> tags;
+
     static {
         classesWithoutRootValue.add(NumberCollection.class);
+        classesWithoutRootValue.add(TagCollection.class);
     }
 
     /**
@@ -907,5 +911,28 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     @Override
     public void setConnectorId(int connectorId){
         this.connectorId = connectorId;
+    }
+
+
+    public Map<String, String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Map<String, String> tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public TagCollection updateTags(Map<String, String>  tags) throws VivialConnectException {
+
+        String requestPayload = JsonBodyBuilder.withCustomClassName("tags").addTypedParams(tags).build();
+
+        String idValue = String.valueOf(getId());
+        TagCollection tagsResponse = request(RequestMethod.PUT, classURLWithResourceSuffix(Number.class, idValue, "tags"),
+                requestPayload, null,TagCollection.class);
+
+        this.tags = tagsResponse.getTags();
+
+        return tagsResponse;
     }
 }
