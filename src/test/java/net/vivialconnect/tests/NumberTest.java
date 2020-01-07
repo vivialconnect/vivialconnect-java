@@ -1,21 +1,19 @@
 package net.vivialconnect.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
-import net.vivialconnect.model.number.TagCollection;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import net.vivialconnect.model.error.VivialConnectException;
-import net.vivialconnect.model.number.AssociatedNumber;
-import net.vivialconnect.model.number.AvailableNumber;
+
+import static org.junit.Assert.*;
 
 public class NumberTest extends BaseTestCase {
 
@@ -294,6 +292,80 @@ public class NumberTest extends BaseTestCase {
         number.updateTags(invalidTagContent);
     }
 
+    @Test
+    public void test_retrieve_all_tags() throws VivialConnectException {
 
+        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+
+        Map<String, String> tags = new HashMap<String, String>();
+        tags.put("tags","test_tag");
+
+        associatedNumber.updateTags(tags);
+
+        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(null);
+
+        assertTrue(taggedNumbers.getNumbers().size() > 0);
+        assertTrue(taggedNumbers.getCount() >= 1);
+        assertTrue(taggedNumbers.getPages() >= 1);
+
+        Number number = (Number) associatedNumber;
+
+        assertTrue(taggedNumbers.getNumbers().contains(number));
+
+    }
+
+    @Test
+    public void test_retrieve_all_tags_with_contains_param() throws VivialConnectException{
+
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
+        String tagValue = simpleDateFormatter.format(new Date());
+        String tagKey = "param_tag";
+
+        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+
+        Map<String ,String> tags = new HashMap<String, String>();
+        tags.put(tagKey, tagValue);
+
+        associatedNumber.updateTags(tags);
+
+        Map<String, String> searchParams = new HashMap<String, String>();
+        searchParams.put("contains",  tagKey + ":" + tagValue);
+
+        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(searchParams);
+
+        assertTrue(taggedNumbers.getNumbers().size() >= 1);
+        assertTrue(taggedNumbers.getCount() >= 1);
+        assertTrue(taggedNumbers.getPages() >= 1);
+
+        Number number = (Number) associatedNumber;
+
+        assertTrue(taggedNumbers.getNumbers().contains(number));
+
+    }
+
+    @Test
+    public void test_retrieve_all_tags_with_not_contains_param() throws VivialConnectException{
+
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
+        String tagValue = simpleDateFormatter.format(new Date());
+        String tagKey = "param_tag";
+
+        Map<String ,String> tags = new HashMap<String, String>();
+        tags.put(tagKey, tagValue);
+
+        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+        associatedNumber.updateTags(tags);
+
+        Map<String, String> searchParams = new HashMap<String, String>();
+        searchParams.put("notcontains",  tagKey + ":" + tagValue);
+
+        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(searchParams);
+
+        assertTrue(taggedNumbers.getNumbers().size() >= 1);
+
+        Number number = (Number) associatedNumber;
+
+        assertFalse(taggedNumbers.getNumbers().contains(number));
+    }
 
 }

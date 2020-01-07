@@ -14,10 +14,8 @@ import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
 import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.BulkMessage;
-import net.vivialconnect.model.number.AssociatedNumber;
-import net.vivialconnect.model.number.AvailableNumber;
+import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
-import net.vivialconnect.model.number.NumberInfo;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.model.log.Log;
@@ -160,6 +158,11 @@ public class VivialConnectServer implements DataSource {
     @Override
     public NumberInfo numberLookup(AssociatedNumber number) throws VivialConnectException {
         return number.lookup();
+    }
+
+    @Override
+    public TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
+        return Number.getTaggedNumbers(requestParams);
     }
 
     @Override

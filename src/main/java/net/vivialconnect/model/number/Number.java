@@ -137,6 +137,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     static {
         classesWithoutRootValue.add(NumberCollection.class);
         classesWithoutRootValue.add(TagCollection.class);
+        classesWithoutRootValue.add(TaggedNumberCollection.class);
     }
 
     /**
@@ -934,5 +935,79 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         this.tags = tagsResponse.getTags();
 
         return tagsResponse;
+    }
+
+    public static TaggedNumberCollection getTaggedNumbers() throws VivialConnectException {
+        return getTaggedNumbers(null);
+    }
+
+    public static TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
+
+        TaggedNumberCollection tagResponse = request(RequestMethod.GET, classURLWithSuffix(Number.class, "tags"), null,
+                requestParams, TaggedNumberCollection.class );
+
+        return tagResponse;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Number)) return false;
+
+        Number number = (Number) o;
+
+        if (id != number.id) return false;
+        if (accountId != number.accountId) return false;
+        if (active != number.active) return false;
+        if (connectorId != number.connectorId) return false;
+        if (dateCreated != null ? !dateCreated.equals(number.dateCreated) : number.dateCreated != null) return false;
+        if (dateModified != null ? !dateModified.equals(number.dateModified) : number.dateModified != null)
+            return false;
+        if (name != null ? !name.equals(number.name) : number.name != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(number.phoneNumber) : number.phoneNumber != null) return false;
+        if (phoneNumberType != null ? !phoneNumberType.equals(number.phoneNumberType) : number.phoneNumberType != null)
+            return false;
+        if (statusTextUrl != null ? !statusTextUrl.equals(number.statusTextUrl) : number.statusTextUrl != null)
+            return false;
+        if (incomingTextUrl != null ? !incomingTextUrl.equals(number.incomingTextUrl) : number.incomingTextUrl != null)
+            return false;
+        if (incomingTextMethod != null ? !incomingTextMethod.equals(number.incomingTextMethod) : number.incomingTextMethod != null)
+            return false;
+        if (incomingTextFallbackUrl != null ? !incomingTextFallbackUrl.equals(number.incomingTextFallbackUrl) : number.incomingTextFallbackUrl != null)
+            return false;
+        if (incomingTextFallbackMethod != null ? !incomingTextFallbackMethod.equals(number.incomingTextFallbackMethod) : number.incomingTextFallbackMethod != null)
+            return false;
+        if (voiceForwardingNumber != null ? !voiceForwardingNumber.equals(number.voiceForwardingNumber) : number.voiceForwardingNumber != null)
+            return false;
+        if (city != null ? !city.equals(number.city) : number.city != null) return false;
+        if (region != null ? !region.equals(number.region) : number.region != null) return false;
+        if (lata != null ? !lata.equals(number.lata) : number.lata != null) return false;
+        if (rateCenter != null ? !rateCenter.equals(number.rateCenter) : number.rateCenter != null) return false;
+        return tags != null ? tags.equals(number.tags) : number.tags == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
+        result = 31 * result + (dateModified != null ? dateModified.hashCode() : 0);
+        result = 31 * result + accountId;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (phoneNumberType != null ? phoneNumberType.hashCode() : 0);
+        result = 31 * result + (statusTextUrl != null ? statusTextUrl.hashCode() : 0);
+        result = 31 * result + (incomingTextUrl != null ? incomingTextUrl.hashCode() : 0);
+        result = 31 * result + (incomingTextMethod != null ? incomingTextMethod.hashCode() : 0);
+        result = 31 * result + (incomingTextFallbackUrl != null ? incomingTextFallbackUrl.hashCode() : 0);
+        result = 31 * result + (incomingTextFallbackMethod != null ? incomingTextFallbackMethod.hashCode() : 0);
+        result = 31 * result + (voiceForwardingNumber != null ? voiceForwardingNumber.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
+        result = 31 * result + (lata != null ? lata.hashCode() : 0);
+        result = 31 * result + (rateCenter != null ? rateCenter.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + connectorId;
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        return result;
     }
 }

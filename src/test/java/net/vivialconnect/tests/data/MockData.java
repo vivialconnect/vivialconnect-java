@@ -12,6 +12,8 @@ import java.util.Random;
 
 import net.vivialconnect.model.connector.*;
 import net.vivialconnect.model.message.*;
+import net.vivialconnect.model.number.*;
+import net.vivialconnect.model.number.Number;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -23,11 +25,6 @@ import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.account.ContactCollection;
 import net.vivialconnect.model.error.VivialConnectException;
-import net.vivialconnect.model.number.AssociatedNumber;
-import net.vivialconnect.model.number.AvailableNumber;
-import net.vivialconnect.model.number.Number;
-import net.vivialconnect.model.number.NumberCollection;
-import net.vivialconnect.model.number.NumberInfo;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
@@ -201,6 +198,11 @@ public class MockData implements DataSource {
             return info;
         }
 
+        return null;
+    }
+
+    @Override
+    public TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
         return null;
     }
 
