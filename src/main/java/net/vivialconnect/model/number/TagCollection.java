@@ -8,6 +8,13 @@ public class TagCollection {
     @JsonProperty("tags")
     private Map<String, String> tags;
 
+    public TagCollection() {
+    }
+
+    public TagCollection(Map<String, String> tags) {
+        this.tags = tags;
+    }
+
     public Map<String, String> getTags() {
         return tags;
     }

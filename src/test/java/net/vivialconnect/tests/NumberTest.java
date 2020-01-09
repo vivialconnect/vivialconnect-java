@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
+import net.vivialconnect.tests.data.DataSource;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -233,14 +234,16 @@ public class NumberTest extends BaseTestCase {
     @Test
     public void test_tags_update() throws VivialConnectException {
 
-        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        DataSource dataSource = getDataSource();
+
+        AssociatedNumber number = dataSource.getLocalAssociatedNumbers().get(0);
         Map<String, String> testTags = new HashMap<String, String>();
 
         for (int i = 1; i < 4; i++) {
             testTags.put(String.format("test%d", i), String.format("tag%d", i));
         }
 
-        TagCollection tagCollection = number.updateTags(testTags);
+        TagCollection tagCollection = dataSource.updateTags(testTags, number);
         Map<String, String> tags = tagCollection.getTags();
 
         assertEquals(tags.get("test1"), "tag1");
@@ -252,35 +255,44 @@ public class NumberTest extends BaseTestCase {
     @Test(expected = VivialConnectException.class)
     public void test_invalid_tags_update_quantity() throws VivialConnectException {
 
-        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        DataSource dataSource = getDataSource();
+
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
         Map<String, String> testTags = new HashMap<String, String>();
 
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < 8; i++) {
             testTags.put(String.format("test%d", i), String.format("tag%d", i));
         }
 
-        number.updateTags(testTags);
+        testTags.put("testtag", "invalid");
+
+        dataSource.updateTags(testTags, associatedNumber);
 
     }
 
     @Test(expected = VivialConnectException.class)
-    public void test_tag_with_invalid_key_length() throws VivialConnectException{
-        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+    public void test_tag_with_invalid_key_length() throws VivialConnectException {
 
-        Map<String, String> invalidTagContent  = new HashMap<String, String>();
-        invalidTagContent.put("UnnecesaryVeryLongTagName","Something...");
+        DataSource dataSource = getDataSource();
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+
+        Map<String, String> invalidTags = new HashMap<String, String>();
+        invalidTags.put("UnnecesaryVeryLongTagName", "Something...");
+        invalidTags.put("testtag", "invalid");
 
         TagCollection invalidTag = new TagCollection();
-        invalidTag.setTags(invalidTagContent);
+        invalidTag.setTags(invalidTags);
 
-        number.updateTags(invalidTagContent);
+        dataSource.updateTags(invalidTags, associatedNumber);
 
     }
 
     @Test(expected = VivialConnectException.class)
-    public void test_tags_with_invalid_value_length() throws VivialConnectException{
+    public void test_tags_with_invalid_value_length() throws VivialConnectException {
 
-        AssociatedNumber number = getDataSource().getLocalAssociatedNumbers().get(0);
+        DataSource dataSource = getDataSource();
+
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
         String longTagValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
                 "Pellentesque commodo elit eget magna luctus, ullamcorper iaculis sapien pharetra." +
                 " Quisque faucibus, urna id fringilla cursus, tellus eros rutrum purus, sit amet fringilla augue nulla vel massa." +
@@ -288,21 +300,24 @@ public class NumberTest extends BaseTestCase {
                 " Quisque mattis ante sed sapien laoreet molestie. Praesent varius tortor at enim tincidunt lobortis ut at urna.";
         Map<String, String> invalidTagContent = new HashMap<String, String>();
         invalidTagContent.put("tag_key", longTagValue);
+        invalidTagContent.put("testtag", "invalid");
 
-        number.updateTags(invalidTagContent);
+        dataSource.updateTags(invalidTagContent, associatedNumber);
     }
 
     @Test
     public void test_retrieve_all_tags() throws VivialConnectException {
 
-        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+        DataSource dataSource = getDataSource();
 
         Map<String, String> tags = new HashMap<String, String>();
-        tags.put("tags","test_tag");
+        tags.put("tags", "test_tag");
 
-        associatedNumber.updateTags(tags);
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
 
-        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(null);
+        dataSource.updateTags(tags, associatedNumber);
+
+        TaggedNumberCollection taggedNumbers = dataSource.getTaggedNumbers(null);
 
         assertTrue(taggedNumbers.getNumbers().size() > 0);
         assertTrue(taggedNumbers.getCount() >= 1);
@@ -315,23 +330,25 @@ public class NumberTest extends BaseTestCase {
     }
 
     @Test
-    public void test_retrieve_all_tags_with_contains_param() throws VivialConnectException{
+    public void test_retrieve_all_tags_with_contains_param() throws VivialConnectException {
 
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
         String tagValue = simpleDateFormatter.format(new Date());
         String tagKey = "param_tag";
 
-        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+        DataSource dataSource = getDataSource();
 
-        Map<String ,String> tags = new HashMap<String, String>();
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+
+        Map<String, String> tags = new HashMap<String, String>();
         tags.put(tagKey, tagValue);
 
-        associatedNumber.updateTags(tags);
+        dataSource.updateTags(tags, associatedNumber);
 
         Map<String, String> searchParams = new HashMap<String, String>();
-        searchParams.put("contains",  tagKey + ":" + tagValue);
+        searchParams.put("contains", tagKey + ":" + tagValue);
 
-        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(searchParams);
+        TaggedNumberCollection taggedNumbers = dataSource.getTaggedNumbers(searchParams);
 
         assertTrue(taggedNumbers.getNumbers().size() >= 1);
         assertTrue(taggedNumbers.getCount() >= 1);
@@ -344,22 +361,24 @@ public class NumberTest extends BaseTestCase {
     }
 
     @Test
-    public void test_retrieve_all_tags_with_not_contains_param() throws VivialConnectException{
+    public void test_retrieve_all_tags_with_not_contains_param() throws VivialConnectException {
 
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
         String tagValue = simpleDateFormatter.format(new Date());
         String tagKey = "param_tag";
 
-        Map<String ,String> tags = new HashMap<String, String>();
+        Map<String, String> tags = new HashMap<String, String>();
         tags.put(tagKey, tagValue);
 
-        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
-        associatedNumber.updateTags(tags);
+        DataSource dataSource = getDataSource();
+
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+        dataSource.updateTags(tags, associatedNumber);
 
         Map<String, String> searchParams = new HashMap<String, String>();
-        searchParams.put("notcontains",  tagKey + ":" + tagValue);
+        searchParams.put("notcontains", tagKey + ":" + tagValue);
 
-        TaggedNumberCollection taggedNumbers = getDataSource().getTaggedNumbers(searchParams);
+        TaggedNumberCollection taggedNumbers = dataSource.getTaggedNumbers(searchParams);
 
         assertTrue(taggedNumbers.getNumbers().size() >= 1);
 
@@ -375,13 +394,16 @@ public class NumberTest extends BaseTestCase {
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
         String tagValue = simpleDateFormatter.format(new Date());
 
-        Map<String ,String> tags = new HashMap<String, String>();
+        Map<String, String> tags = new HashMap<String, String>();
         tags.put(tagKey, tagValue);
 
-        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
-        associatedNumber.updateTags(tags);
+        DataSource dataSource = getDataSource();
 
-        TagCollection numberTags = associatedNumber.fetchTags();
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+
+        dataSource.updateTags(tags, associatedNumber);
+
+        TagCollection numberTags = dataSource.fetchTags(associatedNumber);
 
         assertTrue(numberTags.getTags().containsKey(tagKey));
         assertTrue(numberTags.getTags().containsValue(tagValue));
@@ -401,8 +423,10 @@ public class NumberTest extends BaseTestCase {
         tags.put("location", "US");
         tags.put("platform", "java");
 
-        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
-        TagCollection updatedTags = associatedNumber.updateTags(tags);
+        DataSource dataSource = getDataSource();
+
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+        TagCollection updatedTags = dataSource.updateTags(tags, associatedNumber);
 
         for (String tagKey : tags.keySet()) {
             String tagValue = tags.get(tagKey);
@@ -410,20 +434,20 @@ public class NumberTest extends BaseTestCase {
             assertTrue(updatedTags.getTags().containsValue(tagValue));
         }
 
-        TagCollection tagsLeft = associatedNumber.deleteTags(tags);
+        Map<String, String> tagsToDelete = new HashMap<String, String>();
+        tagsToDelete.put("store_id", "");
+        tagsToDelete.put("platform", "");
 
-        for (String tagKey : tags.keySet()) {
-            String tagValue = tags.get(tagKey);
+        TagCollection tagsLeft = dataSource.deleteTags(tagsToDelete, associatedNumber);
+
+        for (String tagKey : tagsToDelete.keySet()) {
             assertFalse(tagsLeft.getTags().containsKey(tagKey));
-            assertFalse(tagsLeft.getTags().containsValue(tagValue));
         }
 
         Number number = (Number) associatedNumber;
 
-        for (String tagKey : number.getTags().keySet()) {
-            String tagValue = tags.get(tagKey);
-            assertFalse(tagsLeft.getTags().containsKey(tagKey));
-            assertFalse(tagsLeft.getTags().containsValue(tagValue));
+        for (String tagKey : tagsToDelete.keySet()) {
+            assertFalse(number.getTags().containsKey(tagKey));
         }
 
     }

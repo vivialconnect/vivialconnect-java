@@ -166,6 +166,21 @@ public class VivialConnectServer implements DataSource {
     }
 
     @Override
+    public TagCollection updateTags(Map<String, String> tags, AssociatedNumber number) throws VivialConnectException {
+        return number.updateTags(tags);
+    }
+
+    @Override
+    public TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException {
+        return null;
+    }
+
+    @Override
+    public TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
+        return null;
+    }
+
+    @Override
     public List<Message> getMessages(Map<String, String> filters) throws VivialConnectException {
         return Message.getMessages(filters);
     }

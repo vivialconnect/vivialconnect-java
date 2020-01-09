@@ -67,6 +67,12 @@ public interface DataSource {
 
     TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException;
 
+    TagCollection updateTags(Map<String, String> tags, AssociatedNumber number) throws VivialConnectException;
+
+    TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException;
+
+    TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException;
+
     // Message
 
     List<Message> getMessages(Map<String, String> filters) throws VivialConnectException;

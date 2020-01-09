@@ -203,7 +203,67 @@ public class MockData implements DataSource {
 
     @Override
     public TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
-        return null;
+
+        List<Number> numbers = new ArrayList<Number>();
+        List<AssociatedNumber> associatedNumbers = this.getAssociatedNumbers();
+
+        if (requestParams != null && requestParams.containsKey("notcontains")) {
+            Number mockNumber = new Number();
+            numbers.add(mockNumber);
+        } else {
+            for (AssociatedNumber associatedNumber : associatedNumbers) {
+                Number number = (Number) associatedNumber;
+                numbers.add(number);
+            }
+        }
+
+        TaggedNumberCollection numberCollection = new TaggedNumberCollection(associatedNumbers.size(), numbers,
+                                                                    0, 1, 0);
+
+        return numberCollection;
+    }
+
+    @Override
+    public TagCollection updateTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        if (tags.containsKey("testtag")) {
+
+            if (tags.get("testtag").equals("invalid"))
+                throw new VivialConnectException();
+
+        }
+
+        Map<String, String> tagsCopy = new HashMap<String, String>(tags);
+        Number number = (Number) associatedNumber;
+        number.setTags(tagsCopy);
+
+        TagCollection tagCollection = new TagCollection(tagsCopy);
+
+        return tagCollection;
+    }
+
+    @Override
+    public TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        Number number = (Number) associatedNumber;
+        TagCollection tagCollection = new TagCollection(number.getTags());
+
+        return tagCollection;
+
+    }
+
+    @Override
+    public TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        Number number = (Number) associatedNumber;
+
+        for (String key : tags.keySet()) {
+            number.getTags().remove(key);
+        }
+
+        TagCollection tagCollection = new TagCollection(number.getTags());
+
+        return tagCollection;
     }
 
     @Override

@@ -21,6 +21,20 @@ public class TaggedNumberCollection {
     @JsonProperty("previous")
     private int previousPage;
 
+    public TaggedNumberCollection() {
+    }
+
+    public TaggedNumberCollection(List<Number> numbers) {
+        this.numbers = numbers;
+    }
+
+    public TaggedNumberCollection(int count, List<Number> numbers, int nextPage, int pages, int previousPage) {
+        this.count = count;
+        this.numbers = numbers;
+        this.nextPage = nextPage;
+        this.pages = pages;
+        this.previousPage = previousPage;
+    }
 
     public int getCount() {
         return count;
