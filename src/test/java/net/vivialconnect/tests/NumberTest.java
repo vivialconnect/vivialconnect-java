@@ -368,4 +368,29 @@ public class NumberTest extends BaseTestCase {
         assertFalse(taggedNumbers.getNumbers().contains(number));
     }
 
+    @Test
+    public void test_retrieve_number_tags() throws VivialConnectException {
+
+        String tagKey = "test_tag";
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
+        String tagValue = simpleDateFormatter.format(new Date());
+
+        Map<String ,String> tags = new HashMap<String, String>();
+        tags.put(tagKey, tagValue);
+
+        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+        associatedNumber.updateTags(tags);
+
+        TagCollection numberTags = associatedNumber.fetchTags();
+
+        assertTrue(numberTags.getTags().containsKey(tagKey));
+        assertTrue(numberTags.getTags().containsValue(tagValue));
+
+        Number number = (Number) associatedNumber;
+
+        assertTrue(number.getTags().containsKey(tagKey));
+        assertTrue(number.getTags().containsValue(tagValue));
+
+    }
+
 }

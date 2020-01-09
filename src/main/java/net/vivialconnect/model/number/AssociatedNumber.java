@@ -94,4 +94,6 @@ public interface AssociatedNumber extends INumber{
     void setRateCenter(String rateCenter);
 
     TagCollection updateTags(Map<String, String> tags) throws VivialConnectException;
+
+    TagCollection fetchTags() throws  VivialConnectException;
 }

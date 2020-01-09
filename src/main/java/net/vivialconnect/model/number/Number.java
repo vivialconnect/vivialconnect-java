@@ -1010,4 +1010,18 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         return result;
     }
+
+    /**
+     *  Fetch and refresh the tags for an instance of Number. This method represents the endpoint:
+     *  <pre>GET /api/v1.0/accounts/(int: account_id)/numbers/(number_id)/tags.json</pre> in the API.
+     * @return a TagCollection object with the tags of a Number instance.
+     * @throws VivialConnectException if the request could not be processed successfully.
+     */
+    public TagCollection fetchTags() throws VivialConnectException {
+        TagCollection tags = request(RequestMethod.GET, classURLWithResourceSuffix(Number.class, String.valueOf(this.id), "tags"),
+                       null, null, TagCollection.class);
+        this.tags = tags.getTags();
+
+        return tags;
+    }
 }
