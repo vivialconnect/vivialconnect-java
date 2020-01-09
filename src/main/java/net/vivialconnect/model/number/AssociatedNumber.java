@@ -96,4 +96,6 @@ public interface AssociatedNumber extends INumber{
     TagCollection updateTags(Map<String, String> tags) throws VivialConnectException;
 
     TagCollection fetchTags() throws  VivialConnectException;
+
+    TagCollection deleteTags(Map<String, String> tags) throws VivialConnectException;
 }

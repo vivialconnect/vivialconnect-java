@@ -393,4 +393,39 @@ public class NumberTest extends BaseTestCase {
 
     }
 
+    @Test
+    public void test_delete_number_tags() throws VivialConnectException {
+
+        Map<String, String> tags = new HashMap<String, String>();
+        tags.put("store_id", "500");
+        tags.put("location", "US");
+        tags.put("platform", "java");
+
+        AssociatedNumber associatedNumber = getDataSource().getLocalAssociatedNumbers().get(0);
+        TagCollection updatedTags = associatedNumber.updateTags(tags);
+
+        for (String tagKey : tags.keySet()) {
+            String tagValue = tags.get(tagKey);
+            assertTrue(updatedTags.getTags().containsKey(tagKey));
+            assertTrue(updatedTags.getTags().containsValue(tagValue));
+        }
+
+        TagCollection tagsLeft = associatedNumber.deleteTags(tags);
+
+        for (String tagKey : tags.keySet()) {
+            String tagValue = tags.get(tagKey);
+            assertFalse(tagsLeft.getTags().containsKey(tagKey));
+            assertFalse(tagsLeft.getTags().containsValue(tagValue));
+        }
+
+        Number number = (Number) associatedNumber;
+
+        for (String tagKey : number.getTags().keySet()) {
+            String tagValue = tags.get(tagKey);
+            assertFalse(tagsLeft.getTags().containsKey(tagKey));
+            assertFalse(tagsLeft.getTags().containsValue(tagValue));
+        }
+
+    }
+
 }

@@ -1024,4 +1024,34 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
         return tags;
     }
+
+    /**
+     * Delete individual key/value pairs from phone number tags.
+     * <p>
+     * Values are ignored if:
+     *
+     * <ul>
+     *     <li>Existing tag keys included in payload will be removed from tags.</li>
+     *     <li>Existing tag keys NOT included in the payload will be left unchanged.</li>
+     *
+     * </ul>
+     *
+     * @param tags tags to delete.
+     * @return a TagCollection object with the tags remaining.
+     * @throws VivialConnectException if the request could not be processed successfully.
+     */
+    @Override
+    public TagCollection deleteTags(Map<String, String> tags) throws VivialConnectException {
+
+        String requestPayload = JsonBodyBuilder.withCustomClassName("tags").addTypedParams(tags).build();
+
+        TagCollection tagsLeft = request(RequestMethod.DELETE, classURLWithResourceSuffix(Number.class, String.valueOf(this.id), "tags"),
+                requestPayload, null, TagCollection.class);
+
+        this.tags = tagsLeft.getTags();
+
+        return tagsLeft;
+    }
+
+
 }
