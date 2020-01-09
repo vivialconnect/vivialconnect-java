@@ -172,12 +172,12 @@ public class VivialConnectServer implements DataSource {
 
     @Override
     public TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException {
-        return null;
+        return associatedNumber.fetchTags();
     }
 
     @Override
     public TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
-        return null;
+        return associatedNumber.deleteTags(tags);
     }
 
     @Override

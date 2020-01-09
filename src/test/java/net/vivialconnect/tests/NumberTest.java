@@ -239,16 +239,18 @@ public class NumberTest extends BaseTestCase {
         AssociatedNumber number = dataSource.getLocalAssociatedNumbers().get(0);
         Map<String, String> testTags = new HashMap<String, String>();
 
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < 3; i++) {
             testTags.put(String.format("test%d", i), String.format("tag%d", i));
         }
+
+        testTags.put("empty_tag", "");
 
         TagCollection tagCollection = dataSource.updateTags(testTags, number);
         Map<String, String> tags = tagCollection.getTags();
 
         assertEquals(tags.get("test1"), "tag1");
         assertEquals(tags.get("test2"), "tag2");
-        assertEquals(tags.get("test3"), "tag3");
+        assertEquals(tags.get("empty_tag"), "");
 
     }
 
@@ -335,6 +337,8 @@ public class NumberTest extends BaseTestCase {
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("ddHHmmssSSS");
         String tagValue = simpleDateFormatter.format(new Date());
         String tagKey = "param_tag";
+        String emptyTagKey = "empty_tag";
+        String emptyTagValue = "";
 
         DataSource dataSource = getDataSource();
 
@@ -342,6 +346,7 @@ public class NumberTest extends BaseTestCase {
 
         Map<String, String> tags = new HashMap<String, String>();
         tags.put(tagKey, tagValue);
+        tags.put(emptyTagKey, emptyTagValue);
 
         dataSource.updateTags(tags, associatedNumber);
 
@@ -355,6 +360,13 @@ public class NumberTest extends BaseTestCase {
         assertTrue(taggedNumbers.getPages() >= 1);
 
         Number number = (Number) associatedNumber;
+
+        assertTrue(taggedNumbers.getNumbers().contains(number));
+
+        searchParams.clear();
+        searchParams.put("contains", emptyTagKey + ":" + emptyTagValue);
+
+        taggedNumbers = dataSource.getTaggedNumbers(searchParams);
 
         assertTrue(taggedNumbers.getNumbers().contains(number));
 
@@ -425,7 +437,7 @@ public class NumberTest extends BaseTestCase {
 
         DataSource dataSource = getDataSource();
 
-        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
+        AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(1);
         TagCollection updatedTags = dataSource.updateTags(tags, associatedNumber);
 
         for (String tagKey : tags.keySet()) {
