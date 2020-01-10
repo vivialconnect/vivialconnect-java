@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.vivialconnect.tests.data.DataSource;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -226,4 +230,20 @@ public class NumberTest extends BaseTestCase {
         AssociatedNumber number = getDataSource().getNumberById(getDataSource().getAssociatedNumbers().get(0).getId());
         assertEquals(number.getPhoneNumber().substring(1), getDataSource().numberLookup(number).getPhoneNumber());
     }
+
+    @Test
+    public void test_get_available_local_numbers_with_valid_param() throws VivialConnectException {
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        DataSource dataSource = getDataSource();
+
+        try {
+            dataSource.findAvailableNumbersByAreaCode("error", params);
+        } catch (VivialConnectException e) {
+            assertEquals("Error fetching available numbers", e.getMessage());
+            assertEquals(0, e.getErrorCode());
+        }
+    }
+
 }

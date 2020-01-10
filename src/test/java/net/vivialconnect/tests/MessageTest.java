@@ -17,6 +17,7 @@ import net.vivialconnect.model.message.BulkInfo;
 import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.BulkMessage;
 
+import net.vivialconnect.tests.data.DataSource;
 import org.junit.Test;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.number.AssociatedNumber;
@@ -160,6 +161,219 @@ public class MessageTest extends BaseTestCase {
 
         getDataSource().sendBulkWithoutNumbers(bulkMessage);
     }
+
+
+    @Test
+    public void test_error_code_10000() throws VivialConnectException {
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
+        String toNumber = associatedNumbers.get(1).getPhoneNumber();
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(toNumber);
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10000, e.getErrorCode());
+            assertEquals("Message body OR media_urls must be provided", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void test_error_code_10002() throws VivialConnectException {
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
+        String toNumber = associatedNumbers.get(1).getPhoneNumber();
+
+        List<String> mediaUrls = new ArrayList<String>();
+        mediaUrls.add("https://file-examples.com/wp-content/uploads/2017/08/file_example_PPT_500kB.ppt");
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(toNumber);
+        message.setMediaUrls(mediaUrls);
+        message.setBody("Hello");
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10002, e.getErrorCode());
+        }
+
+    }
+
+    @Test
+    public void test_error_code_10003() throws VivialConnectException {
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
+        String toNumber = associatedNumbers.get(1).getPhoneNumber();
+
+        String bodyContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque consectetur eu ipsum at accumsan. " +
+                "Nullam sodales et orci et tincidunt. Quisque rhoncus cursus arcu, eget porta mauris. Phasellus sagittis non odio vel" +
+                " faucibus. Cras ullamcorper eu lectus et viverra. Etiam nec arcu ligula. Aliquam porttitor mi a leo blandit, vitae " +
+                "faucibus quam ultrices. Sed ac odio diam. Vestibulum vel euismod magna, vel fringilla nunc. Pellentesque finibus libero" +
+                " massa, sit amet fringilla magna facilisis vitae. Vestibulum non nunc ac massa tincidunt blandit. Maecenas vel " +
+                "justo accumsan, imperdiet lectus non, mollis sapien. Cras vestibulum nunc pellentesque pellentesque efficitur. " +
+                "Sed in odio ullamcorper ante sodales fringilla sed ac lorem." +
+                "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec mi erat, congue non nibh " +
+                "vel, fermentum ullamcorper justo. Aenean eget scelerisque dolor. Curabitur et imperdiet lacus. Mauris non efficitur metus," +
+                " in ullamcorper augue. Donec vitae dui feugiat, porta augue in, porta arcu. Pellentesque dictum sapien quam, sed vulputate " +
+                "purus fermentum sed." +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque consectetur eu ipsum at accumsan. " +
+                "Nullam sodales et orci et tincidunt. Quisque rhoncus cursus arcu, eget porta mauris. Phasellus sagittis non odio vel" +
+                " faucibus. Cras ullamcorper eu lectus et viverra. Etiam nec arcu ligula. Aliquam porttitor mi a leo blandit, vitae " +
+                "faucibus quam ultrices. Sed ac odio diam. Vestibulum vel euismod magna, vel fringilla nunc. Pellentesque finibus libero" +
+                " massa, sit amet fringilla magna facilisis vitae. Vestibulum non nunc ac massa tincidunt blandit. Maecenas vel " +
+                "justo accumsan, imperdiet lectus non, mollis sapien. Cras vestibulum nunc pellentesque pellentesque efficitur. " +
+                "Sed in odio ullamcorper ante sodales fringilla sed ac lorem." +
+                "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec mi erat, congue non nibh " +
+                "vel, fermentum ullamcorper justo. Aenean eget scelerisque dolor. Curabitur et imperdiet lacus. Mauris non efficitur metus," +
+                " in ullamcorper augue. Donec vitae dui feugiat, porta augue in, porta arcu. Pellentesque dictum sapien quam, sed vulputate " +
+                "purus fermentum sed." +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque consectetur eu ipsum at accumsan. " +
+                "Nullam sodales et orci et tincidunt. Quisque rhoncus cursus arcu, eget porta mauris. Phasellus sagittis non odio vel" +
+                " faucibus. Cras ullamcorper eu lectus et viverra. Etiam nec arcu ligula. Aliquam porttitor mi a leo blandit, vitae " +
+                "faucibus quam ultrices. Sed ac odio diam. Vestibulum vel euismod magna, vel fringilla nunc. Pellentesque finibus libero" +
+                " massa, sit amet fringilla magna facilisis vitae. Vestibulum non nunc ac massa tincidunt blandit. Maecenas vel " +
+                "justo accumsan, imperdiet lectus non, mollis sapien. Cras vestibulum nunc pellentesque pellentesque efficitur. " +
+                "Sed in odio ullamcorper ante sodales fringilla sed ac lorem." +
+                "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec mi erat, congue non nibh " +
+                "vel, fermentum ullamcorper justo. Aenean eget scelerisque dolor. Curabitur et imperdiet lacus. Mauris non efficitur metus," +
+                " in ullamcorper augue. Donec vitae dui feugiat, porta augue in, porta arcu. Pellentesque dictum sapien quam, sed vulputate " +
+                "purus fermentum sed.";
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(toNumber);
+        message.setBody(bodyContent);
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10003, e.getErrorCode());
+            assertEquals("Message body must be less than 2048 characters", e.getMessage());
+        }
+
+    }
+
+
+    @Test
+    public void test_error_code_10005() throws VivialConnectException {
+
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
+        String toNumber = associatedNumbers.get(1).getPhoneNumber();
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(toNumber);
+        message.setBody("STOP");
+
+        dataSource.sendMessage(message);
+
+        message = new Message();
+        message.setFromNumber(toNumber);
+        message.setToNumber(fromNumber);
+        // Note: Do not change this message value. This message is used as a flag for raise an exception for mock data.
+        message.setBody("OPTOUT TEST MESSAGE");
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10005, e.getErrorCode());
+            assertEquals("to_number is opted out for messages from from_number", e.getMessage());
+        } finally {
+            message = new Message();
+            message.setFromNumber(fromNumber);
+            message.setToNumber(toNumber);
+            message.setBody("UNSTOP");
+        }
+
+    }
+
+    @Test
+    public void test_error_code_10008() throws VivialConnectException {
+
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String toNumber = associatedNumbers.get(0).getPhoneNumber();
+
+        Message message = new Message();
+        message.setFromNumber("+16162000000");
+        message.setToNumber(toNumber);
+        message.setBody("Test,Hello!");
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10008, e.getErrorCode());
+            assertEquals("from_number invalid, inactive, or not owned", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void test_error_code_10009() throws VivialConnectException {
+
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String toNumber = associatedNumbers.get(0).getPhoneNumber();
+
+        Message message = new Message();
+        message.setConnectorId(999999999);
+        message.setToNumber(toNumber);
+        message.setBody("Test,Hello!");
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10009, e.getErrorCode());
+            assertEquals("connector_id invalid, inactive, or not owned", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void test_error_code_10012() throws VivialConnectException {
+
+        DataSource dataSource = getDataSource();
+
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setBody("Test,Hello!");
+
+        try {
+            dataSource.sendMessage(message);
+        } catch (VivialConnectException e) {
+            assertEquals(10012, e.getErrorCode());
+            assertEquals("Must specify to_number", e.getMessage());
+        }
+
+    }
+
 
     private List<Message> getMessages() throws VivialConnectException {
         return getMessages(null);
