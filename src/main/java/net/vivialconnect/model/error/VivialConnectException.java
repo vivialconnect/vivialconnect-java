@@ -7,6 +7,7 @@ public class VivialConnectException extends Exception {
     private static final long serialVersionUID = -5461533988163106640L;
 
     private int responseCode;
+    private int errorCode;
 
 
     public VivialConnectException() { 
@@ -17,10 +18,18 @@ public class VivialConnectException extends Exception {
         super(message, cause);
     }
 
+    public VivialConnectException(int errorCode, String message, int responseCode, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
+        this.responseCode = responseCode;
+    }
+
 
     public VivialConnectException(Throwable cause) {
         super(cause);
     }
+
+
     
     /**
      * Gets the error message.
@@ -56,5 +65,22 @@ public class VivialConnectException extends Exception {
 
     public void setResponseCode(int responseCode){
         this.responseCode = responseCode;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    @Override
+    public String toString() {
+
+        String errorDescription = this.errorCode > 0 ?
+                                  String.format("Error Code: %d - %s\n", this.errorCode, super.getMessage()) :
+                                  super.getMessage();
+        return errorDescription;
     }
 }

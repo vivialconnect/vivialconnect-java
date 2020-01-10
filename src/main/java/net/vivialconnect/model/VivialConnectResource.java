@@ -339,10 +339,12 @@ public abstract class VivialConnectResource implements Serializable {
         try{
             reader = createBufferedReader(connection.getErrorStream());
             String errorResponse = readResponse(reader);
-            String errorMessage = unmarshalErrorResponse(errorResponse);
+            ErrorMessage errorMessage = unmarshalErrorResponse(errorResponse);
 
-            VivialConnectException vivialException = new VivialConnectException(errorMessage, ioe);
-            vivialException.setResponseCode(connection.getResponseCode());
+            VivialConnectException vivialException = new VivialConnectException(errorMessage.getErrorCode(),
+                    errorMessage.getErrorMessage(),
+                    connection.getResponseCode(),
+                    ioe);
 
             return vivialException;
         }catch (IOException e){
@@ -359,7 +361,7 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
 
-    private static String unmarshalErrorResponse(String errorResponse){
+    private static ErrorMessage unmarshalErrorResponse(String errorResponse){
         try{
             ObjectMapper mapper = new ObjectMapper();
             Object unmarshalledObject = mapper.reader()
@@ -367,9 +369,9 @@ public abstract class VivialConnectResource implements Serializable {
                                         .readValue(errorResponse);
 
             ErrorMessage errorMessage = (ErrorMessage) unmarshalledObject;
-            return errorMessage.getErrorMessage();
+            return errorMessage;
         }catch (Exception e){
-            return errorResponse;
+            return new ErrorMessage(errorResponse,0);
         }
     }
 

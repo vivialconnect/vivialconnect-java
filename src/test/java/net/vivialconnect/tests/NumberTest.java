@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.vivialconnect.model.number.*;
-import net.vivialconnect.model.number.Number;
 import net.vivialconnect.tests.data.DataSource;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -461,7 +459,19 @@ public class NumberTest extends BaseTestCase {
         for (String tagKey : tagsToDelete.keySet()) {
             assertFalse(number.getTags().containsKey(tagKey));
         }
+      
+    @Test
+    public void test_get_available_local_numbers_with_invalid_param() throws VivialConnectException {
 
+        Map<String, String> params = new HashMap<String, String>();
+
+        DataSource dataSource = getDataSource();
+
+        try {
+            dataSource.findAvailableNumbersByAreaCode("error", params);
+        } catch (VivialConnectException e) {
+            assertEquals("Error fetching available numbers", e.getMessage());
+            assertEquals(0, e.getErrorCode());
+        }
     }
-
 }

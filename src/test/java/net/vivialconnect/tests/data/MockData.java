@@ -2,13 +2,8 @@ package net.vivialconnect.tests.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.lang.Integer;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import net.vivialconnect.model.connector.*;
 import net.vivialconnect.model.message.*;
@@ -47,6 +42,81 @@ public class MockData implements DataSource {
 
     private Random random = new Random();
     private HashMap<Integer, ArrayList<PhoneNumber>> connectorNumbers = new HashMap<Integer, ArrayList<PhoneNumber>>();
+    private String[] supportedExtensionsArray = {
+            ".m4a",
+            ".m4p",
+            ".m4b",
+            ".m4r",
+            ".mp1",
+            ".mp2",
+            ".mp3",
+            ".m1a",
+            ".m2a",
+            ".mpa",
+            ".oga",
+            ".flac",
+            ".webm",
+            ".wav",
+            ".amr",
+            ".3ga",
+            ".3gp",
+            ".bmp",
+            ".dib",
+            ".gif",
+            ".jpg",
+            ".jpeg",
+            ".pjpeg",
+            ".png",
+            ".ogv",
+            ".oga",
+            ".ogx",
+            ".ogg",
+            ".pdf",
+            ".rtf",
+            ".zip",
+            ".tar",
+            ".xml",
+            ".gz ",
+            ".bz2",
+            ".gz",
+            ".smil",
+            ".js",
+            ".json",
+            ".xml",
+            ".avi",
+            ".mp4",
+            ".m4v",
+            ".mpg",
+            ".mpeg",
+            ".m1v",
+            ".mpv",
+            ".ogv",
+            ".ogx",
+            ".ogg",
+            ".spx",
+            ".ogm",
+            ".svg",
+            ".tiff",
+            ".tif",
+            ".webp",
+            ".ico",
+            ".css",
+            ".csv ",
+            ".html",
+            ".cal",
+            ".txt",
+            ".js",
+            ".vcf",
+            ".vcard",
+            ".wap",
+            ".mov",
+            ".qt",
+            ".webm",
+            ".wmv",
+            ".flv"
+    };
+
+    private List<String> supportedExtensionsList = Arrays.asList(supportedExtensionsArray);
 
     @Override
     public Account getAccount() throws VivialConnectException {
@@ -290,8 +360,50 @@ public class MockData implements DataSource {
         return null;
     }
 
+    private void checkForError(Message message) throws VivialConnectException {
+
+        if (message.getBody() == null && message.getFromNumber() != null && message.getToNumber() != null) {
+            throw new VivialConnectException(10000, "Message body OR media_urls must be provided", 400, null);
+        }
+
+        if (message.getMediaUrls() != null) {
+
+            String[] fileNameParts = message.getMediaUrls().get(0).split("/");
+            String filename = fileNameParts[fileNameParts.length - 1];
+            String[] fileNameExtensionParts = filename.split("\\.");
+            String fileNameExtension = fileNameExtensionParts[fileNameExtensionParts.length - 1];
+
+            if (!supportedExtensionsList.contains("." + fileNameExtension))
+                throw new VivialConnectException(10002, null, 400, null);
+        }
+
+        if (message.getBody() != null && message.getBody().length() > 2048) {
+            throw new VivialConnectException(10003, "Message body must be less than 2048 characters", 400, null);
+        }
+
+        if (message.getBody() != null && message.getBody().equals("OPTOUT TEST MESSAGE")) {
+            throw new VivialConnectException(10005, "to_number is opted out for messages from from_number", 400, null);
+        }
+
+        if (message.getFromNumber() != null && message.getFromNumber().equals("+16162000000")) {
+            throw new VivialConnectException(10008, "from_number invalid, inactive, or not owned", 400, null);
+        }
+
+        if (message.getConnectorId() == 999999999) {
+            throw new VivialConnectException(10009, "connector_id invalid, inactive, or not owned", 400, null);
+        }
+
+        if (message.getFromNumber() == null && message.getConnectorId() > 0) {
+            throw new VivialConnectException(10012, "Must specify to_number", 400, null);
+        }
+
+    }
+
     @Override
     public void sendMessage(Message message) throws VivialConnectException {
+
+        checkForError(message);
+
         message.setId(getMessages(null).get(0).getId() + 1);
         message.setDirection("outbound-api");
         message.setStatus("accepted");
@@ -300,7 +412,7 @@ public class MockData implements DataSource {
         message.setDateCreated(dateCreated);
         message.setDateModified(dateCreated);
 
-        int numMedia = message.getMediaUrls().size();
+        int numMedia = message.getMediaUrls() != null ? message.getMediaUrls().size() : 0;
         if (numMedia > 0) {
             message.setNumMedia(numMedia);
             message.setMessageType("local_mms");
