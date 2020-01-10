@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.vivialconnect.model.number.*;
+import net.vivialconnect.model.number.Number;
 import net.vivialconnect.tests.data.DataSource;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import net.vivialconnect.model.error.VivialConnectException;
-
 import static org.junit.Assert.*;
 
 public class NumberTest extends BaseTestCase {
@@ -260,7 +259,7 @@ public class NumberTest extends BaseTestCase {
         AssociatedNumber associatedNumber = dataSource.getLocalAssociatedNumbers().get(0);
         Map<String, String> testTags = new HashMap<String, String>();
 
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
             testTags.put(String.format("test%d", i), String.format("tag%d", i));
         }
 
@@ -459,6 +458,7 @@ public class NumberTest extends BaseTestCase {
         for (String tagKey : tagsToDelete.keySet()) {
             assertFalse(number.getTags().containsKey(tagKey));
         }
+    }
       
     @Test
     public void test_get_available_local_numbers_with_invalid_param() throws VivialConnectException {
