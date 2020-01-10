@@ -157,30 +157,6 @@ public class User extends VivialConnectResource{
         return false;
     }
 
-    /**
-     * Updates the user's password.
-     * <p>
-     * Returns <code>true</code> if the password was successfully updated.
-     * 
-     * @param oldPassword {@link String } representing actual password for this user
-     * @param newPassword {@link String } representing new password to be updated
-     * 
-     * @return whether the password was updated or not
-     * @throws VivialConnectException if there is an API-level error
-     *
-     */
-    public boolean changePassword(String oldPassword, String newPassword) throws VivialConnectException{
-        JsonBodyBuilder builder = JsonBodyBuilder.forClass(User.class)
-                                                 .addParamPair("_password", oldPassword)
-                                                 .addParamPair("password", newPassword);
-
-        String result = request(RequestMethod.PUT, classURLWithSuffix(User.class, String.format("%d/profile/password", getId())),
-                                                                                            builder.build(), null, String.class);
-
-        return "{}".equals(result);
-    }
-
-
     public int getId(){
         return id;
     }

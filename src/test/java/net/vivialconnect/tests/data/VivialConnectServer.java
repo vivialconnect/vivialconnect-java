@@ -248,11 +248,6 @@ public class VivialConnectServer implements DataSource {
     }
 
     @Override
-    public boolean updateUserPassword(User user, String oldPassword, String newPassword) throws VivialConnectException {
-        return user.changePassword(oldPassword, newPassword);
-    }
-
-    @Override
     public List<User> getUsers() throws VivialConnectException {
         return User.getUsers();
     }

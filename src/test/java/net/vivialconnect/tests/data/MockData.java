@@ -486,11 +486,6 @@ public class MockData implements DataSource {
     }
 
     @Override
-    public boolean updateUserPassword(User user, String oldPassword, String newPassword) throws VivialConnectException {
-        return true;
-    }
-
-    @Override
     public List<User> getUsers() throws VivialConnectException {
         return loadUsersFromFixture();
     }
