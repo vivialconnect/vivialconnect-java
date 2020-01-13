@@ -1,6 +1,7 @@
 package net.vivialconnect.tests.data;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -394,6 +395,11 @@ public class VivialConnectServer implements DataSource {
     @Override
     public int phoneNumberCount(int connectorId) throws VivialConnectException {
         return PhoneNumber.count(connectorId);
+    }
+
+    @Override
+    public List<AssociatedNumber> getNumbersForConnectorPagination() throws VivialConnectException {
+        return  this.getLocalAssociatedNumbers();
     }
 
     @Override

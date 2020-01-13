@@ -36,7 +36,7 @@ import net.vivialconnect.model.log.LogCollection;
 public class MockData implements DataSource {
 
     private List<AvailableNumber> availableNumbers;
-    private List<AssociatedNumber> associatedNumbers;
+    private List<AssociatedNumber> associatedNumbers = new ArrayList<AssociatedNumber>();
     private List<Contact> contacts;
     private List<User> users;
     private List<Attachment> attachments;
@@ -766,6 +766,21 @@ public class MockData implements DataSource {
         }
 
         return 0;
+    }
+
+    @Override
+    public List<AssociatedNumber> getNumbersForConnectorPagination() throws VivialConnectException {
+
+        Map<String,String> queryParams = new HashMap<String, String>();
+        queryParams.put("limit","52");
+
+        List<AvailableNumber> availableNumbers = this.findAvailableNumbersByAreaCode("503", queryParams);
+
+        for(AvailableNumber phoneNumber: availableNumbers){
+            this.buyAvailable(phoneNumber);
+        }
+
+        return this.getAssociatedNumbers();
     }
 
     @Override
