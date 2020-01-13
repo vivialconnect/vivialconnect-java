@@ -115,8 +115,6 @@ public interface DataSource {
 
     boolean deleteUser(User user) throws VivialConnectException;
 
-    boolean updateUserPassword(User user, String oldPassword, String newPassword) throws VivialConnectException;
-
     List<User> getUsers() throws VivialConnectException;
 
     User getUserById(int userId) throws VivialConnectException;
