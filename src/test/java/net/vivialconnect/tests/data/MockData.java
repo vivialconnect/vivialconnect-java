@@ -7,6 +7,8 @@ import java.lang.Integer;
 
 import net.vivialconnect.model.connector.*;
 import net.vivialconnect.model.message.*;
+import net.vivialconnect.model.number.*;
+import net.vivialconnect.model.number.Number;
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -18,11 +20,6 @@ import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.account.ContactCollection;
 import net.vivialconnect.model.error.VivialConnectException;
-import net.vivialconnect.model.number.AssociatedNumber;
-import net.vivialconnect.model.number.AvailableNumber;
-import net.vivialconnect.model.number.Number;
-import net.vivialconnect.model.number.NumberCollection;
-import net.vivialconnect.model.number.NumberInfo;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
@@ -272,6 +269,71 @@ public class MockData implements DataSource {
         }
 
         return null;
+    }
+
+    @Override
+    public TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
+
+        List<Number> numbers = new ArrayList<Number>();
+        List<AssociatedNumber> associatedNumbers = this.getAssociatedNumbers();
+
+        if (requestParams != null && requestParams.containsKey("notcontains")) {
+            Number mockNumber = new Number();
+            numbers.add(mockNumber);
+        } else {
+            for (AssociatedNumber associatedNumber : associatedNumbers) {
+                Number number = (Number) associatedNumber;
+                numbers.add(number);
+            }
+        }
+
+        TaggedNumberCollection numberCollection = new TaggedNumberCollection(associatedNumbers.size(), numbers,
+                                                                    0, 1, 0);
+
+        return numberCollection;
+    }
+
+    @Override
+    public TagCollection updateTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        if (tags.containsKey("testtag")) {
+
+            if (tags.get("testtag").equals("invalid"))
+                throw new VivialConnectException();
+
+        }
+
+        Map<String, String> tagsCopy = new HashMap<String, String>(tags);
+        Number number = (Number) associatedNumber;
+        number.setTags(tagsCopy);
+
+        TagCollection tagCollection = new TagCollection(tagsCopy);
+
+        return tagCollection;
+    }
+
+    @Override
+    public TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        Number number = (Number) associatedNumber;
+        TagCollection tagCollection = new TagCollection(number.getTags());
+
+        return tagCollection;
+
+    }
+
+    @Override
+    public TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
+
+        Number number = (Number) associatedNumber;
+
+        for (String key : tags.keySet()) {
+            number.getTags().remove(key);
+        }
+
+        TagCollection tagCollection = new TagCollection(number.getTags());
+
+        return tagCollection;
     }
 
     @Override

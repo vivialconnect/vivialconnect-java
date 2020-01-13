@@ -68,6 +68,15 @@ public class JsonBodyBuilder{
         return this;
     }
 
+    public <Q extends Comparable<Q>> JsonBodyBuilder addTypedParams(Map<String, Q> params){
+        for (String paramName : params.keySet()){
+            Object paramValue = params.get(paramName);
+            this.addParamPair(paramName, paramValue);
+        }
+
+        return this;
+    }
+
 
     public String build(){
         removeTrailingComma();

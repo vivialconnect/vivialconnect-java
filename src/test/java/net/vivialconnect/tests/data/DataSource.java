@@ -11,11 +11,9 @@ import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
 import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.message.BulkInfoCollection;
+import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.error.VivialConnectException;
-import net.vivialconnect.model.number.AssociatedNumber;
-import net.vivialconnect.model.number.AvailableNumber;
-import net.vivialconnect.model.number.NumberInfo;
 import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.connector.Connector;
 import net.vivialconnect.model.connector.Callback;
@@ -66,6 +64,14 @@ public interface DataSource {
     void updateLocalNumber(AssociatedNumber number) throws VivialConnectException;
 
     NumberInfo numberLookup(AssociatedNumber number) throws VivialConnectException;
+
+    TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException;
+
+    TagCollection updateTags(Map<String, String> tags, AssociatedNumber number) throws VivialConnectException;
+
+    TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException;
+
+    TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException;
 
     // Message
 
