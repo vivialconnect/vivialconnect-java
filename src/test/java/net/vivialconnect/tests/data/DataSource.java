@@ -175,6 +175,8 @@ public interface DataSource {
 
     int phoneNumberCount(int connectorId) throws VivialConnectException;
 
+    List<AssociatedNumber> getNumbersForConnectorPagination() throws VivialConnectException;
+
 
     //Bulk
 

@@ -2,6 +2,7 @@ package net.vivialconnect.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -265,23 +266,14 @@ public class ConnectorTest extends BaseTestCase {
     }
 
     @Test
-    public void test_n_paginate_between_numbers()throws VivialConnectException{
+    public void test_n_paginate_between_numbers() throws VivialConnectException {
 
         List<Connector> connectors = getDataSource().getConnectors();
         Connector connector = connectors.get(connectors.size() - 1);
 
-        //Purchase 52 numbers for test pagination
+        List<AssociatedNumber> associatedNumbers = getDataSource().getNumbersForConnectorPagination();
 
-        Map<String,String> queryParams = new HashMap<String, String>();
-        queryParams.put("limit","52");
-
-        List<AvailableNumber> availableNumbers = getDataSource().findAvailableNumbersByAreaCode("503", queryParams);
-        List<AssociatedNumber> purchasedNumbers = new ArrayList<AssociatedNumber>();
-
-        for(AvailableNumber availableNumber: availableNumbers){
-           AssociatedNumber associatedNumber =  getDataSource().buyAvailable(availableNumber);
-           purchasedNumbers.add(associatedNumber);
-        }
+        assumeTrue("Account must have at least 52 numbers", associatedNumbers.size() >= 52);
 
         //Delete from connector
 
@@ -291,7 +283,7 @@ public class ConnectorTest extends BaseTestCase {
 
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
 
-        for(AssociatedNumber associatedNumber: purchasedNumbers){
+        for (AssociatedNumber associatedNumber : associatedNumbers) {
             PhoneNumber phoneNumber = new PhoneNumber(associatedNumber.getId(), associatedNumber.getPhoneNumber());
             phoneNumbers.add(phoneNumber);
         }
@@ -307,61 +299,55 @@ public class ConnectorTest extends BaseTestCase {
 
         assertEquals(2, connectorPhoneNumbers.getPages());
         assertEquals(52, connectorPhoneNumbers.getPhoneNumbersCount());
-        assertEquals(0,connectorPhoneNumbers.getPreviousPage());
-        assertEquals(2,connectorPhoneNumbers.getNextPage());
-        assertEquals(PAGE_SIZE,connectorPhoneNumbers.getPhoneNumbers().size());
+        assertEquals(0, connectorPhoneNumbers.getPreviousPage());
+        assertEquals(2, connectorPhoneNumbers.getNextPage());
+        assertEquals(PAGE_SIZE, connectorPhoneNumbers.getPhoneNumbers().size());
 
         connectorPhoneNumbers = getDataSource().getPhoneNumbers(connector.getId(), 2);
 
         assertEquals(2, connectorPhoneNumbers.getPages());
         assertEquals(52, connectorPhoneNumbers.getPhoneNumbersCount());
-        assertEquals(1,connectorPhoneNumbers.getPreviousPage());
-        assertEquals(0,connectorPhoneNumbers.getNextPage());
+        assertEquals(1, connectorPhoneNumbers.getPreviousPage());
+        assertEquals(0, connectorPhoneNumbers.getNextPage());
         assertTrue(connectorPhoneNumbers.getPhoneNumbers().size() < PAGE_SIZE);
 
         //Before pagination
 
-        assertEquals(PAGE_SIZE,connector.getPhoneNumbers().size());
-        assertEquals(2,connector.getPages());
-        assertEquals(52,connector.getPhoneNumbersCount());
-        assertEquals(0,connector.getPreviousPage());
-        assertEquals(1,connector.getCurrentPage());
-        assertEquals(2,connector.getNextPage());
+        assertEquals(PAGE_SIZE, connector.getPhoneNumbers().size());
+        assertEquals(2, connector.getPages());
+        assertEquals(52, connector.getPhoneNumbersCount());
+        assertEquals(0, connector.getPreviousPage());
+        assertEquals(1, connector.getCurrentPage());
+        assertEquals(2, connector.getNextPage());
 
         //Changing to the next page
 
         connector = (Connector) getDataSource().nextPage(connector);
 
-        assertEquals(2,connector.getCurrentPage());
-        assertEquals(1,connector.getPreviousPage());
+        assertEquals(2, connector.getCurrentPage());
+        assertEquals(1, connector.getPreviousPage());
         assertTrue(connector.getPhoneNumbers().size() < 50);
-        assertEquals(0,connector.getNextPage());
+        assertEquals(0, connector.getNextPage());
 
         //Changing to previous page
 
         connector = (Connector) getDataSource().previousPage(connector);
 
-        assertEquals(1,connector.getCurrentPage());
-        assertEquals(0,connector.getPreviousPage());
-        assertEquals(PAGE_SIZE,connector.getPhoneNumbers().size());
-        assertEquals(2,connector.getNextPage());
+        assertEquals(1, connector.getCurrentPage());
+        assertEquals(0, connector.getPreviousPage());
+        assertEquals(PAGE_SIZE, connector.getPhoneNumbers().size());
+        assertEquals(2, connector.getNextPage());
 
         // Pagination respects limits
 
-        for(int p = connector.getPages() ; p >= 0 ; p--) {
+        for (int p = connector.getPages(); p >= 0; p--) {
             connector = (Connector) getDataSource().previousPage(connector);
             assertEquals(1, connector.getCurrentPage());
         }
 
-        for(int p = connector.getPages() ; p >= 0 ; p--) {
+        for (int p = connector.getPages(); p >= 0; p--) {
             connector = (Connector) getDataSource().nextPage(connector);
             assertEquals(2, connector.getCurrentPage());
-        }
-
-        //Release purchased numbers
-
-        for(AssociatedNumber purchasedNumber: purchasedNumbers){
-            getDataSource().delete(purchasedNumber);
         }
 
     }
