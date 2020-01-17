@@ -15,13 +15,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.SimpleTimeZone;
+import java.util.*;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.Proxy;
@@ -214,7 +208,7 @@ public abstract class VivialConnectResource implements Serializable {
 
 
     private static String createRequestDate(Date currentDate){
-        DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT);
+        DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         requestDateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
 
         return requestDateFormat.format(currentDate);
