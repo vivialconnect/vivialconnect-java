@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.ResourceCount;
@@ -13,21 +14,27 @@ import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
 @JsonRootName("contact")
-public class Contact extends VivialConnectResource{
+public class Contact extends VivialConnectResource {
 
     private static final long serialVersionUID = 3140451099385557777L;
 
-    private static String[] REQUIRED_FIELDS = { "firstName", "lastName", "email", "contactType" };
+    private static String[] REQUIRED_FIELDS = {"firstName", "lastName", "email", "contactType"};
 
-    /** Unique identifier of the user object */
+    /**
+     * Unique identifier of the contact object
+     */
     @JsonProperty
     private int id;
 
-    /** Creation date (UTC) of the contact in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the contact in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of the contact in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of the contact in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
@@ -52,49 +59,69 @@ public class Contact extends VivialConnectResource{
     @JsonProperty
     private String city;
 
-    /** Name of company */
+    /**
+     * Name of company
+     */
     @JsonProperty("company_name")
     private String companyName;
 
-    /** The type of contact. Can be one of: ‘agency,’ ‘billing,’ ‘main,’ ‘company,’ or ‘marketing.’ */
+    /**
+     * The type of contact. Can be one of: ‘agency,’ ‘billing,’ ‘main,’ ‘company,’ or ‘marketing.’
+     */
     @JsonProperty("contact_type")
     private String contactType;
 
     @JsonProperty
     private String country;
 
-    /** Contacts's email address */
+    /**
+     * Contacts's email address
+     */
     @JsonProperty
     private String email;
 
-    /** Contacts's fax number */
+    /**
+     * Contacts's fax number
+     */
     @JsonProperty
     private String fax;
 
-    /** Contacts's first name */
+    /**
+     * Contacts's first name
+     */
     @JsonProperty("first_name")
     private String firstName;
 
-    /** Contacts's last name */
+    /**
+     * Contacts's last name
+     */
     @JsonProperty("last_name")
     private String lastName;
 
-    /** Contacts's mobile phone number */
+    /**
+     * Contacts's mobile phone number
+     */
     @JsonProperty("mobile_phone")
     private String mobilePhone;
 
-    /** Contacts's postal code */
+    /**
+     * Contacts's postal code
+     */
     @JsonProperty("postal_code")
     private String postalCode;
 
     @JsonProperty
     private String state;
 
-    /** Contacts's position or title */
+    /**
+     * Contacts's position or title
+     */
     @JsonProperty
     private String title;
 
-    /** Contacts's work phone number */
+    /**
+     * Contacts's work phone number
+     */
     @JsonProperty("work_phone")
     private String workPhone;
 
@@ -104,12 +131,16 @@ public class Contact extends VivialConnectResource{
         classesWithoutRootValue.add(ContactCollection.class);
     }
 
-    public Contact(){
+    public Contact() {
         jsonBodyBuilder = JsonBodyBuilder.forClass(Contact.class);
     }
 
-
-    public Contact(Contact contact){
+    /**
+     * Create a new contact based in the properties of another contact object.
+     *
+     * @param contact a contact object
+     */
+    public Contact(Contact contact) {
         jsonBodyBuilder = JsonBodyBuilder.forClass(Contact.class).addParamPair("id", contact.getId());
         updateObjectState(contact);
     }
@@ -120,36 +151,33 @@ public class Contact extends VivialConnectResource{
      * This method throws an {@link IllegalStateException} if any of the required fields
      * are not set.
      * <p>
-     * For more details on which fields are required, refer to the VivialConnect API documentation's
-     * <a href="https://www.vivialconnect.net/docs/api.html#post--api-v1.0-accounts-(int-account_id)-contacts.json">contact section.</a>
-     * 
+     *
      * @return this instance of {@link Contact} with the newly-created properties
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see Contact#update()
      */
-    public Contact create() throws VivialConnectException{
+    public Contact create() throws VivialConnectException {
         verifyRequiredFields();
         Contact createdContact = request(RequestMethod.POST, classURL(Contact.class),
-                                        jsonBodyForCreate(), null, Contact.class);
+                jsonBodyForCreate(), null, Contact.class);
 
         updateObjectState(createdContact);
-        
+
         return this;
     }
 
 
-    private void verifyRequiredFields(){
+    private void verifyRequiredFields() {
         Class<?> c = getClass();
-        for (int i = 0; i < REQUIRED_FIELDS.length; i++){
+        for (int i = 0; i < REQUIRED_FIELDS.length; i++) {
             String requiredFieldName = REQUIRED_FIELDS[i];
             Field requiredField = getDeclaredField(c, requiredFieldName);
 
-            if (requiredField == null){
+            if (requiredField == null) {
                 continue;
             }
 
-            if (requiredField.getType().equals(String.class)){
+            if (requiredField.getType().equals(String.class)) {
                 String fieldValue = (String) getValueFromField(requiredField);
                 validateStringValue(requiredField.getName(), fieldValue);
             }
@@ -157,36 +185,36 @@ public class Contact extends VivialConnectResource{
     }
 
 
-    private Field getDeclaredField(Class<?> clazz, String fieldName){
-        try{
+    private Field getDeclaredField(Class<?> clazz, String fieldName) {
+        try {
             return clazz.getDeclaredField(fieldName);
+        } catch (SecurityException e) {
+        } catch (NoSuchFieldException e) {
         }
-        catch (SecurityException e) {}
-        catch (NoSuchFieldException e) {}
 
         return null;
     }
 
 
-    private Object getValueFromField(Field field){
-        try{
+    private Object getValueFromField(Field field) {
+        try {
             return field.get(this);
+        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException e) {
         }
-        catch (IllegalArgumentException e) {}
-        catch (IllegalAccessException e) {}
 
         return null;
     }
 
 
-    private void validateStringValue(String fieldName, String fieldValue){
-        if (fieldValue == null || fieldValue.isEmpty()){
+    private void validateStringValue(String fieldName, String fieldValue) {
+        if (fieldValue == null || fieldValue.isEmpty()) {
             throw new IllegalStateException(String.format("Parameter '%s' is null or empty", fieldName));
         }
     }
 
 
-    private String jsonBodyForCreate(){
+    private String jsonBodyForCreate() {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Contact.class);
         addRequiredFields(builder);
         addOptionalFields(builder);
@@ -195,7 +223,7 @@ public class Contact extends VivialConnectResource{
     }
 
 
-    private void addRequiredFields(JsonBodyBuilder builder){
+    private void addRequiredFields(JsonBodyBuilder builder) {
         /* TODO: Move all these to class-level constants */
         ifParamValidAddToBuilder(builder, "first_name", getFirstName());
         ifParamValidAddToBuilder(builder, "last_name", getLastName());
@@ -204,7 +232,7 @@ public class Contact extends VivialConnectResource{
     }
 
 
-    private void addOptionalFields(JsonBodyBuilder builder){
+    private void addOptionalFields(JsonBodyBuilder builder) {
         ifParamValidAddToBuilder(builder, "company_name", getCompanyName());
         ifParamValidAddToBuilder(builder, "title", getTitle());
         ifParamValidAddToBuilder(builder, "address1", getAddress1());
@@ -219,7 +247,7 @@ public class Contact extends VivialConnectResource{
     }
 
 
-    private void updateObjectState(Contact contact){
+    private void updateObjectState(Contact contact) {
         this.id = contact.getId();
         this.accountId = contact.getAccountId();
         this.active = contact.isActive();
@@ -249,25 +277,22 @@ public class Contact extends VivialConnectResource{
      * Updates this contact by sending to the server the properties that were changed via
      * this class's set methods.
      * <p>
-     * For more details on which properties can be updated, refer to the VivialConnect API documentation's
-     * <a href="https://www.vivialconnect.net/docs/api.html#put--api-v1.0-accounts-(int-account_id)-contacts-(int-id).json">contact section.</a>
-     * <p>
      * If the contact you're trying to update does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return this instance of {@link Contact} with the updated properties
      * @throws VivialConnectException if there is an API-level error
      */
-    public Contact update() throws VivialConnectException{
+    public Contact update() throws VivialConnectException {
         verifyRequiredFields();
         Contact updatedContact = request(RequestMethod.PUT, classURLWithSuffix(Contact.class, String.valueOf(getId())),
-                                        jsonBodyForUpdate(), null, Contact.class);
+                jsonBodyForUpdate(), null, Contact.class);
         updateObjectState(updatedContact);
         return this;
     }
 
 
-    public String jsonBodyForUpdate(){
+    public String jsonBodyForUpdate() {
         return jsonBodyBuilder.build();
     }
 
@@ -277,16 +302,14 @@ public class Contact extends VivialConnectResource{
      * If the contact you're trying to delete does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
      * <p>
-     * Returns <code>true</code> if the connector was successfully deleted.
-     * 
+     *
      * @return a boolean value, indicating whether the contact was deleted or not
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public boolean delete() throws VivialConnectException{
-        try{
+    public boolean delete() throws VivialConnectException {
+        try {
             request(RequestMethod.DELETE, classURLWithSuffix(Contact.class, String.valueOf(getId())), null, null, String.class);
-        }catch(NoContentException nce){
+        } catch (NoContentException nce) {
             return true;
         }
 
@@ -297,14 +320,13 @@ public class Contact extends VivialConnectResource{
      * Gets all contacts for this Account using the API.
      * <p>
      * If no Contact were found for this {@link Account}, a VivialConnectException will be thrown.
-     * 
+     *
      * @return a list of contacts
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getContactById(int)
-     * @see #getContacts(Map) 
+     * @see #getContacts(Map)
      */
-    public static List<Contact> getContacts() throws VivialConnectException{
+    public static List<Contact> getContacts() throws VivialConnectException {
         return getContacts(null);
     }
 
@@ -312,234 +334,439 @@ public class Contact extends VivialConnectResource{
      * Search and filter every contact for this Account using the API.
      * <p>
      * If no {@link Contact} were found for this {@link Account}, a VivialConnectException will be thrown.
-     * 
+     *
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>page</code> – Page number within the returned list of accounts. Default value: 1.
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>page</code> – Page number within the returned list of accounts. Default value: 1.
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
      * @return a list of contact
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getContacts()
-     * @see #getContactById(int) 
+     * @see #getContactById(int)
      */
-    public static List<Contact> getContacts(Map<String, String> queryParams) throws VivialConnectException{
+    public static List<Contact> getContacts(Map<String, String> queryParams) throws VivialConnectException {
         return request(RequestMethod.GET, classURL(Contact.class), null, queryParams, ContactCollection.class).getContacts();
     }
 
-     /**
+    /**
      * Search for a {@link Contact} by its ID using the API.
      * <p>
      * If the {@link Contact} is not found, a VivialConnectException will be thrown.
-     * 
+     *
      * @param contactId the id of the user to look up
-     * 
      * @return the Contact that was found given the id
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getContacts()
      * @see #getContacts(Map)
      */
-    public static Contact getContactById(int contactId) throws VivialConnectException{
+    public static Contact getContactById(int contactId) throws VivialConnectException {
         return new Contact(request(RequestMethod.GET, classURLWithSuffix(Contact.class, String.valueOf(contactId)), null, null, Contact.class));
     }
 
     /**
      * Total number of contacts in the account specified. If there are none, this method will return <code>0</code>.
-     * 
+     *
      * @return contact count
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public static int count() throws VivialConnectException{
+    public static int count() throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Contact.class, "count"), null, null, ResourceCount.class).getCount();
     }
 
-
-    public int getId(){
+    /**
+     * Unique Identifier of the contact object
+     *
+     * @return contact object ID
+     */
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    /**
+     * Set the ID of the contact object
+     *
+     * @param id contact ID value
+     */
+    public void setId(int id) {
         this.id = id;
         ifParamValidAddToBuilder(jsonBodyBuilder, "id", getId());
     }
 
-    public Date getDateCreated(){
+    /**
+     * Creation date of the contact
+     *
+     * @return creation date of the contact
+     */
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated){
+    /**
+     * Set the creation date of the contact
+     *
+     * @param dateCreated creation date value
+     */
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Date getDateModified(){
+    /**
+     * Modified date of the contact
+     *
+     * @return modified date of the contact
+     */
+    public Date getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(Date dateModified){
+    /**
+     * Set the modified date of the contact
+     *
+     * @param dateModified modified date value
+     */
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-    public int getAccountId(){
+    /**
+     * User's account ID of the contact
+     *
+     * @return user account ID
+     */
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(int accountId){
+    /**
+     * Set user's account ID
+     *
+     * @param accountId user account ID value
+     */
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
         ifParamValidAddToBuilder(jsonBodyBuilder, "account_id", getAccountId());
     }
 
-    public boolean isActive(){
+    /**
+     * Contact active
+     *
+     * @return true if the contact is active, false if not
+     */
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active){
+    /**
+     * Set the active value of the contact
+     *
+     * @param active boolean value
+     */
+    public void setActive(boolean active) {
         this.active = active;
         jsonBodyBuilder.addParamPair("active", isActive());
     }
 
-    public String getAddress1(){
+    /**
+     * Address No.1 of the contact
+     *
+     * @return address of the contact
+     */
+    public String getAddress1() {
         return address1;
     }
 
-    public void setAddress1(String address1){
+    /**
+     * Set address No.1 of the contact
+     *
+     * @param address1 address value
+     */
+    public void setAddress1(String address1) {
         this.address1 = address1;
         ifParamValidAddToBuilder(jsonBodyBuilder, "address1", getAddress1());
     }
 
-    public String getAddress2(){
+    /**
+     * Address No.2 of the contact
+     *
+     * @return address of the contact
+     */
+    public String getAddress2() {
         return address2;
     }
 
-    public void setAddress2(String address2){
+    /**
+     * Set address No.2 of the contact
+     *
+     * @param address2 address value
+     */
+    public void setAddress2(String address2) {
         this.address2 = address2;
         ifParamValidAddToBuilder(jsonBodyBuilder, "address2", getAddress2());
     }
 
-    public String getAddress3(){
+    /**
+     * Address No.3 of the contact
+     *
+     * @return address of the contact
+     */
+    public String getAddress3() {
         return address3;
     }
 
-    public void setAddress3(String address3){
+    /**
+     * Set address No.3 of the contact
+     *
+     * @param address3 address value
+     */
+    public void setAddress3(String address3) {
         this.address3 = address3;
         ifParamValidAddToBuilder(jsonBodyBuilder, "address3", getAddress3());
     }
 
-    public String getCity(){
+    /**
+     * Contact's city
+     *
+     * @return Contact's city value
+     */
+    public String getCity() {
         return city;
     }
 
-    public void setCity(String city){
+    /**
+     * Set city of the contact
+     *
+     * @param city city value
+     */
+    public void setCity(String city) {
         this.city = city;
         ifParamValidAddToBuilder(jsonBodyBuilder, "city", getCity());
     }
 
-    public String getCompanyName(){
+    /**
+     * Company name for the contact
+     *
+     * @return company name value
+     */
+    public String getCompanyName() {
         return companyName;
     }
 
-    public void setCompanyName(String companyName){
+    /**
+     * Set the company name for the contact
+     *
+     * @param companyName company name value
+     */
+    public void setCompanyName(String companyName) {
         this.companyName = companyName;
         ifParamValidAddToBuilder(jsonBodyBuilder, "company_name", getCompanyName());
     }
 
-    public String getContactType(){
+    /**
+     * Contact's type.  Can be one of: ‘agency,’ ‘billing,’ ‘main,’ ‘company,’ or ‘marketing.’
+     *
+     * @return contact's type value
+     */
+    public String getContactType() {
         return contactType;
     }
 
-    public void setContactType(String contactType){
+    /**
+     * Set the contact type.  Can be one of: ‘agency,’ ‘billing,’ ‘main,’ ‘company,’ or ‘marketing’
+     *
+     * @param contactType one of : ‘agency,’ ‘billing,’ ‘main,’ ‘company,’ or ‘marketing’
+     */
+    public void setContactType(String contactType) {
         this.contactType = contactType;
         ifParamValidAddToBuilder(jsonBodyBuilder, "contact_type", getContactType());
     }
 
-    public String getCountry(){
+    /**
+     * Contact’s address country
+     *
+     * @return address country value
+     */
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country){
+    /**
+     * Set contact’s address country
+     *
+     * @param country country value
+     */
+    public void setCountry(String country) {
         this.country = country;
         ifParamValidAddToBuilder(jsonBodyBuilder, "country", getCountry());
     }
 
-    public String getEmail(){
+    /**
+     * The contact’s email address
+     *
+     * @return contact's email address value
+     */
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email){
+    /**
+     * Set contact’s email address
+     *
+     * @param email email value
+     */
+    public void setEmail(String email) {
         this.email = email;
         ifParamValidAddToBuilder(jsonBodyBuilder, "email", getEmail());
     }
 
-    public String getFax(){
+    /**
+     * The contact's fax number
+     *
+     * @return contact's fax number value
+     */
+    public String getFax() {
         return fax;
     }
 
-    public void setFax(String fax){
+    /**
+     * Set contact's fax number
+     *
+     * @param fax fax number value
+     */
+    public void setFax(String fax) {
         this.fax = fax;
         ifParamValidAddToBuilder(jsonBodyBuilder, "fax", getFax());
     }
 
-    public String getFirstName(){
+    /**
+     * Contacts’s first name
+     *
+     * @return contact's first name value
+     */
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName){
+    /**
+     * Set contacts’s first name. Max. length: 128 characters.
+     *
+     * @param firstName first name value
+     */
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
         ifParamValidAddToBuilder(jsonBodyBuilder, "first_name", getFirstName());
     }
 
-    public String getLastName(){
+    /**
+     * Contacts’s last name
+     *
+     * @return contact's last name value
+     */
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName){
+    /**
+     * Set contact's last name
+     *
+     * @param lastName last name value
+     */
+    public void setLastName(String lastName) {
         this.lastName = lastName;
         ifParamValidAddToBuilder(jsonBodyBuilder, "last_name", getLastName());
     }
 
-    public String getMobilePhone(){
+    /**
+     * Contact's mobile phone number
+     *
+     * @return conta
+     */
+    public String getMobilePhone() {
         return mobilePhone;
     }
 
-    public void setMobilePhone(String mobilePhone){
+    /**
+     * Set contact's mobile phone number
+     *
+     * @param mobilePhone mobile phone number value
+     */
+    public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
         ifParamValidAddToBuilder(jsonBodyBuilder, "mobile_phone", getMobilePhone());
     }
 
-    public String getPostalCode(){
+    /**
+     * Contact's postal code
+     *
+     * @return Contact's postal code value
+     */
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode){
+    /**
+     * Contact's postal code
+     *
+     * @param postalCode postal code value
+     */
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
         ifParamValidAddToBuilder(jsonBodyBuilder, "postal_code", getPostalCode());
     }
 
-    public String getState(){
+    /**
+     * Contact's state name
+     *
+     * @return contact's state value
+     */
+    public String getState() {
         return state;
     }
 
-    public void setState(String state){
+    /**
+     * Set contact's state name
+     *
+     * @param state state name value
+     */
+    public void setState(String state) {
         this.state = state;
         ifParamValidAddToBuilder(jsonBodyBuilder, "state", getState());
     }
 
-    public String getTitle(){
+    /**
+     * Contact’s position or title
+     *
+     * @return Contact’s title value
+     */
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title){
+    /**
+     * Set contact’s position or title
+     *
+     * @param title title value
+     */
+    public void setTitle(String title) {
         this.title = title;
         ifParamValidAddToBuilder(jsonBodyBuilder, "title", getTitle());
     }
 
-    public String getWorkPhone(){
+    /**
+     * Contact's phone number
+     *
+     * @return Contact's phone number value
+     */
+    public String getWorkPhone() {
         return workPhone;
     }
 
-    public void setWorkPhone(String workPhone){
+    /**
+     * Set Contact's phone number
+     *
+     * @param workPhone work phone number value
+     */
+    public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
         ifParamValidAddToBuilder(jsonBodyBuilder, "work_phone", getWorkPhone());
     }
