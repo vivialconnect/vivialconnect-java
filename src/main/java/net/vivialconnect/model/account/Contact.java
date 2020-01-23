@@ -13,6 +13,9 @@ import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
+/**
+ * This class contains information of account users and administrators.
+ */
 @JsonRootName("contact")
 public class Contact extends VivialConnectResource {
 
