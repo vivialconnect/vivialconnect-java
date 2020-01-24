@@ -2,6 +2,9 @@ package net.vivialconnect.model.number;
 
 import net.vivialconnect.model.error.VivialConnectException;
 
+/**
+ *  Interface that defines the common characteristics for numbers that can be purchased
+ */
 public interface AvailableNumber extends INumber {
     
     /**
