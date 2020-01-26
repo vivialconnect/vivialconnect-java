@@ -9,19 +9,33 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 
+/**
+ * A MMS can contains attachments, which can be a media, text or any supported object by the API defined in the following link:
+ * <a>https://dashboard.vivialconnect.net/docs/general/mms.html</a>
+ * <p>
+ * This class represents single message attachment and its properties.
+ * <p>
+ * For more info about attachments visit: <a>https://dashboard.vivialconnect.net/docs/api/attachments.html</a>
+ */
 @JsonRootName(value = "attachment")
-public class Attachment extends VivialConnectResource{
+public class Attachment extends VivialConnectResource {
     private static final long serialVersionUID = 4189603597882262141L;
 
-    /** Unique identifier of the media attachment object */
+    /**
+     * Unique identifier of the media attachment object
+     */
     @JsonProperty
     private int id;
 
-    /** Creation date (UTC) of the media attachment in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the media attachment in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of the media attachment in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of the media attachment in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
@@ -57,29 +71,24 @@ public class Attachment extends VivialConnectResource{
 
     /**
      * Search for a message attachment given an id.
-     * 
-     * @param messageId the messageId that contains the attachment
+     *
+     * @param messageId    the messageId that contains the attachment
      * @param attachmentId the media attachmentId
-     * 
      * @return the attachment found, or null if not found
      * @throws VivialConnectException if there is an API-level error
-     * 
-     *
      */
-    public static Attachment getAttachmentById(int messageId, int attachmentId) throws VivialConnectException{
+    public static Attachment getAttachmentById(int messageId, int attachmentId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments/%d", messageId, attachmentId)), null, null, Attachment.class);
     }
 
     /**
      * Total number of attachment sent in the specified text message. If there are none, this method will return <code>0</code>
-     * 
+     *
      * @param messageId the messageId that contains the attachment
-     * 
      * @return number of attachment in message
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public static int count(int messageId) throws VivialConnectException{
+    public static int count(int messageId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments/count", messageId)), null, null, ResourceCount.class).getCount();
     }
 
@@ -88,98 +97,162 @@ public class Attachment extends VivialConnectResource{
      * <p>
      * If the attachment you're trying to delete does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return a boolean value, indicating whether the attachment was deleted or not
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public boolean delete() throws VivialConnectException{
-        try{
+    public boolean delete() throws VivialConnectException {
+        try {
             request(RequestMethod.DELETE, classURLWithSuffix(Message.class, String.format("%d/attachments/%d", getMessageId(), getId())), null, null, String.class);
-        }catch(NoContentException e){
+        } catch (NoContentException e) {
             return true;
         }
 
         return false;
     }
 
-
-    public int getId(){
+    /**
+     * Unique identifier of the media attachment object
+     *
+     * @return unique identifier object value
+     */
+    public int getId() {
         return id;
     }
 
-
-    public void setId(int id){
+    /**
+     * Set unique identifier of the media attachment object
+     *
+     * @param id object identifier value
+     */
+    public void setId(int id) {
         this.id = id;
     }
 
 
-    public Date getDateCreated(){
+    /**
+     * Creation date of the attachment
+     *
+     * @return creation date value
+     */
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-
-    public void setDateCreated(Date dateCreated){
+    /**
+     * Set the creation date of the attachment
+     *
+     * @param dateCreated creation date value
+     */
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-
-    public Date getDateModified(){
+    /**
+     * Last modification date of the attachment.
+     *
+     * @return modification date value
+     */
+    public Date getDateModified() {
         return dateModified;
     }
 
-
-    public void setDateModified(Date dateModified){
+    /**
+     * Set modification date of the attachment
+     *
+     * @param dateModified modification date value
+     */
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-
-    public int getAccountId(){
+    /**
+     * Unique identifier of your account.
+     *
+     * @return account ID value
+     */
+    public int getAccountId() {
         return accountId;
     }
 
-
-    public void setAccountId(int accountId){
+    /**
+     * Set the account ID value
+     *
+     * @param accountId account ID value
+     */
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
-
-    public int getMessageId(){
+    /**
+     * Unique identifier of the text message for the media attachment.
+     *
+     * @return message ID to which the attachment belongs
+     */
+    public int getMessageId() {
         return messageId;
     }
 
-
-    public void setMessageId(int messageId){
+    /**
+     * Set the message ID of the attachment
+     *
+     * @param messageId message ID value
+     */
+    public void setMessageId(int messageId) {
         this.messageId = messageId;
     }
 
-
-    public String getContentType(){
+    /**
+     * Mime-type of the media attachment.
+     *
+     * @return attachment content type
+     */
+    public String getContentType() {
         return contentType;
     }
 
-
-    public void setContentType(String contentType){
+    /**
+     * Set Mime-type of the media attachment.
+     *
+     * @param contentType content type value
+     */
+    public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
-
-    public int getSize(){
+    /**
+     * Size of the media attachment in bytes.
+     *
+     * @return size of the attachment
+     */
+    public int getSize() {
         return size;
     }
 
-
-    public void setSize(int size){
+    /**
+     * Set the size of the media attachment.
+     *
+     * @param size size of the media attachment.
+     */
+    public void setSize(int size) {
         this.size = size;
     }
 
-
-    public String getFileName(){
+    /**
+     * File name of the media attachment.
+     *
+     * @return file name of the attachment
+     */
+    public String getFileName() {
         return fileName;
     }
 
-
-    public void setFileName(String fileName){
+    /**
+     * Set the file name of the media attachment
+     *
+     * @param fileName file name value
+     */
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 }
