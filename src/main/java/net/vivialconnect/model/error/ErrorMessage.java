@@ -3,19 +3,9 @@ package net.vivialconnect.model.error;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Map errors that occur at API-level.
- * <p>
- * The API has two kind of errors:
- * <ul>
- *     <li>Errors with error code and description</li>
- *     <li>Errors with a description only</li>
- * </ul>
- * <p>
- * When an error returns only the description the error code will be "empty"(in this case, it will be zero), otherwise, if
- * the error contains an error code and error description the two values will be filled accordingly.
- * <p>
- * For more info about errors with description and error code visit:
- * <a href="https://dashboard.vivialconnect.net/docs/api/errors.html">Error Codes and Rate Limits</a>
+ *Intermediary class for parse errors that occur at API-level.
+ * The values of this class are used for populate the VivialConnectException when an error occurs.
+ * @see VivialConnectException
  */
 public class ErrorMessage {
     /**
