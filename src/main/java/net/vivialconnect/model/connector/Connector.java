@@ -12,20 +12,37 @@ import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
+/**
+ * Connector is used for managing connectors and their components.
+ * Connectors act as configurable gateways through which messages can be sent, providing services like callback configuration and FROM number pooling.
+ * <p>
+ * Connectors enable to:
+ * <ul>
+ *     <li>Send messages from a pool of numbers</li>
+ *     <li>Change FROM numbers without editing your code</li>
+ *     <li>Manage callbacks for multiple numbers</li>
+ * </ul>
+ */
 @JsonRootName("connector")
-public class Connector extends VivialConnectResource implements ConnectorWithCallbacks, ConnectorWithPhoneNumbers{
+public class Connector extends VivialConnectResource implements ConnectorWithCallbacks, ConnectorWithPhoneNumbers {
 
     private static final long serialVersionUID = 9106799578930523035L;
 
-    /** Unique identifier of the Connector object */
+    /**
+     * Unique identifier of the Connector object
+     */
     @JsonProperty
     private int id;
 
-    /** Creation date (UTC) of the Connector in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the Connector in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of the Connector in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of the Connector in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
@@ -38,7 +55,9 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     @JsonProperty
     private boolean active;
 
-    /** User-defined descriptive label */
+    /**
+     * User-defined descriptive label
+     */
     @JsonProperty
     private String name;
 
@@ -60,18 +79,33 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     @JsonProperty("more_numbers")
     private boolean moreNumbers;
 
+    /**
+     * Quantity of pages for pagination
+     */
     @JsonIgnore
     private int pages;
 
+    /**
+     * Quantity of connectors in the list
+     */
     @JsonIgnore
     private int count;
 
+    /**
+     * Next page, if there are any
+     */
     @JsonIgnore
     private int nextPage;
 
+    /**
+     * Previous page, if there are any
+     */
     @JsonIgnore
     private int previousPage;
 
+    /**
+     * Current page
+     */
     @JsonIgnore
     private int currentPage = 1;
 
@@ -84,57 +118,52 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Search for a {@link Connector} by its ID using the API.
      * <p>
      * If the {@link Connector} is not found, a VivialConnectException will be thrown.
-     * 
+     *
      * @param connectorId the id of the connector to look up
-     * 
      * @return the Connector that was found given the id
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getConnectors()
      */
-    public static Connector getConnectorById(int connectorId) throws VivialConnectException{
+    public static Connector getConnectorById(int connectorId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.valueOf(connectorId)), null, null, Connector.class);
     }
 
     /**
      * Gets all connectors associated with the current account. If there are none, the method will return an empty {@link List}
-     * 
+     *
      * @return a list of connectors
      * @throws VivialConnectException if there is an API-level error
-     * 
-     * @see #getConnectorById(int) 
+     * @see #getConnectorById(int)
      */
-    public static List<Connector> getConnectors() throws VivialConnectException{
+    public static List<Connector> getConnectors() throws VivialConnectException {
         return request(RequestMethod.GET, classURL(Connector.class), null, null, ConnectorCollection.class).getConnectors();
     }
 
     /**
      * Total number of connectors in the account specified. If there are none, this method will return <code>0</code>.
-     * 
+     *
      * @return connector count
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public static int count() throws VivialConnectException{
+    public static int count() throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, "count"), null, null, ResourceCount.class).getCount();
     }
-    
+
     /**
      * Creates a new Connector resource for the account
-     * 
+     *
      * @return the Connector that was created
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public Connector create() throws VivialConnectException{
+    public Connector create() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("name", getName());
+                .addParamPair("name", getName());
 
         Connector createdConnector = request(RequestMethod.POST, classURL(Connector.class),
-                                                    builder.build(), null, Connector.class);
+                builder.build(), null, Connector.class);
 
         updateObjectState(createdConnector);
-        
+
         return this;
     }
 
@@ -150,24 +179,24 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <p>
      * If the connector you're trying to update does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return this instance of {@link Connector} with the updated name
      * @throws VivialConnectException if there is an API-level error
      */
-    public Connector update() throws VivialConnectException{
+    public Connector update() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("id", getId())
-                                                 .addParamPair("name", getName());
+                .addParamPair("id", getId())
+                .addParamPair("name", getName());
 
         Connector updatedConnector = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.valueOf(getId())),
-                                                                                    builder.build(), null, Connector.class);
+                builder.build(), null, Connector.class);
 
         updateObjectState(updatedConnector);
         return this;
     }
 
 
-    private void updateObjectState(Connector connector){
+    private void updateObjectState(Connector connector) {
         this.id = connector.getId();
         this.dateCreated = connector.getDateCreated();
         this.dateModified = connector.getDateModified();
@@ -187,56 +216,91 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <p>
      * If the contact you're trying to delete does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return a boolean value, indicating whether the contact was deleted or not
      * @throws VivialConnectException if there is an API-level error
-     *
      */
-    public boolean delete() throws VivialConnectException{
-        try{
+    public boolean delete() throws VivialConnectException {
+        try {
             request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.valueOf(getId())), null, null, String.class);
-        }catch (NoContentException nce){
-                return true;
+        } catch (NoContentException nce) {
+            return true;
         }
 
         return false;
     }
 
-
-    public int getId(){
+    /**
+     * Unique identifier of the Connector object.
+     *
+     * @return Connector's object ID
+     */
+    public int getId() {
         return id;
     }
 
-
-    public void setId(int id){
+    /**
+     * Set unique identifier of the Connector object.
+     *
+     * @param id Connector ID value
+     */
+    public void setId(int id) {
         this.id = id;
     }
 
-
-    public Date getDateCreated(){
+    /**
+     * Set creation date of the connector
+     *
+     * @return creation date of the connector
+     */
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-
-    public void setDateCreated(Date dateCreated){
+    /**
+     * Set creation date of the connector
+     *
+     * @param dateCreated creation date value
+     */
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-
+    /**
+     * Last modification date of the connector
+     *
+     * @return Last modification date of the connector
+     */
     @Override
-    public Date getDateModified(){
+    public Date getDateModified() {
         return dateModified;
     }
 
+    /**
+     * Count of phone numbers that belongs to this connector
+     *
+     * @return count of phone numbers for this connector
+     */
     @Override
     public int getPhoneNumbersCount() {
         return count;
     }
 
+    /**
+     * Set phone number count for the connector
+     *
+     * @param count count value
+     */
     public void setPhoneNumbersCount(int count) {
         this.count = count;
     }
 
+    /**
+     * Move forward to the next page
+     *
+     * @return next page value
+     * @throws VivialConnectException if an error occurs at API level
+     */
     @Override
     public int nextPage() throws VivialConnectException {
 
@@ -249,6 +313,12 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
         return currentPage;
     }
 
+    /**
+     * Move backward to the previous page
+     *
+     * @return previous page value
+     * @throws VivialConnectException if an error occurs at API level
+     */
     @Override
     public int previousPage() throws VivialConnectException {
 
@@ -262,75 +332,142 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
 
     }
 
+    /**
+     * Next page value returned by the API
+     *
+     * @return next page value
+     */
     @Override
     public int getNextPage() {
         return nextPage;
     }
 
+    /**
+     * Set next page value
+     *
+     * @param next next page value
+     */
     public void setNextPage(int next) {
         this.nextPage = next;
     }
 
+    /**
+     * Previous page returned by the API
+     *
+     * @return previous page value
+     */
     @Override
     public int getPreviousPage() {
         return previousPage;
     }
 
+    /**
+     * Set the previous page value
+     *
+     * @param previous previous page value
+     */
     public void setPreviousPage(int previous) {
         this.previousPage = previous;
     }
 
+    /**
+     * Quantity of pages returned by the API
+     *
+     * @return pages count value
+     */
     @Override
     public int getPages() {
         return pages;
     }
 
+    /**
+     * Set pages count
+     *
+     * @param pages pages count value
+     */
     public void setPages(int pages) {
         this.pages = pages;
     }
 
-    public void setDateModified(Date dateModified){
+    /**
+     * Last modification value of the connector
+     *
+     * @param dateModified Connector's modification value
+     */
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-
-    public int getAccountId(){
+    /**
+     * User's account ID
+     *
+     * @return account ID value
+     */
+    public int getAccountId() {
         return accountId;
     }
 
-
-    public void setAccountId(int accountId){
+    /**
+     * Set user's account ID
+     *
+     * @param accountId account ID value
+     */
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
-
-    public boolean isActive(){
+    /**
+     * Determine if the connector is enabled or not.
+     *
+     * @return connector active value
+     */
+    public boolean isActive() {
         return active;
     }
 
-
-    public void setActive(boolean active){
+    /**
+     * Set active value for this connector
+     *
+     * @param active active value
+     */
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-
-    public String getName(){
+    /**
+     * User defined descriptive label
+     *
+     * @return connector's name value
+     */
+    public String getName() {
         return name;
     }
 
-
-    public void setName(String name){
+    /**
+     * Set connector's name
+     *
+     * @param name connector's name value
+     */
+    public void setName(String name) {
         this.name = name;
     }
 
-
+    /**
+     * A list of callbacks representing the callback configurations for the Connector.
+     *
+     * @return list of callbacks
+     */
     @Override
-    public List<Callback> getCallbacks(){
+    public List<Callback> getCallbacks() {
         return callbacks;
     }
 
-
-    public void setCallbacks(List<Callback> callbacks){
+    /**
+     * Set connector's callbacks
+     *
+     * @param callbacks list of callbacks
+     */
+    public void setCallbacks(List<Callback> callbacks) {
         this.callbacks = callbacks;
     }
 
@@ -340,37 +477,36 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <pre>
      * <code>
      * class CallbackCreator {
-     *  
+     *
      *  public void addAllCallbacks(Connector connector) {
      *    Callback c1 = new Callback();
      *    c1.setMessageType("text");
      *    c1.setEventType("incoming");
-     * 
+     *
      *    Callback c2 = new Callback();
      *    c2.setMessageType("text");
-     *    c2.setEventType("status");   
-     * 
+     *    c2.setEventType("status");
+     *
      *    connector.addCallback(c1).addCallback(c2).createCallbacks();
      *  }
      * }
      * </code>
      * </pre>
-     * 
+     *
      * @param callback the callback to be added
      * @return this instance of {@link Connector}
-     * 
      * @see Callback
      * @see Connector#setCallbacks(java.util.List)
      * @see Connector#createCallbacks()
      * @see Connector#updateCallbacks()
      */
     public Connector addCallback(Callback callback) {
-        if (callbacks == null){
+        if (callbacks == null) {
             callbacks = new ArrayList<Callback>();
         }
 
         callbacks.add(callback);
-        
+
         return this;
     }
 
@@ -382,22 +518,21 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <p>
      * For more details, go to the VivialConnect API documentation's
      * <a href="https://www.vivialconnect.net/docs/api.html#post--api-v1.0-accounts-(int-account_id)-connectors-(int-connector_id)-callbacks.json">callback section</a>.
-     * 
-     * @see Callback
-     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback) 
-     * @see Connector#setCallbacks(java.util.List)
-     * 
+     *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of created callbacks
      * @throws VivialConnectException if there is an API-level error
+     * @see Callback
+     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
+     * @see Connector#setCallbacks(java.util.List)
      */
     public ConnectorWithCallbacks createCallbacks() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("callbacks", callbacks);
+                .addParamPair("callbacks", callbacks);
 
         Connector connectorWithCallbacks = request(RequestMethod.POST, classURLWithSuffix(Connector.class, String.format("%d/callbacks", getId())),
-                                                                                                        builder.build(), null, Connector.class);
+                builder.build(), null, Connector.class);
         mergeCallbackFields(connectorWithCallbacks);
-        
+
         return this;
     }
 
@@ -407,51 +542,49 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <pre>
      * <code>
      * class CallbackUpdate {
-     *  
+     *
      *  public void updateCallback(Connector connector, String newMessageType) {
      *    Callback callback = connector.getCallbacks().get(0);
      *    callback.setMesssageType(newMessageType);
-     *    
+     *
      *    connector.updateCallbacks();
      *  }
      * }
      * </code>
      * </pre>
      * Returns an instance of the {@link ConnectorWithCallbacks} interface, which can be used to access the updated callbacks.
-     * 
-     * @see Callback
-     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback) 
-     * @see Connector#setCallbacks(java.util.List)
-     * 
+     *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of updated callbacks
      * @throws VivialConnectException if there is an API-level error
+     * @see Callback
+     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
+     * @see Connector#setCallbacks(java.util.List)
      */
     public ConnectorWithCallbacks updateCallbacks() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("callbacks", callbacks);
+                .addParamPair("callbacks", callbacks);
 
         Connector connectorWithCallbacks = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.format("%d/callbacks", getId())),
-                                                                                                        builder.build(), null, Connector.class);
+                builder.build(), null, Connector.class);
         mergeCallbackFields(connectorWithCallbacks);
-        
+
         return this;
     }
 
 
-    private void mergeCallbackFields(ConnectorWithCallbacks connectorWithCallbacks){
+    private void mergeCallbackFields(ConnectorWithCallbacks connectorWithCallbacks) {
         this.dateModified = connectorWithCallbacks.getDateModified();
         this.callbacks = connectorWithCallbacks.getCallbacks();
     }
 
     /**
      * Removes all the callbacks associated to this connector.
-     * 
-     * @see Callback
-     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback) 
-     * @see Connector#setCallbacks(java.util.List)
-     * 
+     *
      * @return an instance {@link ConnectorWithCallbacks} holding an empty list of callbacks
      * @throws VivialConnectException if there is an API-level error
+     * @see Callback
+     * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
+     * @see Connector#setCallbacks(java.util.List)
      */
     public ConnectorWithCallbacks deleteAllCallbacks() throws VivialConnectException {
         return deleteCallbacks(this.callbacks);
@@ -459,13 +592,11 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
 
     /**
      * Removes a single callback.
-     * 
+     *
      * @param callback the callback to be removed
-     * 
-     * @see Callback
-     * 
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
      * @throws VivialConnectException if there is an API-level error
+     * @see Callback
      */
     public ConnectorWithCallbacks deleteSingleCallback(Callback callback) throws VivialConnectException {
         List<Callback> singleCallbackList = new ArrayList<Callback>(1);
@@ -476,29 +607,35 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
 
     /**
      * Removes a series of callbacks
-     * 
+     *
      * @param callbacks the callbacks to be removed
-     * 
-     * @see Callback
-     * 
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
      * @throws VivialConnectException if there is an API-level error
+     * @see Callback
      */
     public ConnectorWithCallbacks deleteCallbacks(List<Callback> callbacks) throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("callbacks", callbacks);
+                .addParamPair("callbacks", callbacks);
 
         return request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.format("%d/callbacks", getId())),
-                                                                                builder.build(), null, Connector.class);
+                builder.build(), null, Connector.class);
     }
 
-
+    /**
+     * List of phone numbers associated to Connector
+     *
+     * @return list of numbers associated to the connector
+     */
     @Override
     public List<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
 
-
+    /**
+     * Set a list of phone numbers to this connector
+     *
+     * @param phoneNumbers list of phone numbers
+     */
     public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
@@ -508,63 +645,60 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <p>
      * This method calls {@link Connector#addPhoneNumber(PhoneNumber)} underneath, but the arguments are taken
      * separately.
-     * 
+     *
      * @param phoneNumberId the id of the phone number to be added
-     * @param phoneNumber the phone number to be added
-     * 
+     * @param phoneNumber   the phone number to be added
      * @return this instance of {@link Connector}
-     * 
      * @see PhoneNumber
      * @see Connector#addPhoneNumber(PhoneNumber)
      * @see Connector#setPhoneNumbers(List)
      * @see Connector#associatePhoneNumbers()
      * @see Connector#updateAssociatedPhoneNumbers()
      */
-    public Connector addPhoneNumber(int phoneNumberId, String phoneNumber){
+    public Connector addPhoneNumber(int phoneNumberId, String phoneNumber) {
         return addPhoneNumber(new PhoneNumber(phoneNumberId, phoneNumber));
     }
-    
+
     /**
      * Use this method to add phone numbers which can later be saved to the server using {@link Connector#associatePhoneNumbers()}
      * or {@link Connector#updateAssociatedPhoneNumbers()}. This method call can be chained in a builder-like fashion, like so:
      * <pre>
      * <code>
      * class PhoneNumberCreator {
-     *  
+     *
      *  public void addAllPhoneNumbers(Connector connector) {
      *    PhoneNumber p1 = new PhoneNumber();
      *    p1.setPhoneNumberId(29);
      *    p1.setPhoneNumber("+13022136859");
-     * 
+     *
      *    PhoneNumber p2 = new PhoneNumber();
      *    p2.setPhoneNumberId(30);
-     *    p2.setPhoneNumber("+13022136850");   
-     * 
+     *    p2.setPhoneNumber("+13022136850");
+     *
      *    connector.addPhoneNumber(c1).addPhoneNumber(c2).createCallbacks();
      *  }
      * }
      * </code>
      * </pre>
-     * 
+     *
      * @param phoneNumber the phone number to be added
      * @return this instance of {@link Connector}
-     * 
      * @see PhoneNumber
      * @see Connector#addPhoneNumber(int, String)
      * @see Connector#setPhoneNumbers(List)
      * @see Connector#associatePhoneNumbers()
      * @see Connector#updateAssociatedPhoneNumbers()
      */
-    public Connector addPhoneNumber(PhoneNumber phoneNumber){
-        if (phoneNumbers == null){
+    public Connector addPhoneNumber(PhoneNumber phoneNumber) {
+        if (phoneNumbers == null) {
             phoneNumbers = new ArrayList<PhoneNumber>();
         }
 
         this.phoneNumbers.add(phoneNumber);
-        
+
         return this;
     }
-    
+
     /**
      * Overwrites and associates the list of phone numbers added through {@link Connector#addPhoneNumber(PhoneNumber)} and
      * {@link Connector#setPhoneNumbers(List)} to this connector.
@@ -573,21 +707,20 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <p>
      * For more details, go to the VivialConnect API documentation's
      * <a href="https://www.vivialconnect.net/docs/api.html#post--api-v1.0-accounts-(int-account_id)-connectors-(int-connector_id)-phone_numbers.json">phone number section</a>.
-     * 
-     * @see PhoneNumber
-     * @see Connector#addPhoneNumber(PhoneNumber) 
-     * @see Connector#addPhoneNumber(int, String)
-     * @see Connector#setPhoneNumbers(List)
-     * 
+     *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of associated phone numbers
      * @throws VivialConnectException if there is an API-level error
+     * @see PhoneNumber
+     * @see Connector#addPhoneNumber(PhoneNumber)
+     * @see Connector#addPhoneNumber(int, String)
+     * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers associatePhoneNumbers() throws VivialConnectException{
+    public ConnectorWithPhoneNumbers associatePhoneNumbers() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("phone_numbers", phoneNumbers);
+                .addParamPair("phone_numbers", phoneNumbers);
 
         ConnectorWithPhoneNumbers connector = request(RequestMethod.POST, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                                                builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+                builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
         mergePhoneNumberFields(connector);
 
         return this;
@@ -599,7 +732,7 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <pre>
      * <code>
      * class PhoneNumberUpdate {
-     *  
+     *
      *  public void updatePhoneNumbers(Connector connector) {
      *    connector.addPhoneNumber(31, "+13022136851");
      *    connector.updateAssociatedPhoneNumbers();
@@ -608,52 +741,48 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * </code>
      * </pre>
      * Returns an instance of the {@link ConnectorWithPhoneNumbers} interface, which can be used to access the updated phone numbers.
-     * 
-     * @see PhoneNumber 
-     * @see Connector#addPhoneNumber(PhoneNumber)
-     * @see Connector#addPhoneNumber(int, String) 
-     * @see Connector#setPhoneNumbers(List)
-     * 
+     *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of updated phone numbers
      * @throws VivialConnectException if there is an API-level error
+     * @see PhoneNumber
+     * @see Connector#addPhoneNumber(PhoneNumber)
+     * @see Connector#addPhoneNumber(int, String)
+     * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers updateAssociatedPhoneNumbers() throws VivialConnectException{
+    public ConnectorWithPhoneNumbers updateAssociatedPhoneNumbers() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("phone_numbers", phoneNumbers);
+                .addParamPair("phone_numbers", phoneNumbers);
 
-        ConnectorWithPhoneNumbers connector  = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                                                 builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+        ConnectorWithPhoneNumbers connector = request(RequestMethod.PUT, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+                builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
         mergePhoneNumberFields(connector);
-        
+
         return this;
     }
 
     /**
      * Removes all the phone numbers associated to this connector.
-     * 
-     * @see PhoneNumber
-     * @see Connector#addPhoneNumber(PhoneNumber)
-     * @see Connector#addPhoneNumber(int, String) 
-     * @see Connector#setPhoneNumbers(List)
-     * 
+     *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding an empty list of phone numbers
      * @throws VivialConnectException if there is an API-level error
+     * @see PhoneNumber
+     * @see Connector#addPhoneNumber(PhoneNumber)
+     * @see Connector#addPhoneNumber(int, String)
+     * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers deleteAllPhoneNumbers() throws VivialConnectException{
+    public ConnectorWithPhoneNumbers deleteAllPhoneNumbers() throws VivialConnectException {
         return deletePhoneNumbers(this.phoneNumbers);
     }
 
     /**
      * Removes a single phone number.
-     * 
+     *
      * @param phoneNumber the phone number to be removed
-     * 
-     * @see PhoneNumber
-     * 
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
      * @throws VivialConnectException if there is an API-level error
+     * @see PhoneNumber
      */
-    public ConnectorWithPhoneNumbers deleteSinglePhoneNumber(PhoneNumber phoneNumber) throws VivialConnectException{
+    public ConnectorWithPhoneNumbers deleteSinglePhoneNumber(PhoneNumber phoneNumber) throws VivialConnectException {
         List<PhoneNumber> singlePhoneNumberList = new ArrayList<PhoneNumber>(1);
         singlePhoneNumberList.add(phoneNumber);
 
@@ -662,27 +791,25 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
 
     /**
      * Removes a series of phone numbers
-     * 
+     *
      * @param phoneNumbers the phone numbers to be removed
-     * 
-     * @see PhoneNumber
-     * 
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
      * @throws VivialConnectException if there is an API-level error
+     * @see PhoneNumber
      */
-    public ConnectorWithPhoneNumbers deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws VivialConnectException{
+    public ConnectorWithPhoneNumbers deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
-                                                 .addParamPair("phone_numbers", phoneNumbers);
+                .addParamPair("phone_numbers", phoneNumbers);
 
         ConnectorWithPhoneNumbers connector = request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
-                                                                                    builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
+                builder.build(), null, ConnectorPaginatedPhoneNumbers.class).getConnector();
         mergePhoneNumberFields(connector);
 
         return this;
     }
 
 
-    private void mergePhoneNumberFields(ConnectorWithPhoneNumbers connectorWithPhoneNumbers){
+    private void mergePhoneNumberFields(ConnectorWithPhoneNumbers connectorWithPhoneNumbers) {
 
         this.dateModified = connectorWithPhoneNumbers.getDateModified();
         this.phoneNumbers = connectorWithPhoneNumbers.getPhoneNumbers();
@@ -694,27 +821,47 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     }
 
     private ConnectorWithPhoneNumbers paginate(int toPage) throws VivialConnectException {
-        Map<String,String> queryParams = new HashMap<String,String>();
-        queryParams.put("page",String.valueOf(toPage));
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("page", String.valueOf(toPage));
 
-        ConnectorWithPhoneNumbers connector  = request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
+        ConnectorWithPhoneNumbers connector = request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", getId())),
                 null, queryParams, ConnectorPaginatedPhoneNumbers.class).getConnector();
 
         return connector;
     }
 
-    public boolean isMoreNumbers(){
-		return moreNumbers;
-	}
+    /**
+     * A boolean that is true if the Connector has more than 50 associated numbers.
+     *
+     * @return true if connector has more that 50 numbers or false if the connector has less that 50
+     */
+    public boolean isMoreNumbers() {
+        return moreNumbers;
+    }
 
-    public void setMoreNumbers(boolean moreNumbers){
-		this.moreNumbers = moreNumbers;
-	}
+    /**
+     * Set if connector has more that 50 numbers
+     *
+     * @param moreNumbers
+     */
+    public void setMoreNumbers(boolean moreNumbers) {
+        this.moreNumbers = moreNumbers;
+    }
 
+    /**
+     * Pagination current page
+     *
+     * @return current page
+     */
     public int getCurrentPage() {
         return currentPage;
     }
 
+    /**
+     * Set current page
+     *
+     * @param currentPage current page value
+     */
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
