@@ -1,23 +1,35 @@
 package net.vivialconnect.model.account;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Service{
-	
-    /** Unique identifier of the service object */
+/**
+ * Represents a service associated to an account
+ */
+public class Service {
+
+    /**
+     * Unique identifier of the service object
+     */
     @JsonProperty
     private int id;
 
-    /** Creation date (UTC) of the service in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the service in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of service in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of service in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
-    /** The name of the service */
+    /**
+     * The name of the service
+     */
     @JsonProperty
     private String name;
 
@@ -27,63 +39,135 @@ public class Service{
     @JsonProperty
     private boolean active;
 
+    /**
+     * Description of the service
+     */
     @JsonProperty
     private String description;
 
-
-    public int getId(){
+    /**
+     * Unique identifier of the service object
+     *
+     * @return ID value
+     */
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    /**
+     * Set the ID for the service object
+     *
+     * @param id
+     */
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Date getDateCreated(){
+    /**
+     * Creation date of the service
+     *
+     * @return creation date value
+     */
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated){
+    /**
+     * Set the creation date of the service
+     *
+     * @param dateCreated creation date value
+     */
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Date getDateModified(){
+    /**
+     * Last modification date of the service object
+     *
+     * @return last modification value
+     */
+    public Date getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(Date dateModified){
+    /**
+     * Set the last modification date of the service
+     *
+     * @param dateModified last modification value
+     */
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-    public String getName(){
+    /**
+     * Service name
+     *
+     * @return service name value
+     */
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    /**
+     * Set service name
+     *
+     * @param name service name value
+     */
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getServiceType(){
+    /**
+     * Service type
+     *
+     * @return service type value
+     */
+    public String getServiceType() {
         return serviceType;
     }
 
-    public void setServiceType(String serviceType){
+    /**
+     * Set service type
+     *
+     * @param serviceType service type value
+     */
+    public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
     }
 
-    public boolean isActive(){
+    /**
+     * Determine if the service is active or not
+     *
+     * @return service's active value
+     */
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active){
+    /**
+     * Set service's active value
+     *
+     * @param active service active value
+     */
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public String getDescription(){
+    /**
+     * Service description
+     *
+     * @return service description value
+     */
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description){
+    /**
+     * Set service description
+     *
+     * @param description service description value
+     */
+    public void setDescription(String description) {
         this.description = description;
     }
 }
