@@ -10,6 +10,13 @@ import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.model.log.LogCollection;
 
+/**
+ * To access the Vivial Connect API, you must have an account. To set up an account, visit <a href="https://www.vivialconnect.net/">Vivial Connect.</>
+ *
+ * Every Vivial Connect account has at least one user. You can manage users and accounts using the USERS and ACCOUNTS endpoints in the API.
+ *
+ * For more info visit: <a href="https://dashboard.vivialconnect.net/docs/api/accounts.html">Accounts documentation</a>.
+ */
 @JsonRootName("account")
 public class Account extends VivialConnectResource {
 
