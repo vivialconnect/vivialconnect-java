@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <p>
  * This class also contains properties for paginate these elements.
  * <p>
- * For more info, visit <a>https://dashboard.vivialconnect.net/docs/api/messages.html#get--api-v1.0-accounts-(int-account_id)-messages-bulk.json</a>
+ * For more info, visit <a href="https://dashboard.vivialconnect.net/docs/api/messages.html#get--api-v1.0-accounts-(int-account_id)-messages-bulk.json">Bulk Info</a>
  */
 public class BulkInfoCollection {
 
