@@ -13,7 +13,7 @@ import java.util.Map;
  * A single local phone number can only send one message per second.
  * To achieve greater throughput, use a Toll Free number or a Short Code with bulk send requests.
  * <p>
- * For more info, visit <a>https://dashboard.vivialconnect.net/docs/api/messages.html#accounts-account-id-messages-bulk-json</a>
+ * For more info, visit <a href="https://dashboard.vivialconnect.net/docs/api/messages.html#accounts-account-id-messages-bulk-json">Bulk Message</a>
  */
 public class BulkMessage extends VivialConnectResource {
 
