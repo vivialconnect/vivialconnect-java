@@ -11,7 +11,7 @@ import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.model.log.LogCollection;
 
 /**
- * To access the Vivial Connect API, you must have an account. To set up an account, visit <a href="https://www.vivialconnect.net/">Vivial Connect.</>
+ * To access the Vivial Connect API, you must have an account. To set up an account, visit <a href="https://www.vivialconnect.net/">Vivial Connect.</a>
  *
  * Every Vivial Connect account has at least one user. You can manage users and accounts using the USERS and ACCOUNTS endpoints in the API.
  *

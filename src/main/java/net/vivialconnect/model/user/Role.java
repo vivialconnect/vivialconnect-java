@@ -57,7 +57,7 @@ public class Role {
     /**
      * Unique identifier of the Role object
      *
-     * @return
+     * @return role ID
      */
     public int getId() {
         return id;
@@ -66,7 +66,7 @@ public class Role {
     /**
      * Set ID of the role object
      *
-     * @param id
+     * @param id Role ID value
      */
     public void setId(int id) {
         this.id = id;
@@ -84,7 +84,7 @@ public class Role {
     /**
      * Change active value of the role
      *
-     * @param active
+     * @param active role's active value
      */
     public void setActive(boolean active) {
         this.active = active;
@@ -120,7 +120,7 @@ public class Role {
     /**
      * Set last modification date of the role
      *
-     * @param dateModified
+     * @param dateModified last modification date for the role
      */
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
@@ -156,7 +156,7 @@ public class Role {
     /**
      * Set description of the role
      *
-     * @param description
+     * @param description description of the role
      */
     public void setDescription(String description) {
         this.description = description;

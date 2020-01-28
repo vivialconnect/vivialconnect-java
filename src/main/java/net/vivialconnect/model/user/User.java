@@ -313,7 +313,7 @@ public class User extends VivialConnectResource {
     /**
      * User’s email address
      *
-     * @return
+     * @return user's email address
      */
     public String getEmail() {
         return email;
@@ -322,7 +322,7 @@ public class User extends VivialConnectResource {
     /**
      * User’s email address. Max. length: 128 characters
      *
-     * @param email
+     * @param email email value
      */
     public void setEmail(String email) {
         this.email = email;

@@ -963,7 +963,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     /**
      * Two-letter US state abbreviation where the phone number is located.
      *
-     * @return
+     * @return region value
      */
     @Override
     public String getRegion() {

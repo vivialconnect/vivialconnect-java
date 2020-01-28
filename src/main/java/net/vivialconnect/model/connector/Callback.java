@@ -11,7 +11,7 @@ import net.vivialconnect.model.error.VivialConnectException;
 /**
  * The CALLBACKS resource allows you to set callback URLs for message status, incoming messages,
  * and incoming message fallback. When creating or editing a callback, you must provide a message_type and event_type.
- * e.g. ‘text’ & ‘incoming’
+ * e.g. ‘text’ and ‘incoming’
  */
 @JsonRootName("callback")
 public class Callback extends VivialConnectResource {

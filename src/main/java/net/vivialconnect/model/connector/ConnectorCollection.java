@@ -28,7 +28,7 @@ public class ConnectorCollection {
     /**
      * Set a collection of connectors
      *
-     * @param connectors
+     * @param connectors connector list
      */
     public void setConnectors(List<Connector> connectors) {
         this.connectors = connectors;

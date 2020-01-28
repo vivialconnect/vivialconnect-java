@@ -77,7 +77,7 @@ public class TaggedNumberCollection {
     /**
      * Count of tagged numbers returned by the API
      *
-     * @return
+     * @return count value
      */
     public int getCount() {
         return count;
@@ -106,7 +106,7 @@ public class TaggedNumberCollection {
      * Set a collection of number
      * <strong>Note:</strong> Setting this value does not have any effect in the API.
      *
-     * @param numbers
+     * @param numbers list of numbers for this connector
      */
     public void setNumbers(List<Number> numbers) {
         this.numbers = numbers;
@@ -144,7 +144,7 @@ public class TaggedNumberCollection {
      * Set pages value.
      * <strong>Note:</strong> Setting this value does not have any effect in the API.
      *
-     * @param pages
+     * @param pages quantity of pages
      */
     public void setPages(int pages) {
         this.pages = pages;

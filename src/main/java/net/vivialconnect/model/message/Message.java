@@ -411,20 +411,10 @@ public class Message extends VivialConnectResource {
         this.accountId = accountId;
     }
 
-    /**
-     * Master Account ID
-     *
-     * @return master account ID value
-     */
     public int getMasterAccountId() {
         return masterAccountId;
     }
 
-    /**
-     * Set master account ID
-     *
-     * @param masterAccountId
-     */
     public void setMasterAccountId(int masterAccountId) {
         this.masterAccountId = masterAccountId;
     }

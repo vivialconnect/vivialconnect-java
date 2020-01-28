@@ -57,7 +57,7 @@ public class Service {
     /**
      * Set the ID for the service object
      *
-     * @param id
+     * @param id service ID value
      */
     public void setId(int id) {
         this.id = id;

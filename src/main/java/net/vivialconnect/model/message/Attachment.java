@@ -15,7 +15,7 @@ import net.vivialconnect.model.error.VivialConnectException;
  * <p>
  * This class represents single message attachment and its properties.
  * <p>
- * For more info about attachments visit: <a herf="https://dashboard.vivialconnect.net/docs/api/attachments.html">Attachments</a>
+ * For more info about attachments visit: <a href="https://dashboard.vivialconnect.net/docs/api/attachments.html">Attachments</a>
  */
 @JsonRootName(value = "attachment")
 public class Attachment extends VivialConnectResource {

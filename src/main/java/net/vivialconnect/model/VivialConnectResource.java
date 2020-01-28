@@ -146,20 +146,20 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
     /**
-     * TODO
+     * URL without plural with `.json` suffix
      *
-     * @param resourceName
-     * @return
+     * @param resourceName resource name value
+     * @return a new URL with a single name and .json value
      */
     protected static String unmappedURL(String resourceName) {
         return String.format("%s.json", formatURLForResource(resourceName));
     }
 
     /**
-     * TODO
+     * Create an URL in singular
      *
-     * @param resourceName
-     * @return
+     * @param resourceName resource name value
+     * @return a new URL value
      */
     protected static String formatURLForResource(String resourceName) {
         return String.format("%s/accounts/%d/%s", VivialConnectClient.getApiBaseUrl(),

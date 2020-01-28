@@ -50,7 +50,9 @@ public class PhoneNumber extends VivialConnectResource {
 
 
     /**
+     * @param connectorId connector ID
      * @see PhoneNumber#getPhoneNumbers(int, int)
+     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
      */
     public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException {
         return getPhoneNumbers(connectorId, 1);

@@ -842,7 +842,7 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     /**
      * Set if connector has more that 50 numbers
      *
-     * @param moreNumbers
+     * @param moreNumbers boolean value
      */
     public void setMoreNumbers(boolean moreNumbers) {
         this.moreNumbers = moreNumbers;
