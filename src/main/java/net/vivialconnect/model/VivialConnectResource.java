@@ -89,7 +89,7 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
     /**
-     * Create an URL by parsing the given class type, a value and a resource name.
+     * Create a URL by parsing the given class type, a value and a resource name.
      * Example:
      * <code>
      * /accounts/123/numbers/(int: id)/tags.json
