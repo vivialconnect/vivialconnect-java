@@ -46,7 +46,7 @@ import net.vivialconnect.util.ReflectionUtils;
 import net.vivialconnect.util.ProjectProperties;
 
 /**
- * Base class that provides properties and methods for create, request and handle the responses of the API.
+ * Base class that provides properties and methods for API resource creation, request and response handling.
  */
 public abstract class VivialConnectResource implements Serializable {
 
