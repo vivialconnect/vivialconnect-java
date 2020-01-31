@@ -71,7 +71,7 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
     /**
-     * Create an URL by parsing the given class type and suffix. The new URL created will be:
+     * Create a URL by parsing the given class type and suffix. The new URL created will be:
      * <code>
      * {scheme}://{api-base-url}/{account-id}/{class}/{suffix}.json
      * </code>
