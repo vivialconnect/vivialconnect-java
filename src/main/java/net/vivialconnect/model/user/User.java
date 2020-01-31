@@ -391,7 +391,7 @@ public class User extends VivialConnectResource {
     }
 
     /**
-     * List of roles of the user
+     * List of user roles 
      *
      * @return list of roles
      */
