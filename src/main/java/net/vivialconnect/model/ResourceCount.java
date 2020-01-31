@@ -3,7 +3,7 @@ package net.vivialconnect.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class for map count responses from the API
+ * Class for mapping count responses from the API
  */
 public class ResourceCount {
 
