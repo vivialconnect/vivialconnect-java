@@ -400,7 +400,7 @@ public class User extends VivialConnectResource {
     }
 
     /**
-     * Set list of roles of the user
+     * Set list of user roles
      *
      * @param roles list of roles
      */
