@@ -521,7 +521,7 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
     /**
-     * Validate the params are valid for add them to the builder
+     * Check the params are valid before adding them to the builder
      *
      * @param builder   JSONBuilder instance
      * @param paramName param name
