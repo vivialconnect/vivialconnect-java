@@ -280,7 +280,7 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
     /**
-     * Create a timestamp in format ISO 8601. This value is used for create the HMAC signature and Date header.
+     * Create a timestamp in format ISO 8601. This value is used to create the HMAC signature and Date header.
      *
      * @param currentDate current date
      * @return timestamp in format 8601
