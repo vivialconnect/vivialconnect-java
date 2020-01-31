@@ -141,7 +141,7 @@ public class User extends VivialConnectResource {
      *
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
      *                    <p>
-     *                    <code>page</code> – Page number within the returned list of associated phone numbers. Default value: 1.
+     *                    <code>page</code> – Page number within the returned list of users. Default value: 1.
      *                    <p>
      *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
      *                    <code>order</code> – Sort field and direction formatted like: <code>[field]+[direction]</code> where direction is one of ‘asc’ or ‘desc’.
