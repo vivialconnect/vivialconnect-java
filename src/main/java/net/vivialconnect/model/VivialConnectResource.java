@@ -15,17 +15,17 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.SimpleTimeZone;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.Proxy;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Date;
+import java.util.Arrays;
+import java.util.SimpleTimeZone;
+import java.util.Locale;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -292,14 +292,12 @@ public abstract class VivialConnectResource implements Serializable {
         return iso8601.format(currentDate);
     }
 
-
-    private static String createRequestDate(Date currentDate) {
-        DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT);
+    private static String createRequestDate(Date currentDate){
+        DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         requestDateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
 
         return requestDateFormat.format(currentDate);
     }
-
 
     private static String createSignature(String canonicalRequest) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         Mac hmac = Mac.getInstance(SIGNATURE_ALGORITHM);
