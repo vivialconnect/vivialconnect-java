@@ -373,7 +373,7 @@ public class User extends VivialConnectResource {
     }
 
     /**
-     * User's location time zone
+     * User's time zone
      *
      * @return User's timezone
      */
