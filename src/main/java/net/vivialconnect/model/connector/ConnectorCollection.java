@@ -1,20 +1,36 @@
 package net.vivialconnect.model.connector;
 
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ConnectorCollection{
+/**
+ * Wrapper class for a collection of connectors
+ */
+public class ConnectorCollection {
 
+    /**
+     * Collection of connectors
+     */
     @JsonProperty
     private List<Connector> connectors;
 
 
-    public List<Connector> getConnectors(){
+    /**
+     * Returns a collection of connectors
+     *
+     * @return
+     */
+    public List<Connector> getConnectors() {
         return connectors;
     }
 
-
-    public void setConnectors(List<Connector> connectors){
+    /**
+     * Set a collection of connectors
+     *
+     * @param connectors connector list
+     */
+    public void setConnectors(List<Connector> connectors) {
         this.connectors = connectors;
     }
 }

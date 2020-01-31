@@ -2,18 +2,32 @@ package net.vivialconnect.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ResourceCount{
-	
+/**
+ * Class for mapping count responses from the API
+ */
+public class ResourceCount {
+
+    /**
+     * Count value for a Resource
+     */
     @JsonProperty
     private int count;
 
-
-    public int getCount(){
+    /**
+     * Count value for a Resource
+     *
+     * @return count value
+     */
+    public int getCount() {
         return count;
     }
 
-
-    public void setCount(int count){
+    /**
+     * Set count value
+     *
+     * @param count count value
+     */
+    public void setCount(int count) {
         this.count = count;
     }
 }

@@ -1,90 +1,182 @@
 package net.vivialconnect.model.user;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Role{
-	
-    /** Unique identifier of the role object */
+/**
+ * An user has role that allow to operate over a Vivial Connect account.
+ * <p>
+ * A role can be helpful for manage multiple users in the same account, specifying actions that must
+ * belong to every registered user.
+ */
+public class Role {
+
+    /**
+     * Unique identifier of the role object
+     */
     @JsonProperty
     private int id;
 
+    /**
+     * Determine if this role is active or not
+     */
     @JsonProperty
     private boolean active;
 
-    /** Creation date (UTC) of the role in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the role in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of the role in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of the role in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
-    /** Name of the role  */
+    /**
+     * Name of the role
+     */
     @JsonProperty
     private String name;
 
-    /** Role's description  */
+    /**
+     * Role's description
+     */
     @JsonProperty
     private String description;
 
-    /** Role's type  */
+    /**
+     * Role's type
+     */
     @JsonProperty("role_type")
     private String roleType;
 
-    public int getId(){
+    /**
+     * Unique identifier of the Role object
+     *
+     * @return role ID
+     */
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    /**
+     * Set ID of the role object
+     *
+     * @param id Role ID value
+     */
+    public void setId(int id) {
         this.id = id;
     }
 
-    public boolean isActive(){
+    /**
+     * Determine if the role is active or note
+     *
+     * @return true if the role is active, false if not
+     */
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active){
+    /**
+     * Change active value of the role
+     *
+     * @param active role's active value
+     */
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public Date getDateCreated(){
+    /**
+     * Creation date of the role
+     *
+     * @return creation date of the role
+     */
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated){
+    /**
+     * Set creation date of the role
+     *
+     * @param dateCreated creation date value
+     */
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Date getDateModified(){
+    /**
+     * Last modification date of the role
+     *
+     * @return last modification date of the role
+     */
+    public Date getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(Date dateModified){
+    /**
+     * Set last modification date of the role
+     *
+     * @param dateModified last modification date for the role
+     */
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-    public String getName(){
+    /**
+     * Name of the role
+     *
+     * @return name of the role
+     */
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    /**
+     * Set name of the role
+     *
+     * @param name name of the role
+     */
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription(){
+    /**
+     * Description of the role
+     *
+     * @return description value of the role
+     */
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description){
+    /**
+     * Set description of the role
+     *
+     * @param description description of the role
+     */
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getRoleType(){
+    /**
+     * Type of the role
+     *
+     * @return type of the role value
+     */
+    public String getRoleType() {
         return roleType;
     }
 
-    public void setRoleType(String roleType){
+    /**
+     * Set role type
+     *
+     * @param roleType role type value
+     */
+    public void setRoleType(String roleType) {
         this.roleType = roleType;
     }
 }

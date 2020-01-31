@@ -2,44 +2,81 @@ package net.vivialconnect.model.log;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LogData{
+/**
+ * Log's entity for message status entries
+ */
+public class LogData {
 
+    /**
+     * Reciever's phone number of the message
+     */
     @JsonProperty
     private String receiver;
 
+    /**
+     * Sender's phone number of the message
+     */
     @JsonProperty
     private String sender;
 
+    /**
+     * Content of the message
+     */
     @JsonProperty
     private String text;
 
-
-    public String getReceiver(){
+    /**
+     * Reciever's phone number value
+     *
+     * @return phone number value
+     */
+    public String getReceiver() {
         return receiver;
     }
 
-
-    public void setReceiver(String receiver){
+    /**
+     * Set message's reciever number
+     *
+     * @param receiver reciever phone number value
+     */
+    public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
 
 
-    public String getSender(){
+    /**
+     * Sender's phone number of the message
+     *
+     * @return sender's phone number value
+     */
+    public String getSender() {
         return sender;
     }
 
-
-    public void setSender(String sender){
+    /**
+     * Set message's sender value
+     *
+     * @param sender message sender value
+     */
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
-
-    public String getText(){
+    /**
+     * Message's content
+     *
+     * @return content of the message
+     */
+    public String getText() {
         return text;
     }
 
-
-    public void setText(String text){
+    /**
+     * Set message content
+     *
+     * @param text message content
+     */
+    public void setText(String text) {
         this.text = text;
     }
 }

@@ -9,37 +9,67 @@ import net.vivialconnect.model.error.VivialConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * In the API, the phone_numbers resource allows you to associate or disassociate phone numbers from a Connector.
+ * When creating or editing a phone number association, you must provide a phone_number or phone_number_id for a phone number you own.
+ * Currently, a phone number can only be associated with a single Connector.
+ * <p>
+ * This class represents a phone number entity that can operated over a connector.
+ */
 @JsonRootName("phone_number")
-public class PhoneNumber extends VivialConnectResource{
+public class PhoneNumber extends VivialConnectResource {
 
     private static final long serialVersionUID = -621133784366767246L;
 
-    /** A string containing the phone number */
+    /**
+     * A string containing the phone number
+     */
     @JsonProperty("phone_number")
     private String phoneNumber;
 
-    /** An integer representing the id of the PhoneNumber resource associated */
+    /**
+     * An integer representing the id of the PhoneNumber resource associated
+     */
     @JsonProperty("phone_number_id")
     private int phoneNumberId;
 
-    public PhoneNumber(){
+    public PhoneNumber() {
 
     }
 
-    public PhoneNumber(int phoneNumberId, String phoneNumber){
+    /**
+     * Convenient constructor for create a connector's phone number
+     *
+     * @param phoneNumberId phone number ID
+     * @param phoneNumber   phone number value
+     */
+    public PhoneNumber(int phoneNumberId, String phoneNumber) {
         this.phoneNumberId = phoneNumberId;
         this.phoneNumber = phoneNumber;
     }
 
 
-    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException{
-        return  getPhoneNumbers(connectorId,1);
+    /**
+     * @param connectorId connector ID
+     * @see PhoneNumber#getPhoneNumbers(int, int)
+     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     */
+    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException {
+        return getPhoneNumbers(connectorId, 1);
     }
 
-    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException{
+    /**
+     * List of phone numbers associated to a connector
+     *
+     * @param connectorId connector ID value
+     * @param page        page number value
+     * @return an instance of connector with a list of its phone numbers
+     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     */
+    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException {
 
-        Map<String,String> pageParam = new HashMap<String, String>();
-        pageParam.put("page",String.valueOf(page));
+        Map<String, String> pageParam = new HashMap<String, String>();
+        pageParam.put("page", String.valueOf(page));
 
         ConnectorWithPhoneNumbers connector = request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers", connectorId)), null, pageParam,
                 ConnectorPaginatedPhoneNumbers.class).getConnector();
@@ -47,28 +77,50 @@ public class PhoneNumber extends VivialConnectResource{
         return connector;
     }
 
-
-    public static int count(int connectorId) throws VivialConnectException{
+    /**
+     * Count of phone numbers associated to a connector
+     *
+     * @param connectorId connector ID
+     * @return count of phone numbers associated to the connector
+     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     */
+    public static int count(int connectorId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers/count", connectorId)), null, null, ResourceCount.class).getCount();
     }
 
-
-    public String getPhoneNumber(){
+    /**
+     * Literal phone number value
+     *
+     * @return phone number value
+     */
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-
-    public void setPhoneNumber(String phoneNumber){
+    /**
+     * Set phone number
+     *
+     * @param phoneNumber phone number value
+     */
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-
-    public int getPhoneNumberId(){
+    /**
+     * Phone number ID
+     *
+     * @return phone number ID value
+     */
+    public int getPhoneNumberId() {
         return phoneNumberId;
     }
 
-
-    public void setPhoneNumberId(int phoneNumberId){
+    /**
+     * Set phone number ID value
+     *
+     * @param phoneNumberId phone number ID value
+     */
+    public void setPhoneNumberId(int phoneNumberId) {
         this.phoneNumberId = phoneNumberId;
     }
 }

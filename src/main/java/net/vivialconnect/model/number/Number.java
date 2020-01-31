@@ -15,22 +15,35 @@ import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
+/**
+ * Phone numbers are the basis for sending and receiving text messages to and from your Vivial Connect account.
+ * In the course of sending text messages you must manage the phone number or set of phone numbers to use as the source and destination for your text messages.
+ * <p>
+ * The API supports US phone numbers only. When searching available numbers for a phone number to provision, you can search for
+ * either Toll-Free or local (non-Toll-Free) numbers.
+ */
 @JsonRootName(value = "phone_number")
-public class Number extends VivialConnectResource implements AssociatedNumber, AvailableNumber{
-	
+public class Number extends VivialConnectResource implements AssociatedNumber, AvailableNumber {
+
     private static final long serialVersionUID = -1224802858893763457L;
 
     private static final String AVAILABLE_US_LOCAL = "available/US/local";
 
-    /** Unique identifier of the phone number object */
+    /**
+     * Unique identifier of the phone number object
+     */
     @JsonProperty
     private int id;
 
-    /** Creation date (UTC) of the phone number in ISO 8601 format */
+    /**
+     * Creation date (UTC) of the phone number in ISO 8601 format
+     */
     @JsonProperty("date_created")
     private Date dateCreated;
 
-    /** Last modification date (UTC) of phone number in ISO 8601 format */
+    /**
+     * Last modification date (UTC) of phone number in ISO 8601 format
+     */
     @JsonProperty("date_modified")
     private Date dateModified;
 
@@ -131,6 +144,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     @JsonProperty("connector_id")
     private int connectorId;
 
+    /**
+     * Tags associated to this number instance
+     */
     @JsonProperty("tags")
     private Map<String, String> tags;
 
@@ -145,20 +161,20 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * this class's set methods.
      * <p>
      * For more details on which properties can be updated, refer to the VivialConnect API documentation's
-     * <a href="https://www.vivialconnect.net/docs/api.html#put--api-v1.0-accounts-(int-account_id)-numbers-(int-id).json">number section.</a>
+     * <a href="https://dashboard.vivialconnect.net/docs/api/numbers.html#put--api-v1.0-accounts-(int-account_id)-numbers-(id).json">number section.</a>
      * <p>
      * If the number you're trying to update does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return this instance of {@link AssociatedNumber} with the updated properties
      * @throws VivialConnectException if there is an API-level error
      */
     @Override
     public AssociatedNumber update() throws VivialConnectException {
         AssociatedNumber number = request(RequestMethod.PUT, classURLWithSuffix(Number.class, String.valueOf(getId())),
-                                                                        buildJsonBodyForUpdate(), null, Number.class);
+                buildJsonBodyForUpdate(), null, Number.class);
         updateObjectState(number);
-        
+
         return this;
     }
 
@@ -206,19 +222,18 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Updates information about a phone number associated with your account
-     * 
+     *
      * @return associated number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     @Override
     public AssociatedNumber updateLocalNumber() throws VivialConnectException {
         ensureNumberIsLocal();
 
         AssociatedNumber number = request(RequestMethod.PUT, classURLWithSuffix(Number.class, String.format("local/%d", getId())),
-                                                                                    buildJsonBodyForUpdate(), null, Number.class);
+                buildJsonBodyForUpdate(), null, Number.class);
         updateObjectState(number);
-        
+
         return this;
     }
 
@@ -234,31 +249,29 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * <p>
      * If the number you're trying to delete does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return a boolean value, indicating whether the number was deleted or not
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     @Override
     public boolean delete() throws VivialConnectException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Number.class, String.valueOf(getId())), null, null, String.class);
-        } catch(NoContentException e) {
+        } catch (NoContentException e) {
             return true;
         }
 
         return false;
     }
-    
+
     /**
      * Deletes this local number from the database, dissociating it from the account.
      * <p>
      * If the local number you're trying to delete does not exist, a {@link VivialConnectException}
      * holding a 404 response code will be thrown.
-     * 
+     *
      * @return a boolean value, indicating whether the local number was deleted or not
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     @Override
     public boolean deleteLocalNumber() throws VivialConnectException {
@@ -266,17 +279,23 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Number.class, String.format("local/%d", getId())), null, null, String.class);
-        } catch(NoContentException e){
+        } catch (NoContentException e) {
             return true;
         }
 
         return false;
     }
 
+    /**
+     * Purchases a new number using the properties: phone number and phone number type
+     *
+     * @return the new Number purchased
+     * @throws VivialConnectException if there is an API-level error
+     */
     public AssociatedNumber buy() throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number")
-                                                 .addParamPair("phone_number", getPhoneNumber())
-                                                 .addParamPair("phone_number_type", getPhoneNumberType());
+                .addParamPair("phone_number", getPhoneNumber())
+                .addParamPair("phone_number_type", getPhoneNumberType());
         fillOptionalFieldsForBuy(builder);
 
         return request(RequestMethod.POST, classURL(Number.class), builder.build(), null, Number.class);
@@ -293,34 +312,34 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod());
     }
 
+    //TODO: Deprecate this
+
     /**
      * Purchases the specified phone number in this area code.
-     * 
-     * @param phoneNumber Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
-     * If you specify this parameter, the area_code parameter will be ignored.
-     * @param areaCode Three-digit US area code you want to specify for the phone number you want to purchase. The API will assign a random number within 
-     * the area code. You must specify this parameter if phone_number is not specified.
-     * @param optionalParams a map of {@link String } anf {@link Object } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
-     * <p>
-     * <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number. 
-     * Max. length: 256 characters.
-     * <p>
-     * <code>connector_id</code> – Unique identifier of the connector this message was sent over, if any.
-     * <p>
-     * <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
-     * <p>
-     * <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
-     * <p>
-     * <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter. 
-     * Max. length: 256 characters.
-     * <p>
-     * <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
-     * 
+     *
+     * @param phoneNumber    Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+     *                       If you specify this parameter, the area_code parameter will be ignored.
+     * @param areaCode       Three-digit US area code you want to specify for the phone number you want to purchase. The API will assign a random number within
+     *                       the area code. You must specify this parameter if phone_number is not specified.
+     * @param optionalParams a map of {@link String } and {@link Object } key-value pairs used to filter results, possible values are:
+     *                       <p>
+     *                       <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
+     *                       <p>
+     *                       <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *                       Max. length: 256 characters.
+     *                       <p>
+     *                       <code>connector_id</code> – Unique identifier of the connector this message was sent over, if any.
+     *                       <p>
+     *                       <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     *                       <p>
+     *                       <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter.
+     *                       Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
      * @return associated number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
@@ -333,35 +352,35 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         return request(RequestMethod.POST, classURLWithSuffix(Number.class, "local"), builder.build(), null, Number.class);
     }
 
+    //TODO: Code revision for the random area code
+
     /**
      * Purchases the specified phone number in this area code with a phone number type.
-     * 
-     * @param phoneNumber Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
-     * If you specify this parameter, the area_code parameter will be ignored.
-     * @param areaCode Three-digit US area code you want to specify for the phone number you want to purchase. The API will assign a random number within 
-     * the area code. You must specify this parameter if phone_number is not specified.
+     *
+     * @param phoneNumber     Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+     *                        If you specify this parameter, the area_code parameter will be ignored.
+     * @param areaCode        Three-digit US area code you want to specify for the phone number you want to purchase. The API will assign a random number within
+     *                        the area code. You must specify this parameter if phone_number is not specified.
      * @param phoneNumberType {@link String} with the phone number type i.e local
-     * @param optionalParams a map of {@link String } anf {@link Object } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
-     * <p>
-     * <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number. 
-     * Max. length: 256 characters.
-     * <p>
-     * <code>connector_id</code> – Unique identifier of the connector this message was sent over, if any.
-     * <p>
-     * <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
-     * <p>
-     * <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
-     * <p>
-     * <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter. 
-     * Max. length: 256 characters.
-     * <p>
-     * <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
-     * 
+     * @param optionalParams  a map of {@link String } anf {@link Object } key-value pairs used to filter results, possible values are:
+     *                        <p>
+     *                        <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
+     *                        <p>
+     *                        <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *                        Max. length: 256 characters.
+     *                        <p>
+     *                        <code>connector_id</code> – Unique identifier of the connector this message was sent over, if any.
+     *                        <p>
+     *                        <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
+     *                        <p>
+     *                        <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     *                        <p>
+     *                        <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter.
+     *                        Max. length: 256 characters.
+     *                        <p>
+     *                        <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
      * @return associated number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static AssociatedNumber buy(String phoneNumber, String areaCode, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
@@ -379,10 +398,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Gets all phone numbers associated with your account using the API.
      * <p>
      * If no numbers were found for this {@link Account},the method will return an empty {@link List}
-     * 
+     *
      * @return a list of associated number
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getAssociatedNumbers(Map)
      */
     public static List<AssociatedNumber> getAssociatedNumbers() throws VivialConnectException {
@@ -393,25 +411,23 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Search and filter every associated number for this Account using the API.
      * <p>
      * If no {@link AssociatedNumber} were found for this {@link Account}, the method will return an empty {@link List}
-     * 
+     *
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>page</code> – Page number within the returned list of associated phone numbers. Default value: 1.
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
-     * <p>
-     * <code>name</code> – Filters the results to include only phone numbers exactly matching the specified name.
-     * <p>
-     * <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify. 
-     * The pattern can include digits and the following wildcard characters:
-     * <p>
-     * ? : matches any single digit
-     * <br>
-     * * : matches zero or more digits
-     * 
+     *                    <p>
+     *                    <code>page</code> – Page number within the returned list of associated phone numbers. Default value: 1.
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>name</code> – Filters the results to include only phone numbers exactly matching the specified name.
+     *                    <p>
+     *                    <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify.
+     *                    The pattern can include digits and the following wildcard characters:
+     *                    <p>
+     *                    ? : matches any single digit
+     *                    <br>
+     *                    * : matches zero or more digits
      * @return a list of associated number
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getAssociatedNumbers()
      */
     public static List<AssociatedNumber> getAssociatedNumbers(Map<String, String> queryParams) throws VivialConnectException {
@@ -423,11 +439,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
      *
-     * @param region 2-letter {@link String } region (US state). 
-     * 
+     * @param region 2-letter {@link String } region (US state).
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #findAvailableNumbersInRegion(String, Map)
      */
     public static List<AvailableNumber> findAvailableNumbersInRegion(String region) throws VivialConnectException {
@@ -438,31 +452,29 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Search and filter available phone numbers in a specific region using the API.
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
-     * 
-     * @param region 2-letter {@link String } region (US state). 
+     *
+     * @param region      2-letter {@link String } region (US state).
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
-     * <p>
-     * <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify. 
-     * The pattern can include letters, digits, and the following wildcard characters:
-     * <p>
-     * ? : matches any single digit
-     * <br>
-     * : matches zero or more digits
-     * <p>
-     * <code>in_postal_code</code> – Filters the results to include only phone numbers in a specified 5-digit postal code.
-     * <p>
-     * <code>area_code</code> – Filters the results to include only phone numbers by US area code.
-     * <p>
-     * <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
-     * <p>
-     * <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you 
-     * specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
-     * 
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify.
+     *                    The pattern can include letters, digits, and the following wildcard characters:
+     *                    <p>
+     *                    ? : matches any single digit
+     *                    <br>
+     *                    : matches zero or more digits
+     *                    <p>
+     *                    <code>in_postal_code</code> – Filters the results to include only phone numbers in a specified 5-digit postal code.
+     *                    <p>
+     *                    <code>area_code</code> – Filters the results to include only phone numbers by US area code.
+     *                    <p>
+     *                    <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
+     *                    <p>
+     *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
+     *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AvailableNumber> findAvailableNumbersInRegion(String region, Map<String, String> queryParams) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("in_region", region, queryParams), NumberCollection.class).getAvailableNumbers();
@@ -472,12 +484,10 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Search for available phone numbers in a specific area code using the API.
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
-     * 
+     *
      * @param areaCode {@link String } representing a US area code.
-     * 
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode) throws VivialConnectException {
         return findAvailableNumbersByAreaCode(areaCode, null);
@@ -488,30 +498,28 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
      *
-     * @param areaCode {@link String } representing a US area code.
+     * @param areaCode    {@link String } representing a US area code.
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
-     * <p>
-     * <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify. 
-     * The pattern can include letters, digits, and the following wildcard characters:
-     * <p>
-     * ? : matches any single digit
-     * <br>
-     * : matches zero or more digits
-     * <p>
-     * <code>in_postal_code</code> – Filters the results to include only phone numbers in a specified 5-digit postal code.
-     * <p>
-     * <code>in_region</code> – Filters the results include only phone numbers in a specified 2-letter region (US state).
-     * <p>
-     * <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
-     * <p>
-     * <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you 
-     * specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
-     * 
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify.
+     *                    The pattern can include letters, digits, and the following wildcard characters:
+     *                    <p>
+     *                    ? : matches any single digit
+     *                    <br>
+     *                    : matches zero or more digits
+     *                    <p>
+     *                    <code>in_postal_code</code> – Filters the results to include only phone numbers in a specified 5-digit postal code.
+     *                    <p>
+     *                    <code>in_region</code> – Filters the results include only phone numbers in a specified 2-letter region (US state).
+     *                    <p>
+     *                    <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
+     *                    <p>
+     *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
+     *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode, Map<String, String> queryParams) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("area_code", areaCode, queryParams), NumberCollection.class).getAvailableNumbers();
@@ -521,12 +529,10 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Search for available phone numbers in a specific postal code using the API.
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
-     * 
+     *
      * @param postalCode 5-digit {@link String } postal code.
-     * 
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode) throws VivialConnectException {
         return findAvailableNumbersByPostalCode(postalCode, null);
@@ -536,31 +542,29 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Search and filter available phone numbers in a specific postal code using the API.
      * <p>
      * If no numbers were found for this {@link Account}, the method will return an empty {@link List}
-     * 
-     * @param postalCode 5-digit {@link String } postal code.
+     *
+     * @param postalCode  5-digit {@link String } postal code.
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
-     * <p>
-     * <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify. 
-     * The pattern can include letters, digits, and the following wildcard characters:
-     * <p>
-     * ? : matches any single digit
-     * <br>
-     * : matches zero or more digits
-     * <p>
-     * <code>area_code</code> – Filters the results to include only phone numbers by US area code.
-     * <p>
-     * <code>in_region</code> – Filters the results include only phone numbers in a specified 2-letter region (US state).
-     * <p>
-     * <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
-     * <p>
-     * <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you 
-     * specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
-     * 
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify.
+     *                    The pattern can include letters, digits, and the following wildcard characters:
+     *                    <p>
+     *                    ? : matches any single digit
+     *                    <br>
+     *                    : matches zero or more digits
+     *                    <p>
+     *                    <code>area_code</code> – Filters the results to include only phone numbers by US area code.
+     *                    <p>
+     *                    <code>in_region</code> – Filters the results include only phone numbers in a specified 2-letter region (US state).
+     *                    <p>
+     *                    <code>in_city</code> – Filters the results to include only phone numbers in a specified city.
+     *                    <p>
+     *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
+     *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode, Map<String, String> queryParams) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("in_postal_code", postalCode, queryParams), NumberCollection.class).getAvailableNumbers();
@@ -568,10 +572,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Gets all the numbers associated with this account. If there are none, this method will return an empty { @link List }
-     * 
+     *
      * @return a list of associated number
      * @throws VivialConnectException if there is an API-level error
-     * 
      * @see #getLocalAssociatedNumbers(Map)
      */
     public static List<AssociatedNumber> getLocalAssociatedNumbers() throws VivialConnectException {
@@ -580,25 +583,23 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Lists and filters numbers associated with the current account. If there are none, the method will return an empty {@link List}
-     * 
+     *
      * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
-     * <p>
-     * <code>page</code> – Page number within the returned list of associated phone numbers. Default value: 1.
-     * <p>
-     * <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
-     * <p>
-     * <code>name</code> – Filters the results to include only phone numbers exactly matching the specified name.
-     * <p>
-     * <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify. 
-     * The pattern can include digits and the following wildcard characters:
-     * <p>
-     * ? : matches any single digit
-     * <br>
-     * * : matches zero or more digits
-     * 
+     *                    <p>
+     *                    <code>page</code> – Page number within the returned list of associated phone numbers. Default value: 1.
+     *                    <p>
+     *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                    <p>
+     *                    <code>name</code> – Filters the results to include only phone numbers exactly matching the specified name.
+     *                    <p>
+     *                    <code>contains</code> – Filters the results to include only phone numbers that match a number pattern you specify.
+     *                    The pattern can include digits and the following wildcard characters:
+     *                    <p>
+     *                    ? : matches any single digit
+     *                    <br>
+     *                    * : matches zero or more digits
      * @return a list of associated number
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static List<AssociatedNumber> getLocalAssociatedNumbers(Map<String, String> queryParams) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "local"), null, queryParams, NumberCollection.class).getAssociatedNumbers();
@@ -606,10 +607,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Total number of phone numbers in the account. If there are none, this method will return <code>0</code>.
-     * 
+     *
      * @return number count
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static int count() throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "count"), null, null, ResourceCount.class).getCount();
@@ -617,10 +617,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Total number of local numbers in the account. If there are none, this method will return <code>0</code>.
-     * 
+     *
      * @return local number count
      * @throws VivialConnectException if there is an API-level error
-     *
      */
     public static int countLocal() throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "local/count"), null, null, ResourceCount.class).getCount();
@@ -628,12 +627,10 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Retrieves a single associated number given an id.
-     * 
+     *
      * @param numberId the id of the associated number to look up
-     * 
      * @return the AssociatedNumber found, or null if not found
      * @throws VivialConnectException if there is an API-level error
-     * 
      */
     public static AssociatedNumber getNumberById(int numberId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, String.valueOf(numberId)), null, null, Number.class);
@@ -641,12 +638,10 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Retrieves a single local number given an id.
-     * 
+     *
      * @param numberId the id of the local number to look up
-     * 
      * @return the AssociatedNumber found, or null if not found
      * @throws VivialConnectException if there is an API-level error
-     * 
      */
     public static AssociatedNumber getLocalNumberById(int numberId) throws VivialConnectException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, String.format("local/%d", numberId)), null, null, Number.class);
@@ -654,11 +649,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
 
     /**
      * Gets information about the device type and carrier that is associated with a specific phone number
-     * 
-     * 
+     *
      * @return number info, or null if not found
      * @throws VivialConnectException if there is an API-level error
-     * 
      */
     @Override
     public NumberInfo lookup() throws VivialConnectException {
@@ -674,159 +667,264 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         return getPhoneNumber().substring(1);
     }
 
-
+    /**
+     * Unique identifier of the phone number object.
+     *
+     * @return unique object ID value
+     */
     @Override
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-
+    /**
+     * Set unique identifier of the phone number object.
+     *
+     * @param id unique identifier value
+     */
     @Override
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-
+    /**
+     * Creation date of the phone number
+     *
+     * @return creation date value
+     */
     @Override
-    public Date getDateCreated(){
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-
+    /**
+     * Set the creation date of the phone number
+     *
+     * @param dateCreated creation date value
+     */
     @Override
-    public void setDateCreated(Date dateCreated){
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-
+    /**
+     * Last modification date (UTC) of the phone number
+     *
+     * @return last modification date value
+     */
     @Override
-    public Date getDateModified(){
+    public Date getDateModified() {
         return dateModified;
     }
 
-
+    /**
+     * Set the phone number modification date
+     *
+     * @param dateModified modified date value
+     */
     @Override
-    public void setDateModified(Date dateModified){
+    public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
 
-
+    /**
+     * Unique identifier of the account associated with the phone number
+     *
+     * @return account ID value
+     */
     @Override
-    public int getAccountId(){
+    public int getAccountId() {
         return accountId;
     }
 
-
+    /**
+     * Set the account ID value for the phone number
+     *
+     * @param accountId account ID value
+     */
     @Override
-    public void setAccountId(int accountId){
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
-
+    /**
+     * Associated phone number as it is displayed to users.
+     *
+     * @return phone number's name value
+     */
     @Override
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-
+    /**
+     * Set the name of the phone number
+     *
+     * @param name phone number's name value
+     */
     @Override
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-
+    /**
+     * Associated phone number in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+     *
+     * @return literal phone number value
+     */
     @Override
-    public String getPhoneNumber(){
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-
+    /**
+     * Set associated phone number in E.164 format
+     *
+     * @param phoneNumber phone number value
+     */
     @Override
-    public void setPhoneNumber(String phoneNumber){
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-
+    /**
+     * Type of associated phone number. Possible values: local or tollfree.
+     *
+     * @return phone number type value
+     */
     @Override
-    public String getPhoneNumberType(){
+    public String getPhoneNumberType() {
         return phoneNumberType;
     }
 
-
+    /**
+     * Set phone number type value
+     *
+     * @param phoneNumberType phone number type value
+     */
     @Override
-    public void setPhoneNumberType(String phoneNumberType){
+    public void setPhoneNumberType(String phoneNumberType) {
         this.phoneNumberType = phoneNumberType;
     }
 
-
+    /**
+     * URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *
+     * @return status text URL value
+     */
     @Override
-    public String getStatusTextUrl(){
+    public String getStatusTextUrl() {
         return statusTextUrl;
     }
 
-
+    /**
+     * Set status text URL value
+     *
+     * @param statusTextUrl Status Text URL value
+     */
     @Override
-    public void setStatusTextUrl(String statusTextUrl){
+    public void setStatusTextUrl(String statusTextUrl) {
         this.statusTextUrl = statusTextUrl;
     }
 
-
+    /**
+     * URL for receiving SMS messages to the associated phone number.
+     *
+     * @return incoming text URL value
+     */
     @Override
-    public String getIncomingTextUrl(){
+    public String getIncomingTextUrl() {
         return incomingTextUrl;
     }
 
-
+    /**
+     * Set incoming text url value
+     *
+     * @param incomingTextUrl incoming text URL value
+     */
     @Override
-    public void setIncomingTextUrl(String incomingTextUrl){
+    public void setIncomingTextUrl(String incomingTextUrl) {
         this.incomingTextUrl = incomingTextUrl;
     }
 
-
+    /**
+     * HTTP method used for the incoming_text_url requests
+     *
+     * @return incoming text ulr value
+     */
     @Override
-    public String getIncomingTextMethod(){
+    public String getIncomingTextMethod() {
         return incomingTextMethod;
     }
 
-
+    /**
+     * Set incoming text URL method
+     *
+     * @param incomingTextMethod incoming text URL method.
+     */
     @Override
-    public void setIncomingTextMethod(String incomingTextMethod){
+    public void setIncomingTextMethod(String incomingTextMethod) {
         this.incomingTextMethod = incomingTextMethod;
     }
 
-
+    /**
+     * URL for receiving SMS messages if incoming_text_url fails.
+     * Only valid if you provide a value for the incoming_text_url parameter.
+     *
+     * @return incoming text fallback URL
+     */
     @Override
-    public String getIncomingTextFallbackUrl(){
+    public String getIncomingTextFallbackUrl() {
         return incomingTextFallbackUrl;
     }
 
-
+    /**
+     * Set the incoming text fallback URL value
+     *
+     * @param incomingTextFallbackUrl incoming text fallback URL value
+     */
     @Override
-    public void setIncomingTextFallbackUrl(String incomingTextFallbackUrl){
+    public void setIncomingTextFallbackUrl(String incomingTextFallbackUrl) {
         this.incomingTextFallbackUrl = incomingTextFallbackUrl;
     }
 
-
+    /**
+     * HTTP method used for incoming_text_fallback_url requests.
+     *
+     * @return incoming text fallback method value
+     */
     @Override
-    public String getIncomingTextFallbackMethod(){
+    public String getIncomingTextFallbackMethod() {
         return incomingTextFallbackMethod;
     }
 
-
+    /**
+     * Set incoming text fallback method value
+     *
+     * @param incomingTextFallbackMethod incoming text fallback method value
+     */
     @Override
-    public void setIncomingTextFallbackMethod(String incomingTextFallbackMethod){
+    public void setIncomingTextFallbackMethod(String incomingTextFallbackMethod) {
         this.incomingTextFallbackMethod = incomingTextFallbackMethod;
     }
 
-
+    /**
+     * Number to which voice calls will be forwarded.
+     *
+     * @return voice forward value
+     */
     @Override
-    public String getVoiceForwardingNumber(){
+    public String getVoiceForwardingNumber() {
         return voiceForwardingNumber;
     }
 
-
+    /**
+     * Set  voice forward value
+     *
+     * @param voiceForwardingNumber voice forwarding value
+     */
     @Override
-    public void setVoiceForwardingNumber(String voiceForwardingNumber){
+    public void setVoiceForwardingNumber(String voiceForwardingNumber) {
         this.voiceForwardingNumber = voiceForwardingNumber;
     }
 
@@ -842,109 +940,190 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         this.capabilities = capabilities;
     } */
 
-
+    /**
+     * City where the phone number is located.
+     *
+     * @return city name value
+     */
     @Override
-    public String getCity(){
+    public String getCity() {
         return city;
     }
 
-
+    /**
+     * Set city name value
+     *
+     * @param city city value
+     */
     @Override
-    public void setCity(String city){
+    public void setCity(String city) {
         this.city = city;
     }
 
-
+    /**
+     * Two-letter US state abbreviation where the phone number is located.
+     *
+     * @return region value
+     */
     @Override
-    public String getRegion(){
+    public String getRegion() {
         return region;
     }
 
-
+    /**
+     * Set the phone number region value
+     *
+     * @param region region value
+     */
     @Override
-    public void setRegion(String region){
+    public void setRegion(String region) {
         this.region = region;
     }
 
-
+    /**
+     * Local address and transport area (LATA) where the available phone number is located.
+     *
+     * @return phone number's LATA value
+     */
     @Override
-    public String getLata(){
+    public String getLata() {
         return lata;
     }
 
-
+    /**
+     * Set LATA value of the phone number
+     *
+     * @param lata LATA value
+     */
     @Override
-    public void setLata(String lata){
+    public void setLata(String lata) {
         this.lata = lata;
     }
 
-
+    /**
+     * LATA rate center where the phone number is located.
+     *
+     * @return Rate Center value
+     */
     @Override
-    public String getRateCenter(){
+    public String getRateCenter() {
         return rateCenter;
     }
 
-
+    /**
+     * Set the phone number's rate center
+     *
+     * @param rateCenter rate center value
+     */
     @Override
-    public void setRateCenter(String rateCenter){
+    public void setRateCenter(String rateCenter) {
         this.rateCenter = rateCenter;
     }
 
-
+    /**
+     * Determine if the phone number value is enabled or not.
+     *
+     * @return phone number active value
+     */
     @Override
-    public boolean isActive(){
+    public boolean isActive() {
         return active;
     }
 
-
+    /**
+     * Set the phone number active value
+     *
+     * @param active active value
+     */
     @Override
-    public void setActive(boolean active){
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-
+    /**
+     * Connector ID to witch this phone number belongs
+     *
+     * @return Connector ID value
+     */
     @Override
-    public int getConnectorId(){
+    public int getConnectorId() {
         return connectorId;
     }
 
-
+    /**
+     * Set connector ID value for the phone number
+     *
+     * @param connectorId connector ID value
+     */
     @Override
-    public void setConnectorId(int connectorId){
+    public void setConnectorId(int connectorId) {
         this.connectorId = connectorId;
     }
 
-
+    /**
+     * User-defined tags as key-value pair
+     *
+     * @return phone number tags value
+     */
     public Map<String, String> getTags() {
         return tags;
     }
 
+    /**
+     * Set tags for the phone number
+     *
+     * @param tags phone number tags value
+     */
     public void setTags(Map<String, String> tags) {
         this.tags = tags;
     }
 
+    /**
+     * Update the tags to the API
+     *
+     * @param tags String map with  key-pair values with the tag names and values
+     * @return Updated tags
+     * @throws VivialConnectException if there is an API-level error
+     */
     @Override
-    public TagCollection updateTags(Map<String, String>  tags) throws VivialConnectException {
+    public TagCollection updateTags(Map<String, String> tags) throws VivialConnectException {
 
         String requestPayload = JsonBodyBuilder.withCustomClassName("tags").addTypedParams(tags).build();
 
         String idValue = String.valueOf(getId());
         TagCollection tagsResponse = request(RequestMethod.PUT, classURLWithResourceSuffix(Number.class, idValue, "tags"),
-                requestPayload, null,TagCollection.class);
+                requestPayload, null, TagCollection.class);
 
         this.tags = tagsResponse.getTags();
 
         return tagsResponse;
     }
 
+    /**
+     * Get all tagged numbers associated to the user's account.
+     *
+     * @return Collection of tagged numbers
+     * @throws VivialConnectException if there is an API-level error
+     */
     public static TaggedNumberCollection getTaggedNumbers() throws VivialConnectException {
         return getTaggedNumbers(null);
     }
 
+    /**
+     * Get all tagged numbers associated to the user's account.
+     *
+     * @param requestParams a map of {@link String } key-value pairs used to filter results, possible values are:
+     *                      - page – Page number to return. Default value: 1.
+     *                      - limit – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *                      - contains – Comma-separated list of key:value pairs. Filters results to included only phone numbers tagged with these pairs.
+     *                      - notcontains – Comma-separated list of key:value pairs. Filters results to exclude phone numbers tagged with these pairs.
+     * @return Collection of tagged numbers
+     * @throws VivialConnectException if there is an API-level error
+     */
     public static TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
 
         TaggedNumberCollection tagResponse = request(RequestMethod.GET, classURLWithSuffix(Number.class, "tags"), null,
-                requestParams, TaggedNumberCollection.class );
+                requestParams, TaggedNumberCollection.class);
 
         return tagResponse;
     }
@@ -1012,14 +1191,15 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     }
 
     /**
-     *  Fetch and refresh the tags for an instance of Number. This method represents the endpoint:
-     *  <pre>GET /api/v1.0/accounts/(int: account_id)/numbers/(number_id)/tags.json</pre> in the API.
+     * Fetch and refresh the tags for an instance of Number. This method represents the endpoint:
+     * <pre>GET /api/v1.0/accounts/(int: account_id)/numbers/(number_id)/tags.json</pre> in the API.
+     *
      * @return a TagCollection object with the tags of a Number instance.
      * @throws VivialConnectException if the request could not be processed successfully.
      */
     public TagCollection fetchTags() throws VivialConnectException {
         TagCollection tags = request(RequestMethod.GET, classURLWithResourceSuffix(Number.class, String.valueOf(this.id), "tags"),
-                       null, null, TagCollection.class);
+                null, null, TagCollection.class);
         this.tags = tags.getTags();
 
         return tags;
@@ -1033,7 +1213,6 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * <ul>
      *     <li>Existing tag keys included in payload will be removed from tags.</li>
      *     <li>Existing tag keys NOT included in the payload will be left unchanged.</li>
-     *
      * </ul>
      *
      * @param tags tags to delete.

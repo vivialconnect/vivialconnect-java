@@ -20,22 +20,34 @@ public class Device{
     @JsonProperty
     private String model;
 
-
+    /**
+     * Information about errors in device lookup
+     * @return information value
+     */
     public String getError(){
         return error;
     }
 
-
+    /**
+     * Set error value
+     * @param error error value
+     */
     public void setError(String error){
         this.error = error;
     }
 
-
+    /**
+     * Model name of the device
+     * @return device's model value
+     */
     public String getModel(){
         return model;
     }
 
-
+    /**
+     * Device's model name
+     * @param model device's model value
+     */
     public void setModel(String model){
         this.model = model;
     }
