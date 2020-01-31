@@ -347,7 +347,7 @@ public class User extends VivialConnectResource {
     }
 
     /**
-     * Indicate if the account was verified by the user after signed in
+     * Indicate if the account was verified by the user after registration.
      *
      * @return true if the user was verified, false otherwise
      */
