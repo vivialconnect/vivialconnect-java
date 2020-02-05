@@ -15,6 +15,12 @@ import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * Phone numbers are the basis for sending and receiving text messages to and from your Vivial Connect account.
  * In the course of sending text messages you must manage the phone number or set of phone numbers to use as the source and destination for your text messages.
@@ -167,10 +173,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * holding a 404 response code will be thrown.
      *
      * @return this instance of {@link AssociatedNumber} with the updated properties
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public AssociatedNumber update() throws VivialConnectException {
+    public AssociatedNumber update() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         AssociatedNumber number = request(RequestMethod.PUT, classURLWithSuffix(Number.class, String.valueOf(getId())),
                 buildJsonBodyForUpdate(), null, Number.class);
         updateObjectState(number);
@@ -224,10 +234,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Updates information about a phone number associated with your account
      *
      * @return associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public AssociatedNumber updateLocalNumber() throws VivialConnectException {
+    public AssociatedNumber updateLocalNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         ensureNumberIsLocal();
 
         AssociatedNumber number = request(RequestMethod.PUT, classURLWithSuffix(Number.class, String.format("local/%d", getId())),
@@ -251,10 +265,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * holding a 404 response code will be thrown.
      *
      * @return a boolean value, indicating whether the number was deleted or not
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public boolean delete() throws VivialConnectException {
+    public boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Number.class, String.valueOf(getId())), null, null, String.class);
         } catch (NoContentException e) {
@@ -271,10 +289,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * holding a 404 response code will be thrown.
      *
      * @return a boolean value, indicating whether the local number was deleted or not
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public boolean deleteLocalNumber() throws VivialConnectException {
+    public boolean deleteLocalNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         ensureNumberIsLocal();
 
         try {
@@ -290,9 +312,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Purchases a new number using the properties: phone number and phone number type
      *
      * @return the new Number purchased
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public AssociatedNumber buy() throws VivialConnectException {
+    public AssociatedNumber buy() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number")
                 .addParamPair("phone_number", getPhoneNumber())
                 .addParamPair("phone_number_type", getPhoneNumberType());
@@ -339,9 +365,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                       <p>
      *                       <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
      * @return associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws VivialConnectException {
+    public static AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
         if (optionalParams != null) {
             builder = builder.addParams(optionalParams);
@@ -380,9 +410,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                        <p>
      *                        <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
      * @return associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static AssociatedNumber buy(String phoneNumber, String areaCode, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException {
+    public static AssociatedNumber buy(String phoneNumber, String areaCode, String phoneNumberType, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
         if (optionalParams != null) {
             builder = builder.addParams(optionalParams);
@@ -400,10 +434,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * If no numbers were found for this {@link Account},the method will return an empty {@link List}
      *
      * @return a list of associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getAssociatedNumbers(Map)
      */
-    public static List<AssociatedNumber> getAssociatedNumbers() throws VivialConnectException {
+    public static List<AssociatedNumber> getAssociatedNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getAssociatedNumbers(null);
     }
 
@@ -427,10 +465,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                    <br>
      *                    * : matches zero or more digits
      * @return a list of associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getAssociatedNumbers()
      */
-    public static List<AssociatedNumber> getAssociatedNumbers(Map<String, String> queryParams) throws VivialConnectException {
+    public static List<AssociatedNumber> getAssociatedNumbers(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURL(Number.class), null, queryParams, NumberCollection.class).getAssociatedNumbers();
     }
 
@@ -441,10 +483,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param region 2-letter {@link String } region (US state).
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #findAvailableNumbersInRegion(String, Map)
      */
-    public static List<AvailableNumber> findAvailableNumbersInRegion(String region) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersInRegion(String region) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return findAvailableNumbersInRegion(region, null);
     }
 
@@ -474,9 +520,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
      *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AvailableNumber> findAvailableNumbersInRegion(String region, Map<String, String> queryParams) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersInRegion(String region, Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("in_region", region, queryParams), NumberCollection.class).getAvailableNumbers();
     }
 
@@ -487,9 +537,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param areaCode {@link String } representing a US area code.
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return findAvailableNumbersByAreaCode(areaCode, null);
     }
 
@@ -519,9 +573,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
      *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode, Map<String, String> queryParams) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersByAreaCode(String areaCode, Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("area_code", areaCode, queryParams), NumberCollection.class).getAvailableNumbers();
     }
 
@@ -532,9 +590,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param postalCode 5-digit {@link String } postal code.
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return findAvailableNumbersByPostalCode(postalCode, null);
     }
 
@@ -564,9 +626,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                    <code>local_number</code> – Filters the results to include only phone numbers that match the first three or more digits you
      *                    specify to immediately follow the area code. To use this parameter, you must also specify an area_code.
      * @return a list of available number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode, Map<String, String> queryParams) throws VivialConnectException {
+    public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode, Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("in_postal_code", postalCode, queryParams), NumberCollection.class).getAvailableNumbers();
     }
 
@@ -574,10 +640,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Gets all the numbers associated with this account. If there are none, this method will return an empty { @link List }
      *
      * @return a list of associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getLocalAssociatedNumbers(Map)
      */
-    public static List<AssociatedNumber> getLocalAssociatedNumbers() throws VivialConnectException {
+    public static List<AssociatedNumber> getLocalAssociatedNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getLocalAssociatedNumbers(null);
     }
 
@@ -599,9 +669,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                    <br>
      *                    * : matches zero or more digits
      * @return a list of associated number
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<AssociatedNumber> getLocalAssociatedNumbers(Map<String, String> queryParams) throws VivialConnectException {
+    public static List<AssociatedNumber> getLocalAssociatedNumbers(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "local"), null, queryParams, NumberCollection.class).getAssociatedNumbers();
     }
 
@@ -609,9 +683,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Total number of phone numbers in the account. If there are none, this method will return <code>0</code>.
      *
      * @return number count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count() throws VivialConnectException {
+    public static int count() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "count"), null, null, ResourceCount.class).getCount();
     }
 
@@ -619,9 +697,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Total number of local numbers in the account. If there are none, this method will return <code>0</code>.
      *
      * @return local number count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int countLocal() throws VivialConnectException {
+    public static int countLocal() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "local/count"), null, null, ResourceCount.class).getCount();
     }
 
@@ -630,9 +712,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param numberId the id of the associated number to look up
      * @return the AssociatedNumber found, or null if not found
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static AssociatedNumber getNumberById(int numberId) throws VivialConnectException {
+    public static AssociatedNumber getNumberById(int numberId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, String.valueOf(numberId)), null, null, Number.class);
     }
 
@@ -641,9 +727,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param numberId the id of the local number to look up
      * @return the AssociatedNumber found, or null if not found
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static AssociatedNumber getLocalNumberById(int numberId) throws VivialConnectException {
+    public static AssociatedNumber getLocalNumberById(int numberId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, String.format("local/%d", numberId)), null, null, Number.class);
     }
 
@@ -651,10 +741,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Gets information about the device type and carrier that is associated with a specific phone number
      *
      * @return number info, or null if not found
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public NumberInfo lookup() throws VivialConnectException {
+    public NumberInfo lookup() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("phone_number", getRawPhoneNumber());
 
@@ -1083,10 +1177,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param tags String map with  key-pair values with the tag names and values
      * @return Updated tags
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
-    public TagCollection updateTags(Map<String, String> tags) throws VivialConnectException {
+    public TagCollection updateTags(Map<String, String> tags) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         String requestPayload = JsonBodyBuilder.withCustomClassName("tags").addTypedParams(tags).build();
 
@@ -1103,9 +1201,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * Get all tagged numbers associated to the user's account.
      *
      * @return Collection of tagged numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static TaggedNumberCollection getTaggedNumbers() throws VivialConnectException {
+    public static TaggedNumberCollection getTaggedNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getTaggedNumbers(null);
     }
 
@@ -1118,9 +1220,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                      - contains – Comma-separated list of key:value pairs. Filters results to included only phone numbers tagged with these pairs.
      *                      - notcontains – Comma-separated list of key:value pairs. Filters results to exclude phone numbers tagged with these pairs.
      * @return Collection of tagged numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
+    public static TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         TaggedNumberCollection tagResponse = request(RequestMethod.GET, classURLWithSuffix(Number.class, "tags"), null,
                 requestParams, TaggedNumberCollection.class);
@@ -1195,9 +1301,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * <pre>GET /api/v1.0/accounts/(int: account_id)/numbers/(number_id)/tags.json</pre> in the API.
      *
      * @return a TagCollection object with the tags of a Number instance.
-     * @throws VivialConnectException if the request could not be processed successfully.
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public TagCollection fetchTags() throws VivialConnectException {
+    public TagCollection fetchTags() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         TagCollection tags = request(RequestMethod.GET, classURLWithResourceSuffix(Number.class, String.valueOf(this.id), "tags"),
                 null, null, TagCollection.class);
         this.tags = tags.getTags();
@@ -1217,10 +1327,14 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *
      * @param tags tags to delete.
      * @return a TagCollection object with the tags remaining.
-     * @throws VivialConnectException if the request could not be processed successfully.
-     */
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     * */
     @Override
-    public TagCollection deleteTags(Map<String, String> tags) throws VivialConnectException {
+    public TagCollection deleteTags(Map<String, String> tags) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         String requestPayload = JsonBodyBuilder.withCustomClassName("tags").addTypedParams(tags).build();
 

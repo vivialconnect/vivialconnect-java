@@ -8,6 +8,11 @@ import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
 
 /**
  * A MMS can contains attachments, which can be a media, text or any supported object by the API defined in the following link:
@@ -75,9 +80,13 @@ public class Attachment extends VivialConnectResource {
      * @param messageId    the messageId that contains the attachment
      * @param attachmentId the media attachmentId
      * @return the attachment found, or null if not found
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static Attachment getAttachmentById(int messageId, int attachmentId) throws VivialConnectException {
+    public static Attachment getAttachmentById(int messageId, int attachmentId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments/%d", messageId, attachmentId)), null, null, Attachment.class);
     }
 
@@ -86,9 +95,13 @@ public class Attachment extends VivialConnectResource {
      *
      * @param messageId the messageId that contains the attachment
      * @return number of attachment in message
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count(int messageId) throws VivialConnectException {
+    public static int count(int messageId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments/count", messageId)), null, null, ResourceCount.class).getCount();
     }
 
@@ -99,9 +112,13 @@ public class Attachment extends VivialConnectResource {
      * holding a 404 response code will be thrown.
      *
      * @return a boolean value, indicating whether the attachment was deleted or not
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public boolean delete() throws VivialConnectException {
+    public boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Message.class, String.format("%d/attachments/%d", getMessageId(), getId())), null, null, String.class);
         } catch (NoContentException e) {

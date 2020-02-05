@@ -6,11 +6,14 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.hamcrest.Matchers;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
@@ -18,13 +21,17 @@ import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.BulkMessage;
 
 import net.vivialconnect.tests.data.DataSource;
+import org.junit.Rule;
 import org.junit.Test;
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.number.AssociatedNumber;
+import org.junit.rules.ExpectedException;
 
 public class MessageTest extends BaseTestCase {
 
     private static final String MESSAGE_BODY = "Message from Vivial Connect Test Suite";
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void test_send_message_with_attachments() throws VivialConnectException, InterruptedException {
@@ -111,13 +118,13 @@ public class MessageTest extends BaseTestCase {
     }
 
     @Test
-    public void test_create_bulk_message() throws VivialConnectException{
+    public void test_create_bulk_message() throws VivialConnectException {
 
         List<AssociatedNumber> numbers = getDataSource().getAssociatedNumbers();
         String fromNumber = numbers.get(0).getPhoneNumber();
         List<String> bulkSendNumberList = new ArrayList<String>();
 
-        for(AssociatedNumber number: numbers.subList(1, numbers.size())){
+        for (AssociatedNumber number : numbers.subList(1, numbers.size())) {
             bulkSendNumberList.add(number.getPhoneNumber());
         }
 
@@ -131,11 +138,11 @@ public class MessageTest extends BaseTestCase {
 
         assertNotNull(bulkInfo);
         assertNotNull(bulkInfo.getBulkId());
-            
+
     }
 
     @Test
-    public void test_get_bulks_sent() throws VivialConnectException{
+    public void test_get_bulks_sent() throws VivialConnectException {
 
         BulkInfoCollection bulksSent = getDataSource().getCreatedBulks();
         List<BulkInfo> bulks = bulksSent.getBulkList();
@@ -148,12 +155,12 @@ public class MessageTest extends BaseTestCase {
         assertTrue("Bulk pages is zero", bulksSent.getPages() > 0);
         assertFalse("Bulk message list is empty", bulkMessages.isEmpty());
 
-        for(Message message: bulkMessages){
-            assertNotNull(String.format("Message %d has a null bulk ID",message.getId()),message.getBulkId());
+        for (Message message : bulkMessages) {
+            assertNotNull(String.format("Message %d has a null bulk ID", message.getId()), message.getBulkId());
         }
     }
 
-    @Test(expected = VivialConnectException.class)
+    @Test(expected = IllegalStateException.class)
     public void test_send_bulk_empty_to_numbers() throws VivialConnectException {
 
         BulkMessage bulkMessage = new BulkMessage();
@@ -161,7 +168,6 @@ public class MessageTest extends BaseTestCase {
 
         getDataSource().sendBulkWithoutNumbers(bulkMessage);
     }
-
 
     @Test
     public void test_error_code_10000() throws VivialConnectException {
@@ -176,12 +182,11 @@ public class MessageTest extends BaseTestCase {
         message.setFromNumber(fromNumber);
         message.setToNumber(toNumber);
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10000, e.getErrorCode());
-            assertEquals("Message body OR media_urls must be provided", e.getMessage());
-        }
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10000)));
+        expectedException.expectMessage("Message body OR media_urls must be provided");
+
+        dataSource.sendMessage(message);
 
     }
 
@@ -203,11 +208,10 @@ public class MessageTest extends BaseTestCase {
         message.setMediaUrls(mediaUrls);
         message.setBody("Hello");
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10002, e.getErrorCode());
-        }
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10002)));
+
+        dataSource.sendMessage(message);
 
     }
 
@@ -259,12 +263,11 @@ public class MessageTest extends BaseTestCase {
         message.setToNumber(toNumber);
         message.setBody(bodyContent);
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10003, e.getErrorCode());
-            assertEquals("Message body must be less than 2048 characters", e.getMessage());
-        }
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10003)));
+        expectedException.expectMessage("Message body must be less than 2048 characters");
+
+        dataSource.sendMessage(message);
 
     }
 
@@ -292,16 +295,21 @@ public class MessageTest extends BaseTestCase {
         // Note: Do not change this message value. This message is used as a flag for raise an exception for mock data.
         message.setBody("OPTOUT TEST MESSAGE");
 
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10005)));
+        expectedException.expectMessage("to_number is opted out for messages from from_number");
+
         try {
             dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10005, e.getErrorCode());
-            assertEquals("to_number is opted out for messages from from_number", e.getMessage());
+        } catch (MessageErrorException me) {
+            throw me;
         } finally {
             message = new Message();
             message.setFromNumber(fromNumber);
             message.setToNumber(toNumber);
             message.setBody("UNSTOP");
+
+            dataSource.sendMessage(message);
         }
 
     }
@@ -320,12 +328,12 @@ public class MessageTest extends BaseTestCase {
         message.setToNumber(toNumber);
         message.setBody("Test,Hello!");
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10008, e.getErrorCode());
-            assertEquals("from_number invalid, inactive, or not owned", e.getMessage());
-        }
+
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10008)));
+        expectedException.expectMessage("from_number invalid, inactive, or not owned");
+
+        dataSource.sendMessage(message);
 
     }
 
@@ -343,12 +351,11 @@ public class MessageTest extends BaseTestCase {
         message.setToNumber(toNumber);
         message.setBody("Test,Hello!");
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10009, e.getErrorCode());
-            assertEquals("connector_id invalid, inactive, or not owned", e.getMessage());
-        }
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10009)));
+        expectedException.expectMessage("connector_id invalid, inactive, or not owned");
+
+        dataSource.sendMessage(message);
 
     }
 
@@ -365,12 +372,11 @@ public class MessageTest extends BaseTestCase {
         message.setFromNumber(fromNumber);
         message.setBody("Test,Hello!");
 
-        try {
-            dataSource.sendMessage(message);
-        } catch (VivialConnectException e) {
-            assertEquals(10012, e.getErrorCode());
-            assertEquals("Must specify to_number", e.getMessage());
-        }
+        expectedException.expect(MessageErrorException.class);
+        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10012)));
+        expectedException.expectMessage("Must specify to_number");
+
+        dataSource.sendMessage(message);
 
     }
 

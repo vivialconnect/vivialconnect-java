@@ -15,6 +15,12 @@ import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.EmptyJson;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * class for get query and manage info about users of an account.
  * <p>
@@ -112,11 +118,15 @@ public class User extends VivialConnectResource {
      *
      * @param userId the id of the user to look up
      * @return the User that was found given the id
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getUsers()
      * @see #getUsers(Map)
      */
-    public static User getUserById(int userId) throws VivialConnectException {
+    public static User getUserById(int userId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(User.class, String.valueOf(userId)), null, null, User.class);
     }
 
@@ -126,11 +136,14 @@ public class User extends VivialConnectResource {
      * If no User were found for this {@link Account}, the method will return an empty {@link List}
      *
      * @return a list of users
-     * @throws VivialConnectException if there is an API-level error
-     * @see #getUserById(int)
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs     * @see #getUserById(int)
      * @see #getUsers(Map)
      */
-    public static List<User> getUsers() throws VivialConnectException {
+    public static List<User> getUsers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getUsers(null);
     }
 
@@ -147,11 +160,14 @@ public class User extends VivialConnectResource {
      *                    <code>order</code> – Sort field and direction formatted like: <code>[field]+[direction]</code> where direction is one of ‘asc’ or ‘desc’.
      *                    Default value: ‘id+asc’.
      * @return a list of users
-     * @throws VivialConnectException if there is an API-level error
-     * @see #getUsers()
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs     * @see #getUsers()
      * @see #getUserById(int)
      */
-    public static List<User> getUsers(Map<String, String> queryParams) throws VivialConnectException {
+    public static List<User> getUsers(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURL(User.class), null, queryParams, UserCollection.class).getUsers();
     }
 
@@ -159,9 +175,13 @@ public class User extends VivialConnectResource {
      * Total number of users in the account specified. If there are none, this method will return <code>0</code>.
      *
      * @return user count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count() throws VivialConnectException {
+    public static int count() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(User.class, "count"), null, null, ResourceCount.class).getCount();
     }
 
@@ -174,7 +194,7 @@ public class User extends VivialConnectResource {
      * @return a boolean value, indicating whether the user was deleted or not
      * @throws VivialConnectException if there is an API-level error
      */
-    public boolean delete() throws VivialConnectException {
+    public boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(User.class, String.valueOf(getId())), null, null, String.class);
         } catch (NoContentException nce) {

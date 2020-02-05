@@ -12,6 +12,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * Sending messages is the main feature provide by the Vivial Connect API. This class represents the Message entity and provide all the
  * properties and methods needed for send and retrieve messages from your account.
@@ -190,7 +196,11 @@ public class Message extends VivialConnectResource {
      * using the {@link #addMediaUrl(String)} and {@link #setMediaUrls(List)} methods.
      *
      * @return the message that was just sent
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #setBody(String)
      * @see #setFromNumber(String)
      * @see #setToNumber(String)
@@ -198,7 +208,7 @@ public class Message extends VivialConnectResource {
      * @see #addMediaUrl(String)
      * @see #setMediaUrls(List)
      */
-    public Message send() throws VivialConnectException {
+    public Message send() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Message sentMessage = request(RequestMethod.POST, classURL(Message.class), jsonBody(), null, Message.class);
         updateObjectState(sentMessage);
         return this;
@@ -260,11 +270,15 @@ public class Message extends VivialConnectResource {
      *
      * @param messageId the id of the message to look up
      * @return the Message found, or null if not found
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getMessages()
      * @see #getMessages(Map)
      */
-    public static Message getMessageById(int messageId) throws VivialConnectException {
+    public static Message getMessageById(int messageId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.valueOf(messageId)), null, null, Message.class);
     }
 
@@ -272,11 +286,15 @@ public class Message extends VivialConnectResource {
      * Gets all the messages associated with the current account. If there are none, this method will return an empty { @link List }
      *
      * @return a list of messages
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getMessageById(int)
      * @see #getMessages(Map)
      */
-    public static List<Message> getMessages() throws VivialConnectException {
+    public static List<Message> getMessages() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getMessages(null);
     }
 
@@ -289,11 +307,15 @@ public class Message extends VivialConnectResource {
      *                        <p>
      *                        <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
      * @return a list of messages
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getMessages()
      * @see #getMessageById(int)
      */
-    public static List<Message> getMessages(Map<String, String> queryParameters) throws VivialConnectException {
+    public static List<Message> getMessages(Map<String, String> queryParameters) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURL(Message.class), null, queryParameters, MessageCollection.class).getMessages();
     }
 
@@ -301,9 +323,13 @@ public class Message extends VivialConnectResource {
      * Total number of messages in the account. If there are none, this method will return <code>0</code>.
      *
      * @return message count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count() throws VivialConnectException {
+    public static int count() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, "count"), null, null, ResourceCount.class).getCount();
     }
 
@@ -311,9 +337,13 @@ public class Message extends VivialConnectResource {
      * Retrieves this message's media attachments. If the message has none, it will return an empty {@link List}.
      *
      * @return an attachment list
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public List<Attachment> getAttachments() throws VivialConnectException {
+    public List<Attachment> getAttachments() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, String.format("%d/attachments", this.getId())), null, null, AttachmentCollection.class).getAttachments();
     }
 
@@ -321,9 +351,13 @@ public class Message extends VivialConnectResource {
      * Redacts the text message by replacing the message body text with an empty value.
      *
      * @return this Message instance with the body text redacted
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public Message redact() throws VivialConnectException {
+    public Message redact() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Message redactedMessage = request(RequestMethod.PUT, classURLWithSuffix(Message.class, String.valueOf(this.getId())), jsonBodyEmpty(), null, Message.class);
         updateObjectState(redactedMessage);
 

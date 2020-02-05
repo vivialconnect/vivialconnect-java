@@ -2,6 +2,12 @@ package net.vivialconnect.model.number;
 
 import net.vivialconnect.model.error.VivialConnectException;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  *  Interface that defines the common characteristics for numbers that can be purchased
  */
@@ -26,7 +32,6 @@ public interface AvailableNumber extends INumber {
      * @see #setIncomingTextFallbackMethod(java.lang.String)
      * 
      * @return the newly-purchased number, associated to your account
-     * @throws VivialConnectException if there is an API-level error, such as the number not being found
      */
-    AssociatedNumber buy() throws VivialConnectException;
+    AssociatedNumber buy() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException;
 }
