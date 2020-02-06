@@ -52,6 +52,7 @@ import net.vivialconnect.model.error.UnauthorizedAccessException;
 import net.vivialconnect.model.error.MessageError;
 import net.vivialconnect.model.error.MessageErrorException;
 import net.vivialconnect.model.error.RateLimitException;
+
 /**
  * Base class that provides properties and methods for API resource creation, request and response handling.
  */
@@ -191,16 +192,21 @@ public abstract class VivialConnectResource implements Serializable {
      */
     protected static <T> T request(VivialConnectResource.RequestMethod method,
                                    String url, String body, Map<String, String> queryParams,
-                                   Class<T> responseClass)throws BadRequestException, ServerErrorException, UnauthorizedAccessException,
+                                   Class<T> responseClass) throws BadRequestException, ServerErrorException, UnauthorizedAccessException,
             ForbiddenAccessException, ApiRequestException {
+
+        URL endpoint;
+        Map<String, String> headers;
+
         try {
-            URL endpoint = createEndpoint(url, method, queryParams);
+
+            endpoint = createEndpoint(url, method, queryParams);
             Date currentDate = new Date();
 
             String requestTimestamp = createRequestTimestamp(currentDate);
             String requestDate = createRequestDate(currentDate);
 
-            Map<String, String> headers = new HashMap<String, String>();
+            headers = new HashMap<String, String>();
             headers.put("Date", requestDate);
             headers.put("Host", endpoint.getHost());
             headers.put("Accept", "application/json");
@@ -238,24 +244,12 @@ public abstract class VivialConnectResource implements Serializable {
                     System.getProperty("os.arch"));
             ObjectMapper mapper = new ObjectMapper();
             headers.put("X-VivialConnect-User-Agent", mapper.writeValueAsString(xUserAgent));
-
-            return request(endpoint, method, headers, queryParams, body, responseClass);
-            /* return jerseyRequest(endpoint, method, headers, queryParams, body, responseClass); */
-        } catch (NoContentException nce) {
-            throw nce;
-        } catch (BadRequestException e) {
-            throw e;
-        } catch (ServerErrorException e) {
-            throw e;
-        } catch (UnauthorizedAccessException e) {
-            throw e;
-        } catch (ForbiddenAccessException e) {
-            throw e;
-        } catch (ApiRequestException e) {
-            throw e;
         } catch (Exception e) {
             throw new ApiRequestException(e);
         }
+
+        return request(endpoint, method, headers, queryParams, body, responseClass);
+        /* return jerseyRequest(endpoint, method, headers, queryParams, body, responseClass); */
     }
 
 
@@ -309,7 +303,7 @@ public abstract class VivialConnectResource implements Serializable {
         return iso8601.format(currentDate);
     }
 
-    private static String createRequestDate(Date currentDate){
+    private static String createRequestDate(Date currentDate) {
         DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         requestDateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
 
@@ -337,9 +331,10 @@ public abstract class VivialConnectResource implements Serializable {
 
     private static <T> T request(URL endpoint, VivialConnectResource.RequestMethod method, Map<String, String> headers,
                                  Map<String, String> queryParams, String body, Class<T> responseClass)
-            throws IOException, NoContentException, VivialConnectException {
+            throws NoContentException, BadRequestException, ForbiddenAccessException, ServerErrorException, ApiRequestException, UnauthorizedAccessException {
 
         HttpURLConnection connection = null;
+        T entityResponse;
 
         try {
             connection = prepareConnection(endpoint, method);
@@ -348,10 +343,14 @@ public abstract class VivialConnectResource implements Serializable {
 
             String response = doRequest(connection);
 
-            return unmarshallResponse(response, responseClass);
+            entityResponse = unmarshallResponse(response, responseClass);
+        } catch (IOException e) {
+            throw new ApiRequestException(e);
         } finally {
             disconnect(connection);
         }
+
+        return entityResponse;
     }
 
     private static HttpURLConnection prepareConnection(URL endpoint, RequestMethod method) throws IOException {
@@ -397,40 +396,38 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
 
-    private static String doRequest(HttpURLConnection connection) throws NoContentException, VivialConnectException {
+    private static String doRequest(HttpURLConnection connection) throws NoContentException, ForbiddenAccessException, BadRequestException,
+            UnauthorizedAccessException, ServerErrorException, ApiRequestException, IOException {
         BufferedReader reader = null;
+        String response = null;
 
         try {
             InputStream inputStream = connection.getInputStream();
             reader = createBufferedReader(inputStream);
 
-            String response = readResponse(reader);
+            response = readResponse(reader);
             if (connection.getResponseCode() == 204 /* No Content */) {
                 throw new NoContentException();
             }
 
-            return response;
         } catch (IOException ioe) {
-            throw convertToVivialExceptions(ioe, connection);
+            convertToVivialExceptions(ioe, connection);
         } finally {
             if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    throw convertToVivialExceptions(e, null);
-                }
+                reader.close();
             }
         }
+        return response;
     }
 
 
-    private static VivialConnectException convertToVivialExceptions(IOException ioe, HttpURLConnection connection) {
+    private static void convertToVivialExceptions(IOException ioe, HttpURLConnection connection) throws BadRequestException, UnauthorizedAccessException,
+            ForbiddenAccessException, ApiRequestException, ServerErrorException, IOException {
         if (connection == null) {
-            return new ApiRequestException(ioe);
+            throw new ApiRequestException(ioe);
         }
 
         BufferedReader reader = null;
-        VivialConnectException exception;
 
         try {
             reader = createBufferedReader(connection.getErrorStream());
@@ -443,53 +440,38 @@ public abstract class VivialConnectResource implements Serializable {
 
                 case 400:
                     if (errorResponse.getErrorCode() != 0) {
-                        exception = new MessageErrorException(errorResponse.getErrorCode(), errorResponse.getErrorMessage(), connectionResponseCode, ioe);
+                        throw new MessageErrorException(errorResponse.getErrorCode(), errorResponse.getErrorMessage(), connectionResponseCode, ioe);
                     } else {
-                        exception = new BadRequestException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+                        throw new BadRequestException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
                     }
-                    break;
 
                 case 401:
-                    exception = new UnauthorizedAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
-                    break;
+                    throw new UnauthorizedAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
 
                 case 403:
-                    exception = new ForbiddenAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
-                    break;
+                    throw new ForbiddenAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
 
                 case 404:
-                    exception = new ResourceNotFoundException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
-                    break;
+                    throw new ResourceNotFoundException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
 
                 case 429:
-                    exception = new RateLimitException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
-                    break;
+                    throw new RateLimitException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
 
                 case 500:
-                    exception = new ServerErrorException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
-                    break;
+                    throw new ServerErrorException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
 
                 default:
                     String rawErrorMessage = errorResponse.getErrorMessage();
                     String errorMessage = rawErrorMessage == null ? "" : rawErrorMessage;
-                    exception = new ApiRequestException(connectionResponseCode, errorMessage, ioe);
-                    break;
+                    throw new ApiRequestException(connectionResponseCode, errorMessage, ioe);
 
             }
 
-        } catch (IOException e) {
-            exception = new ApiRequestException(e);
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    exception = new ApiRequestException(e);
-                }
+            if(reader != null) {
+                reader.close();
             }
         }
-
-        return exception;
     }
 
 
