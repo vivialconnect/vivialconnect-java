@@ -9,6 +9,12 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.model.log.LogCollection;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 
 /**
  * To access the Vivial Connect API, you must have an account. To set up an account, visit <a href="https://www.vivialconnect.net/">Vivial Connect.</a>
@@ -76,9 +82,13 @@ public class Account extends VivialConnectResource {
      * Retrieve the information for this Account.
      *
      * @return account object
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static Account getAccount() throws VivialConnectException {
+    public static Account getAccount() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, singleClassURL(Account.class), null, null, Account.class);
     }
 
@@ -94,9 +104,13 @@ public class Account extends VivialConnectResource {
      * holding a 404 response code will be thrown.
      *
      * @return this instance of {@link Account} with the updated properties
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public Account update() throws VivialConnectException {
+    public Account update() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Account updatedAccount = request(RequestMethod.PUT, singleClassURL(Account.class),
                 buildJsonBodyForUpdate(), null, Account.class);
         updateFields(updatedAccount);

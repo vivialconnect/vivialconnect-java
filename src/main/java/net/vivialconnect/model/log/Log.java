@@ -8,6 +8,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * This class holds Vivial Connect logs a variety of events.
  * <p>
@@ -131,10 +137,14 @@ public class Log extends VivialConnectResource {
      * @param startTime start date and time in ISO 8601 format like YYYYMMDDThhmmssZ
      * @param endTime   end date and time in ISO 8601 format like YYYYMMDDThhmmssZ
      * @return a list of log collection
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getLogs(Date, Date, Map)
      */
-    public static LogCollection getLogs(Date startTime, Date endTime) throws VivialConnectException {
+    public static LogCollection getLogs(Date startTime, Date endTime) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getLogs(startTime, endTime, null);
     }
 
@@ -158,10 +168,14 @@ public class Log extends VivialConnectResource {
      *                        <p>
      *                        <code>start_key</code> – Used for pagination: value of last_key from previous response
      * @return a list of log collection
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getLogs(Date, Date)
      */
-    public static LogCollection getLogs(Date startTime, Date endTime, Map<String, String> queryParameters) throws VivialConnectException {
+    public static LogCollection getLogs(Date startTime, Date endTime, Map<String, String> queryParameters) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         queryParameters = buildQueryParams(startTime, endTime, null, queryParameters);
         return request(RequestMethod.GET, classURL(Log.class), null, queryParameters, LogCollection.class);
     }
@@ -175,10 +189,14 @@ public class Log extends VivialConnectResource {
      * @param endTime        end date and time in ISO 8601 format like YYYYMMDDThhmmssZ
      * @param aggregatorType valid values are: minutes, hours, days, months, years
      * @return a list of log collection
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getAggregate(Date, Date, String, Map)
      */
-    public static LogCollection getAggregate(Date startTime, Date endTime, String aggregatorType) throws VivialConnectException {
+    public static LogCollection getAggregate(Date startTime, Date endTime, String aggregatorType) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getAggregate(startTime, endTime, aggregatorType, null);
     }
 
@@ -202,10 +220,14 @@ public class Log extends VivialConnectResource {
      *                        <p>
      *                        <code>start_key</code> – Used for pagination. Value of last_key from previous response
      * @return a list of log collection
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getAggregate(Date, Date, String)
      */
-    public static LogCollection getAggregate(Date startTime, Date endTime, String aggregatorType, Map<String, String> queryParameters) throws VivialConnectException {
+    public static LogCollection getAggregate(Date startTime, Date endTime, String aggregatorType, Map<String, String> queryParameters) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         queryParameters = buildQueryParams(startTime, endTime, aggregatorType, queryParameters);
         return request(RequestMethod.GET, classURLWithSuffix(Log.class, "aggregate"), null, queryParameters, LogCollection.class);
     }

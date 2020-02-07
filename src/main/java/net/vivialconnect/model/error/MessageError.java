@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The values of this class are used for populate the VivialConnectException when an error occurs.
  * @see VivialConnectException
  */
-public class ErrorMessage {
+public class MessageError {
     /**
      * Error description
      */
@@ -19,7 +19,7 @@ public class ErrorMessage {
     @JsonProperty("error_code")
     private int errorCode;
 
-    public ErrorMessage() {
+    public MessageError() {
     }
 
     /**
@@ -28,7 +28,7 @@ public class ErrorMessage {
      * @param errorMessage error description value
      * @param errorCode    error code value
      */
-    public ErrorMessage(String errorMessage, int errorCode) {
+    public MessageError(String errorMessage, int errorCode) {
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
     }

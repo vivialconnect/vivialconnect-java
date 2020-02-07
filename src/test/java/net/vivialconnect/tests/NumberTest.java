@@ -460,18 +460,6 @@ public class NumberTest extends BaseTestCase {
         }
     }
       
-    @Test
-    public void test_get_available_local_numbers_with_invalid_param() throws VivialConnectException {
+//@Mgs.123
 
-        Map<String, String> params = new HashMap<String, String>();
-
-        DataSource dataSource = getDataSource();
-
-        try {
-            dataSource.findAvailableNumbersByAreaCode("error", params);
-        } catch (VivialConnectException e) {
-            assertEquals("Error fetching available numbers", e.getMessage());
-            assertEquals(0, e.getErrorCode());
-        }
-    }
 }

@@ -1,12 +1,15 @@
 package net.vivialconnect.tests.data;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.EmptyJson;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
@@ -432,6 +435,131 @@ public class VivialConnectServer implements DataSource {
     public List<Message> getBulk(String bulkId) throws VivialConnectException{
         return BulkMessage.getBulk(bulkId);
 	}
+
+
+    @Override
+    public void throwBadRequestException() throws VivialConnectException {
+        Number.findAvailableNumbersByAreaCode("INVALID");
+    }
+
+    /**
+     * Try to authenticate to the API using invalid credentials
+     *
+     * @throws UnauthorizedAccessException It should throw an UnauthorizedAccessException.
+     */
+    @Override
+    public void throwUnauthorizedAccessException() throws VivialConnectException {
+        int currentAccountId = VivialConnectClient.getAccountId();
+        String apiKey = VivialConnectClient.getApiKey();
+        String apiSecret = VivialConnectClient.getApiSecret();
+
+        try {
+            VivialConnectClient.init(currentAccountId, "invalid_key", "invalid_key_secret");
+            Message.count();
+        } finally {
+            VivialConnectClient.init(currentAccountId, apiKey, apiSecret);
+        }
+
+    }
+
+    /**
+     * Try to get the associated numbers of an account using an invalid account ID
+     *
+     * @throws VivialConnectException It should throw a ForbiddenAccessException.
+     */
+    @Override
+    public void throwForbiddenAccessException() throws VivialConnectException {
+
+        String key = VivialConnectClient.getApiKey();
+        String secret = VivialConnectClient.getApiSecret();
+        int wrongAccountId = 10;
+
+        VivialConnectClient.init(wrongAccountId, key, secret);
+
+        Number.getAssociatedNumbers();
+
+    }
+
+    /**
+     * Try get a message with an invalid ID
+     *
+     * @throws ResourceNotFoundException must throw this exception with a bad request status code
+     */
+    @Override
+    public void throwResourceNotFoundException() throws VivialConnectException {
+        int invalidId = 9999999;
+        Message.getMessageById(invalidId);
+
+    }
+
+    /**
+     * Throwing exception as is. The test case is not consistent to replicate using the API.
+     *
+     * @throws VivialConnectException
+     */
+    @Override
+    public void throwRateLimitException() throws VivialConnectException {
+        throw new RateLimitException();
+    }
+
+    /**
+     * Try to search an available local number without the phone number type.
+     *
+     * @throws VivialConnectException It should throw a ServerErrorException with a http response code 500.
+     */
+    @Override
+    public void throwServerErrorException() throws VivialConnectException {
+        Number.findAvailableNumbersByAreaCode("");
+    }
+
+    /**
+     * Try to send an international sms using an account that is not enabled.
+     * NOTE: Verify that international SMS is disabled for the account.
+     *
+     * @throws VivialConnectException it should throw a ApiRequestException. This is the default exception if there's not
+     *                                one in specific.
+     */
+    @Override
+    public void throwUnexpectedErrorException() throws VivialConnectException {
+
+        List<AssociatedNumber> numbers = Number.getAssociatedNumbers();
+        AssociatedNumber fromNumberAssociated = numbers.get(0);
+
+        String fromNumber = fromNumberAssociated.getPhoneNumber();
+        String internationalNumber = System.getProperty("vivialconnect.test.intl_number");
+        ;
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(internationalNumber);
+        message.setBody("This is going to fail");
+
+        message.send();
+
+    }
+
+    /**
+     * Try to send a message without body.
+     *
+     * @throws VivialConnectException it should throw a MessageErrorException.
+     */
+    @Override
+    public void throwMessageErrorException() throws VivialConnectException {
+
+        List<AssociatedNumber> numbers = Number.getAssociatedNumbers();
+        AssociatedNumber fromNumberAssociated = numbers.get(0);
+        AssociatedNumber toNumberAssociated = numbers.get(1);
+
+        String fromNumber = fromNumberAssociated.getPhoneNumber();
+        String toNumber = toNumberAssociated.getPhoneNumber();
+
+        Message message = new Message();
+        message.setFromNumber(fromNumber);
+        message.setToNumber(toNumber);
+
+        message.send();
+    }
+
 
     @Override
     public List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException {

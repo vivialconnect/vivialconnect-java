@@ -4,23 +4,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.lang.Integer;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.vivialconnect.model.connector.*;
+import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.*;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
 import org.apache.commons.io.IOUtils;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
 import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.account.ContactCollection;
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
@@ -29,7 +27,7 @@ import net.vivialconnect.model.log.LogCollection;
 public class MockData implements DataSource {
 
     private List<AvailableNumber> availableNumbers;
-    private List<AssociatedNumber> associatedNumbers = new ArrayList<AssociatedNumber>();
+    private List<AssociatedNumber> associatedNumbers;
     private List<Contact> contacts;
     private List<User> users;
     private List<Attachment> attachments;
@@ -361,10 +359,10 @@ public class MockData implements DataSource {
         return null;
     }
 
-    private void checkForError(Message message) throws VivialConnectException {
+    private void checkForError(Message message) throws MessageErrorException {
 
         if (message.getBody() == null && message.getFromNumber() != null && message.getToNumber() != null) {
-            throw new VivialConnectException(10000, "Message body OR media_urls must be provided", 400, null);
+            throw new MessageErrorException(10000, "Message body OR media_urls must be provided", 400, null);
         }
 
         if (message.getMediaUrls() != null) {
@@ -375,27 +373,27 @@ public class MockData implements DataSource {
             String fileNameExtension = fileNameExtensionParts[fileNameExtensionParts.length - 1];
 
             if (!supportedExtensionsList.contains("." + fileNameExtension))
-                throw new VivialConnectException(10002, null, 400, null);
+                throw new MessageErrorException(10002, null, 400, null);
         }
 
         if (message.getBody() != null && message.getBody().length() > 2048) {
-            throw new VivialConnectException(10003, "Message body must be less than 2048 characters", 400, null);
+            throw new MessageErrorException(10003, "Message body must be less than 2048 characters", 400, null);
         }
 
         if (message.getBody() != null && message.getBody().equals("OPTOUT TEST MESSAGE")) {
-            throw new VivialConnectException(10005, "to_number is opted out for messages from from_number", 400, null);
+            throw new MessageErrorException(10005, "to_number is opted out for messages from from_number", 400, null);
         }
 
         if (message.getFromNumber() != null && message.getFromNumber().equals("+16162000000")) {
-            throw new VivialConnectException(10008, "from_number invalid, inactive, or not owned", 400, null);
+            throw new MessageErrorException(10008, "from_number invalid, inactive, or not owned", 400, null);
         }
 
         if (message.getConnectorId() == 999999999) {
-            throw new VivialConnectException(10009, "connector_id invalid, inactive, or not owned", 400, null);
+            throw new MessageErrorException(10009, "connector_id invalid, inactive, or not owned", 400, null);
         }
 
-        if (message.getFromNumber() == null && message.getConnectorId() > 0) {
-            throw new VivialConnectException(10012, "Must specify to_number", 400, null);
+        if (message.getToNumber() == null) {
+            throw new MessageErrorException(10012, "Must specify to_number", 400, null);
         }
 
     }
@@ -960,7 +958,7 @@ public class MockData implements DataSource {
 
     @Override
     public BulkInfo sendBulkWithoutNumbers(BulkMessage bulkMessage) throws VivialConnectException {
-        throw new VivialConnectException();
+        throw new IllegalStateException();
     }
 
     @Override
@@ -972,6 +970,56 @@ public class MockData implements DataSource {
     public List<Message> getBulk(String bulkId) throws VivialConnectException {
         return loadFixture("bulk", MessageCollection.class,false).getMessages();
     }
+
+    @Override
+    public void throwBadRequestException() throws BadRequestException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new BadRequestException(400, "Something went wrong", cause);
+    }
+
+    @Override
+    public void throwUnauthorizedAccessException() throws  UnauthorizedAccessException{
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new UnauthorizedAccessException(401,"Unauthorized Access to the resource", cause);
+    }
+
+    @Override
+    public void throwForbiddenAccessException() throws ForbiddenAccessException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new ForbiddenAccessException(403,"Forbidden Access to the resource", cause);
+    }
+
+    @Override
+    public void throwResourceNotFoundException() throws ResourceNotFoundException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new ResourceNotFoundException(404,"Resource not found", cause);
+    }
+
+    @Override
+    public void throwRateLimitException() throws RateLimitException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new RateLimitException(429, "Rate limit reached", cause);
+
+    }
+
+    @Override
+    public void throwServerErrorException() throws ServerErrorException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new ServerErrorException(500, "Server Error", cause);
+    }
+
+    @Override
+    public void throwUnexpectedErrorException() throws VivialConnectException {
+        throw new ApiRequestException();
+    }
+
+    @Override
+    public void throwMessageErrorException() throws MessageErrorException {
+        VivialConnectException cause = new VivialConnectException("Mock exception", null);
+        throw new MessageErrorException(10000,"Message body OR media_urls must be provided",400, cause);
+    }
+
+
 
     @Override
     public List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException {
