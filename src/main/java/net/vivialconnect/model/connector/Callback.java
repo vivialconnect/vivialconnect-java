@@ -4,9 +4,13 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
 
 /**
  * The CALLBACKS resource allows you to set callback URLs for message status, incoming messages,
@@ -83,9 +87,13 @@ public class Callback extends VivialConnectResource {
      *
      * @param connectorId connector ID value
      * @return a Connector instance with callbacks
-     * @throws VivialConnectException if an error occurs at API level
-     */
-    public static ConnectorWithCallbacks getCallbacks(int connectorId) throws VivialConnectException {
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     * */
+    public static ConnectorWithCallbacks getCallbacks(int connectorId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/callbacks", connectorId)), null, null, Connector.class);
     }
 

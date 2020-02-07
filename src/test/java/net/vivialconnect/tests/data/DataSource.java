@@ -6,6 +6,7 @@ import java.util.Date;
 
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
@@ -13,7 +14,6 @@ import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.user.User;
-import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.connector.Connector;
 import net.vivialconnect.model.connector.Callback;
@@ -187,5 +187,23 @@ public interface DataSource {
     BulkInfoCollection getCreatedBulks() throws VivialConnectException;
     
     List<Message> getBulk(String bulkId) throws VivialConnectException;
+
+    // Exceptions
+
+    void throwBadRequestException() throws VivialConnectException;
+
+    void throwUnauthorizedAccessException() throws VivialConnectException;
+
+    void throwForbiddenAccessException() throws VivialConnectException;
+
+    void throwResourceNotFoundException() throws VivialConnectException;
+
+    void throwRateLimitException() throws  VivialConnectException;
+
+    void throwServerErrorException() throws VivialConnectException;
+
+    void throwUnexpectedErrorException() throws VivialConnectException;
+
+    void throwMessageErrorException() throws VivialConnectException;
     
 }

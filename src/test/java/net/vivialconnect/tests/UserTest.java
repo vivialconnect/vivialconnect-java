@@ -1,16 +1,10 @@
 package net.vivialconnect.tests;
 
 import static org.junit.Assert.*;
-
-import java.lang.Integer;
-
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.HashMap;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.vivialconnect.model.user.User;

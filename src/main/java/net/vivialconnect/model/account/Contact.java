@@ -12,6 +12,11 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
 
 /**
  * This class contains information of account users and administrators.
@@ -156,10 +161,14 @@ public class Contact extends VivialConnectResource {
      * <p>
      *
      * @return this instance of {@link Contact} with the newly-created properties
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Contact#update()
      */
-    public Contact create() throws VivialConnectException {
+    public Contact create() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         verifyRequiredFields();
         Contact createdContact = request(RequestMethod.POST, classURL(Contact.class),
                 jsonBodyForCreate(), null, Contact.class);
@@ -284,9 +293,13 @@ public class Contact extends VivialConnectResource {
      * holding a 404 response code will be thrown.
      *
      * @return this instance of {@link Contact} with the updated properties
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public Contact update() throws VivialConnectException {
+    public Contact update() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         verifyRequiredFields();
         Contact updatedContact = request(RequestMethod.PUT, classURLWithSuffix(Contact.class, String.valueOf(getId())),
                 jsonBodyForUpdate(), null, Contact.class);
@@ -307,9 +320,13 @@ public class Contact extends VivialConnectResource {
      * <p>
      *
      * @return a boolean value, indicating whether the contact was deleted or not
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public boolean delete() throws VivialConnectException {
+    public boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Contact.class, String.valueOf(getId())), null, null, String.class);
         } catch (NoContentException nce) {
@@ -325,11 +342,15 @@ public class Contact extends VivialConnectResource {
      * If no Contact were found for this {@link Account}, a VivialConnectException will be thrown.
      *
      * @return a list of contacts
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getContactById(int)
      * @see #getContacts(Map)
      */
-    public static List<Contact> getContacts() throws VivialConnectException {
+    public static List<Contact> getContacts() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getContacts(null);
     }
 
@@ -344,11 +365,15 @@ public class Contact extends VivialConnectResource {
      *                    <p>
      *                    <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
      * @return a list of contact
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getContacts()
      * @see #getContactById(int)
      */
-    public static List<Contact> getContacts(Map<String, String> queryParams) throws VivialConnectException {
+    public static List<Contact> getContacts(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURL(Contact.class), null, queryParams, ContactCollection.class).getContacts();
     }
 
@@ -359,11 +384,15 @@ public class Contact extends VivialConnectResource {
      *
      * @param contactId the id of the user to look up
      * @return the Contact that was found given the id
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getContacts()
      * @see #getContacts(Map)
      */
-    public static Contact getContactById(int contactId) throws VivialConnectException {
+    public static Contact getContactById(int contactId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return new Contact(request(RequestMethod.GET, classURLWithSuffix(Contact.class, String.valueOf(contactId)), null, null, Contact.class));
     }
 
@@ -371,9 +400,13 @@ public class Contact extends VivialConnectResource {
      * Total number of contacts in the account specified. If there are none, this method will return <code>0</code>.
      *
      * @return contact count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count() throws VivialConnectException {
+    public static int count() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Contact.class, "count"), null, null, ResourceCount.class).getCount();
     }
 

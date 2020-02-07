@@ -4,16 +4,7 @@ import java.io.IOException;
 
 /**
  * Map errors that occur at API-level.
- * <p>
- * The API has two kind of errors:
- * <ul>
- *     <li>Errors with error code and description</li>
- *     <li>Errors with a description only</li>
- * </ul>
- * <p>
- * When an error returns only the description the error code will be "empty"(in this case, it will be zero), otherwise, if
- * the error contains an error code and error description the two values will be filled accordingly.
- * <p>
+
  * For more info about errors with description and error code visit:
  * <a href="https://dashboard.vivialconnect.net/docs/api/errors.html">Error Codes and Rate Limits</a>
  */
@@ -25,11 +16,6 @@ public class VivialConnectException extends Exception {
      */
     private int responseCode;
 
-    /**
-     * Platform error code
-     */
-    private int errorCode;
-
 
     public VivialConnectException() {
     }
@@ -39,9 +25,8 @@ public class VivialConnectException extends Exception {
         super(message, cause);
     }
 
-    public VivialConnectException(int errorCode, String message, int responseCode, Throwable cause) {
+    public VivialConnectException(int responseCode, String message, Throwable cause) {
         super(message, cause);
-        this.errorCode = errorCode;
         this.responseCode = responseCode;
     }
 
@@ -51,6 +36,7 @@ public class VivialConnectException extends Exception {
     }
 
 
+    
     /**
      * Gets the error message.
      * <p>
@@ -90,30 +76,4 @@ public class VivialConnectException extends Exception {
         this.responseCode = responseCode;
     }
 
-    /**
-     * Platform error code
-     *
-     * @return platform error code value
-     */
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    /**
-     * Set platform error code
-     *
-     * @param errorCode platform error code value
-     */
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    @Override
-    public String toString() {
-
-        String errorDescription = this.errorCode > 0 ?
-                String.format("Error Code: %d - %s\n", this.errorCode, super.getMessage()) :
-                super.getMessage();
-        return errorDescription;
-    }
 }

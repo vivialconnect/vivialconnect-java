@@ -9,6 +9,12 @@ import net.vivialconnect.model.error.VivialConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * In the API, the phone_numbers resource allows you to associate or disassociate phone numbers from a Connector.
  * When creating or editing a phone number association, you must provide a phone_number or phone_number_id for a phone number you own.
@@ -52,9 +58,13 @@ public class PhoneNumber extends VivialConnectResource {
     /**
      * @param connectorId connector ID
      * @see PhoneNumber#getPhoneNumbers(int, int)
-     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws VivialConnectException {
+    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getPhoneNumbers(connectorId, 1);
     }
 
@@ -64,9 +74,13 @@ public class PhoneNumber extends VivialConnectResource {
      * @param connectorId connector ID value
      * @param page        page number value
      * @return an instance of connector with a list of its phone numbers
-     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws VivialConnectException {
+    public static ConnectorWithPhoneNumbers getPhoneNumbers(int connectorId, int page) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         Map<String, String> pageParam = new HashMap<String, String>();
         pageParam.put("page", String.valueOf(page));
@@ -82,9 +96,13 @@ public class PhoneNumber extends VivialConnectResource {
      *
      * @param connectorId connector ID
      * @return count of phone numbers associated to the connector
-     * @throws VivialConnectException if the connector does not exist or an error occurs at API-level
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count(int connectorId) throws VivialConnectException {
+    public static int count(int connectorId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.format("%d/phone_numbers/count", connectorId)), null, null, ResourceCount.class).getCount();
     }
 

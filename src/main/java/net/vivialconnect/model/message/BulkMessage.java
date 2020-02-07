@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+
 /**
  * Bulk requests allow you to enqueue a large number of messages using only a few requests.
  * A single local phone number can only send one message per second.
@@ -163,9 +169,13 @@ public class BulkMessage extends VivialConnectResource {
      *
      * @param bulkId ID of an existing bulk.
      * @return List of messages sent in a bulk.
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static List<Message> getBulk(String bulkId) throws VivialConnectException {
+    public static List<Message> getBulk(String bulkId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         String bulkIdPath = String.format("bulk/%s", bulkId);
         return request(RequestMethod.GET, classURLWithSuffix(Message.class, bulkIdPath), null, null, MessageCollection.class).getMessages();
     }
@@ -174,9 +184,13 @@ public class BulkMessage extends VivialConnectResource {
      * Returns a collection of bulk sent. This method returns the first of multiples pages.
      *
      * @return a BulkInfoCollection that contains: list of bulk sent,count of elements retrieved, number of pages, previous and next page.
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static BulkInfoCollection getBulksCreated() throws VivialConnectException {
+    public static BulkInfoCollection getBulksCreated() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return getBulksCreated(1);
     }
 
@@ -184,9 +198,13 @@ public class BulkMessage extends VivialConnectResource {
      * Returns a collection of bulk sent. This method returns the "N" page of multiple pages.
      *
      * @return a BulkInfoCollection that contains: list of bulk sent,count of elements retrieved, number of pages, previous and next page.
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static BulkInfoCollection getBulksCreated(int page) throws VivialConnectException {
+    public static BulkInfoCollection getBulksCreated(int page) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("page", String.valueOf(page));
 
@@ -197,12 +215,16 @@ public class BulkMessage extends VivialConnectResource {
      * Send a bulk of messages.
      *
      * @return a BulkInfo with the ID of the bulk.
-     * @throws VivialConnectException throw this exception if toNumbers property is null or empty.
-     */
-    public BulkInfo send() throws VivialConnectException {
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     * */
+    public BulkInfo send() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         if (toNumbers == null || toNumbers.isEmpty()) {
-            throw new VivialConnectException("The list of numbers cannot be null or empty", null);
+            throw new IllegalStateException("The list of numbers cannot be null or empty");
         }
 
         String payload = createJson();

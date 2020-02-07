@@ -11,6 +11,11 @@ import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
 
 /**
  * Connector is used for managing connectors and their components.
@@ -121,10 +126,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @param connectorId the id of the connector to look up
      * @return the Connector that was found given the id
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getConnectors()
      */
-    public static Connector getConnectorById(int connectorId) throws VivialConnectException {
+    public static Connector getConnectorById(int connectorId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, String.valueOf(connectorId)), null, null, Connector.class);
     }
 
@@ -132,10 +141,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Gets all connectors associated with the current account. If there are none, the method will return an empty {@link List}
      *
      * @return a list of connectors
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see #getConnectorById(int)
      */
-    public static List<Connector> getConnectors() throws VivialConnectException {
+    public static List<Connector> getConnectors() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURL(Connector.class), null, null, ConnectorCollection.class).getConnectors();
     }
 
@@ -143,9 +156,13 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Total number of connectors in the account specified. If there are none, this method will return <code>0</code>.
      *
      * @return connector count
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public static int count() throws VivialConnectException {
+    public static int count() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Connector.class, "count"), null, null, ResourceCount.class).getCount();
     }
 
@@ -153,9 +170,13 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Creates a new Connector resource for the account
      *
      * @return the Connector that was created
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public Connector create() throws VivialConnectException {
+    public Connector create() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("name", getName());
 
@@ -181,9 +202,13 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * holding a 404 response code will be thrown.
      *
      * @return this instance of {@link Connector} with the updated name
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public Connector update() throws VivialConnectException {
+    public Connector update() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("id", getId())
                 .addParamPair("name", getName());
@@ -218,9 +243,13 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * holding a 404 response code will be thrown.
      *
      * @return a boolean value, indicating whether the contact was deleted or not
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
-    public boolean delete() throws VivialConnectException {
+    public boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         try {
             request(RequestMethod.DELETE, classURLWithSuffix(Connector.class, String.valueOf(getId())), null, null, String.class);
         } catch (NoContentException nce) {
@@ -302,7 +331,7 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @throws VivialConnectException if an error occurs at API level
      */
     @Override
-    public int nextPage() throws VivialConnectException {
+    public int nextPage() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         if (currentPage < pages)
             currentPage++;
@@ -320,7 +349,7 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @throws VivialConnectException if an error occurs at API level
      */
     @Override
-    public int previousPage() throws VivialConnectException {
+    public int previousPage() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
 
         if (currentPage > 1)
             currentPage--;
@@ -520,12 +549,16 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <a href="https://www.vivialconnect.net/docs/api.html#post--api-v1.0-accounts-(int-account_id)-connectors-(int-connector_id)-callbacks.json">callback section</a>.
      *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of created callbacks
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Callback
      * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
      * @see Connector#setCallbacks(java.util.List)
      */
-    public ConnectorWithCallbacks createCallbacks() throws VivialConnectException {
+    public ConnectorWithCallbacks createCallbacks() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("callbacks", callbacks);
 
@@ -555,12 +588,16 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Returns an instance of the {@link ConnectorWithCallbacks} interface, which can be used to access the updated callbacks.
      *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of updated callbacks
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Callback
      * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
      * @see Connector#setCallbacks(java.util.List)
      */
-    public ConnectorWithCallbacks updateCallbacks() throws VivialConnectException {
+    public ConnectorWithCallbacks updateCallbacks() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("callbacks", callbacks);
 
@@ -581,12 +618,16 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Removes all the callbacks associated to this connector.
      *
      * @return an instance {@link ConnectorWithCallbacks} holding an empty list of callbacks
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Callback
      * @see Connector#addCallback(net.vivialconnect.model.connector.Callback)
      * @see Connector#setCallbacks(java.util.List)
      */
-    public ConnectorWithCallbacks deleteAllCallbacks() throws VivialConnectException {
+    public ConnectorWithCallbacks deleteAllCallbacks() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return deleteCallbacks(this.callbacks);
     }
 
@@ -595,10 +636,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @param callback the callback to be removed
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Callback
      */
-    public ConnectorWithCallbacks deleteSingleCallback(Callback callback) throws VivialConnectException {
+    public ConnectorWithCallbacks deleteSingleCallback(Callback callback) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         List<Callback> singleCallbackList = new ArrayList<Callback>(1);
         singleCallbackList.add(callback);
 
@@ -610,10 +655,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @param callbacks the callbacks to be removed
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see Callback
      */
-    public ConnectorWithCallbacks deleteCallbacks(List<Callback> callbacks) throws VivialConnectException {
+    public ConnectorWithCallbacks deleteCallbacks(List<Callback> callbacks) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("callbacks", callbacks);
 
@@ -709,13 +758,17 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * <a href="https://www.vivialconnect.net/docs/api.html#post--api-v1.0-accounts-(int-account_id)-connectors-(int-connector_id)-phone_numbers.json">phone number section</a>.
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of associated phone numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
      * @see Connector#addPhoneNumber(PhoneNumber)
      * @see Connector#addPhoneNumber(int, String)
      * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers associatePhoneNumbers() throws VivialConnectException {
+    public ConnectorWithPhoneNumbers associatePhoneNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("phone_numbers", phoneNumbers);
 
@@ -743,13 +796,17 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Returns an instance of the {@link ConnectorWithPhoneNumbers} interface, which can be used to access the updated phone numbers.
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of updated phone numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
      * @see Connector#addPhoneNumber(PhoneNumber)
      * @see Connector#addPhoneNumber(int, String)
      * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers updateAssociatedPhoneNumbers() throws VivialConnectException {
+    public ConnectorWithPhoneNumbers updateAssociatedPhoneNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("phone_numbers", phoneNumbers);
 
@@ -764,13 +821,17 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Removes all the phone numbers associated to this connector.
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding an empty list of phone numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
      * @see Connector#addPhoneNumber(PhoneNumber)
      * @see Connector#addPhoneNumber(int, String)
      * @see Connector#setPhoneNumbers(List)
      */
-    public ConnectorWithPhoneNumbers deleteAllPhoneNumbers() throws VivialConnectException {
+    public ConnectorWithPhoneNumbers deleteAllPhoneNumbers() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return deletePhoneNumbers(this.phoneNumbers);
     }
 
@@ -779,10 +840,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @param phoneNumber the phone number to be removed
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
      */
-    public ConnectorWithPhoneNumbers deleteSinglePhoneNumber(PhoneNumber phoneNumber) throws VivialConnectException {
+    public ConnectorWithPhoneNumbers deleteSinglePhoneNumber(PhoneNumber phoneNumber) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         List<PhoneNumber> singlePhoneNumberList = new ArrayList<PhoneNumber>(1);
         singlePhoneNumberList.add(phoneNumber);
 
@@ -794,10 +859,14 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @param phoneNumbers the phone numbers to be removed
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
-     * @throws VivialConnectException if there is an API-level error
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params or/and payload  are not valid
+     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
      */
-    public ConnectorWithPhoneNumbers deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws VivialConnectException {
+    public ConnectorWithPhoneNumbers deletePhoneNumbers(List<PhoneNumber> phoneNumbers) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.forClass(Connector.class)
                 .addParamPair("phone_numbers", phoneNumbers);
 
@@ -820,7 +889,7 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
 
     }
 
-    private ConnectorWithPhoneNumbers paginate(int toPage) throws VivialConnectException {
+    private ConnectorWithPhoneNumbers paginate(int toPage) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("page", String.valueOf(toPage));
 

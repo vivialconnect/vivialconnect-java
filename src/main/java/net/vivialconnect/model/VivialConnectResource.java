@@ -35,7 +35,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.http.CanonicalRequestBuilder;
 import net.vivialconnect.model.account.Account;
-import net.vivialconnect.model.error.ErrorMessage;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
@@ -44,6 +43,15 @@ import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.util.CryptoUtils;
 import net.vivialconnect.util.ReflectionUtils;
 import net.vivialconnect.util.ProjectProperties;
+import net.vivialconnect.model.error.BadRequestException;
+import net.vivialconnect.model.error.ServerErrorException;
+import net.vivialconnect.model.error.ApiRequestException;
+import net.vivialconnect.model.error.ForbiddenAccessException;
+import net.vivialconnect.model.error.ResourceNotFoundException;
+import net.vivialconnect.model.error.UnauthorizedAccessException;
+import net.vivialconnect.model.error.MessageError;
+import net.vivialconnect.model.error.MessageErrorException;
+import net.vivialconnect.model.error.RateLimitException;
 
 /**
  * Base class that provides properties and methods for API resource creation, request and response handling.
@@ -184,15 +192,21 @@ public abstract class VivialConnectResource implements Serializable {
      */
     protected static <T> T request(VivialConnectResource.RequestMethod method,
                                    String url, String body, Map<String, String> queryParams,
-                                   Class<T> responseClass) throws VivialConnectException {
+                                   Class<T> responseClass) throws BadRequestException, ServerErrorException, UnauthorizedAccessException,
+            ForbiddenAccessException, ApiRequestException {
+
+        URL endpoint;
+        Map<String, String> headers;
+
         try {
-            URL endpoint = createEndpoint(url, method, queryParams);
+
+            endpoint = createEndpoint(url, method, queryParams);
             Date currentDate = new Date();
 
             String requestTimestamp = createRequestTimestamp(currentDate);
             String requestDate = createRequestDate(currentDate);
 
-            Map<String, String> headers = new HashMap<String, String>();
+            headers = new HashMap<String, String>();
             headers.put("Date", requestDate);
             headers.put("Host", endpoint.getHost());
             headers.put("Accept", "application/json");
@@ -230,15 +244,12 @@ public abstract class VivialConnectResource implements Serializable {
                     System.getProperty("os.arch"));
             ObjectMapper mapper = new ObjectMapper();
             headers.put("X-VivialConnect-User-Agent", mapper.writeValueAsString(xUserAgent));
-
-            return request(endpoint, method, headers, queryParams, body, responseClass);
-            /* return jerseyRequest(endpoint, method, headers, queryParams, body, responseClass); */
-        } catch (NoContentException nce) {
-            throw nce;
         } catch (Exception e) {
-            VivialConnectException vivialConnectException = handleException(e);
-            throw vivialConnectException;
+            throw new ApiRequestException(e);
         }
+
+        return request(endpoint, method, headers, queryParams, body, responseClass);
+        /* return jerseyRequest(endpoint, method, headers, queryParams, body, responseClass); */
     }
 
 
@@ -292,7 +303,7 @@ public abstract class VivialConnectResource implements Serializable {
         return iso8601.format(currentDate);
     }
 
-    private static String createRequestDate(Date currentDate){
+    private static String createRequestDate(Date currentDate) {
         DateFormat requestDateFormat = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
         requestDateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
 
@@ -320,9 +331,10 @@ public abstract class VivialConnectResource implements Serializable {
 
     private static <T> T request(URL endpoint, VivialConnectResource.RequestMethod method, Map<String, String> headers,
                                  Map<String, String> queryParams, String body, Class<T> responseClass)
-            throws IOException, NoContentException, VivialConnectException {
+            throws NoContentException, BadRequestException, ForbiddenAccessException, ServerErrorException, ApiRequestException, UnauthorizedAccessException {
 
         HttpURLConnection connection = null;
+        T entityResponse;
 
         try {
             connection = prepareConnection(endpoint, method);
@@ -331,10 +343,14 @@ public abstract class VivialConnectResource implements Serializable {
 
             String response = doRequest(connection);
 
-            return unmarshallResponse(response, responseClass);
+            entityResponse = unmarshallResponse(response, responseClass);
+        } catch (IOException e) {
+            throw new ApiRequestException(e);
         } finally {
             disconnect(connection);
         }
+
+        return entityResponse;
     }
 
     private static HttpURLConnection prepareConnection(URL endpoint, RequestMethod method) throws IOException {
@@ -380,76 +396,96 @@ public abstract class VivialConnectResource implements Serializable {
     }
 
 
-    private static String doRequest(HttpURLConnection connection) throws NoContentException, VivialConnectException {
+    private static String doRequest(HttpURLConnection connection) throws NoContentException, ForbiddenAccessException, BadRequestException,
+            UnauthorizedAccessException, ServerErrorException, ApiRequestException, IOException {
         BufferedReader reader = null;
+        String response = null;
 
         try {
             InputStream inputStream = connection.getInputStream();
             reader = createBufferedReader(inputStream);
 
-            String response = readResponse(reader);
+            response = readResponse(reader);
             if (connection.getResponseCode() == 204 /* No Content */) {
                 throw new NoContentException();
             }
 
-            return response;
         } catch (IOException ioe) {
-            throw convertToVivialException(ioe, connection);
+            convertToVivialExceptions(ioe, connection);
         } finally {
             if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    throw convertToVivialException(e, null);
-                }
+                reader.close();
             }
         }
+        return response;
     }
 
 
-    private static VivialConnectException convertToVivialException(IOException ioe, HttpURLConnection connection) {
+    private static void convertToVivialExceptions(IOException ioe, HttpURLConnection connection) throws BadRequestException, UnauthorizedAccessException,
+            ForbiddenAccessException, ApiRequestException, ServerErrorException, IOException {
         if (connection == null) {
-            return new VivialConnectException(ioe);
+            throw new ApiRequestException(ioe);
         }
 
         BufferedReader reader = null;
 
         try {
             reader = createBufferedReader(connection.getErrorStream());
-            String errorResponse = readResponse(reader);
-            ErrorMessage errorMessage = unmarshalErrorResponse(errorResponse);
+            String serviceErrorResponse = readResponse(reader);
+            MessageError errorResponse = unmarshalErrorResponse(serviceErrorResponse);
 
-            VivialConnectException vivialException = new VivialConnectException(errorMessage.getErrorCode(),
-                    errorMessage.getErrorMessage(),
-                    connection.getResponseCode(),
-                    ioe);
+            int connectionResponseCode = connection.getResponseCode();
 
-            return vivialException;
-        } catch (IOException e) {
-            return new VivialConnectException(e);
+            switch (connectionResponseCode) {
+
+                case 400:
+                    if (errorResponse.getErrorCode() != 0) {
+                        throw new MessageErrorException(errorResponse.getErrorCode(), errorResponse.getErrorMessage(), connectionResponseCode, ioe);
+                    } else {
+                        throw new BadRequestException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+                    }
+
+                case 401:
+                    throw new UnauthorizedAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+
+                case 403:
+                    throw new ForbiddenAccessException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+
+                case 404:
+                    throw new ResourceNotFoundException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+
+                case 429:
+                    throw new RateLimitException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+
+                case 500:
+                    throw new ServerErrorException(connectionResponseCode, errorResponse.getErrorMessage(), ioe);
+
+                default:
+                    String rawErrorMessage = errorResponse.getErrorMessage();
+                    String errorMessage = rawErrorMessage == null ? "" : rawErrorMessage;
+                    throw new ApiRequestException(connectionResponseCode, errorMessage, ioe);
+
+            }
+
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    return new VivialConnectException(e);
-                }
+            if(reader != null) {
+                reader.close();
             }
         }
     }
 
 
-    private static ErrorMessage unmarshalErrorResponse(String errorResponse) {
+    private static MessageError unmarshalErrorResponse(String errorResponse) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             Object unmarshalledObject = mapper.reader()
-                    .forType(ErrorMessage.class)
+                    .forType(MessageError.class)
                     .readValue(errorResponse);
 
-            ErrorMessage errorMessage = (ErrorMessage) unmarshalledObject;
+            MessageError errorMessage = (MessageError) unmarshalledObject;
             return errorMessage;
         } catch (Exception e) {
-            return new ErrorMessage(errorResponse, 0);
+            return new MessageError(errorResponse, 0);
         }
     }
 
