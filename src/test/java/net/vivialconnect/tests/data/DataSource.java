@@ -6,6 +6,7 @@ import java.util.Date;
 
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
@@ -187,5 +188,10 @@ public interface DataSource {
     BulkInfoCollection getCreatedBulks() throws VivialConnectException;
     
     List<Message> getBulk(String bulkId) throws VivialConnectException;
+
+
+    // Message Direction
+
+    List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException;
     
 }

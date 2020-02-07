@@ -6,6 +6,7 @@ import java.util.*;
 import java.lang.Integer;
 
 import net.vivialconnect.model.connector.*;
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.*;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
@@ -405,7 +406,7 @@ public class MockData implements DataSource {
         checkForError(message);
 
         message.setId(getMessages(null).get(0).getId() + 1);
-        message.setDirection("outbound-api");
+        message.setDirection(MessageDirection.OUTBOUND_API);
         message.setStatus("accepted");
 
         Date dateCreated = new Date();
@@ -971,5 +972,21 @@ public class MockData implements DataSource {
     public List<Message> getBulk(String bulkId) throws VivialConnectException {
         return loadFixture("bulk", MessageCollection.class,false).getMessages();
     }
-    
+
+    @Override
+    public List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException {
+
+        List<Message> messagesByDirection = new ArrayList<Message>();
+
+        for (Message message : getMessages(null)) {
+
+            if (message.getDirection() == direction) {
+                messagesByDirection.add(message);
+            }
+
+        }
+
+        return messagesByDirection;
+    }
+
 }

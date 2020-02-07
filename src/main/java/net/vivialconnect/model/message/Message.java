@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 
@@ -76,7 +77,7 @@ public class Message extends VivialConnectResource {
      * nature of the text message initiation
      */
     @JsonProperty
-    private String direction;
+    private MessageDirection direction;
 
     /**
      * Phone number that received the text message. Uses E.164 format (+country
@@ -442,7 +443,7 @@ public class Message extends VivialConnectResource {
      *
      * @return message's direction value
      */
-    public String getDirection() {
+    public MessageDirection getDirection() {
         return direction;
     }
 
@@ -451,7 +452,7 @@ public class Message extends VivialConnectResource {
      *
      * @param direction message's direction value
      */
-    public void setDirection(String direction) {
+    public void setDirection(MessageDirection direction) {
         this.direction = direction;
     }
 

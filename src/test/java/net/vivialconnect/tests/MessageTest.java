@@ -1,16 +1,14 @@
 package net.vivialconnect.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.Message;
 import net.vivialconnect.model.message.Attachment;
 import net.vivialconnect.model.message.BulkInfo;
@@ -371,6 +369,37 @@ public class MessageTest extends BaseTestCase {
             assertEquals(10012, e.getErrorCode());
             assertEquals("Must specify to_number", e.getMessage());
         }
+
+    }
+
+    @Test
+    public void test_message_direction_values() throws VivialConnectException{
+
+        DataSource dataSource = getDataSource();
+        List<Message> outboundMessages;
+        List<Message> inboundMessages;
+        boolean comparison;
+
+        inboundMessages =dataSource.getMessageByDirection(MessageDirection.INBOUND);
+        outboundMessages =dataSource.getMessageByDirection(MessageDirection.OUTBOUND_API);
+
+        assumeTrue("Not INBOUND and OUTBOUND messages", !inboundMessages.isEmpty()
+                && !outboundMessages.isEmpty());
+
+        comparison = outboundMessages.get(0).getDirection() == MessageDirection.OUTBOUND_API;
+        assertTrue(comparison);
+
+        comparison = inboundMessages.get(0).getDirection() == MessageDirection.INBOUND;
+        assertTrue(comparison);
+
+    }
+
+    @Test
+    public void test_message_direction_value_parsing(){
+
+        assertSame(MessageDirection.OUTBOUND_API, MessageDirection.parseTo("outbound-api"));
+        assertSame(MessageDirection.OUTBOUND_REPLY , MessageDirection.parseTo("outbound-reply"));
+        assertSame(MessageDirection.INBOUND , MessageDirection.parseTo("inbound"));
 
     }
 

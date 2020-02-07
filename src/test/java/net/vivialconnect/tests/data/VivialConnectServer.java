@@ -1,13 +1,11 @@
 package net.vivialconnect.tests.data;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.EmptyJson;
 import net.vivialconnect.model.message.Message;
@@ -434,4 +432,19 @@ public class VivialConnectServer implements DataSource {
     public List<Message> getBulk(String bulkId) throws VivialConnectException{
         return BulkMessage.getBulk(bulkId);
 	}
+
+    @Override
+    public List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException {
+        List<Message> messagesByDirection = new ArrayList<Message>();
+
+        for(Message message: getMessages(null)){
+
+            if(message.getDirection() == direction){
+                messagesByDirection.add(message);
+            }
+
+        }
+
+        return messagesByDirection;
+    }
 }
