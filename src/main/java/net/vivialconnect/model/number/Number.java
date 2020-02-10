@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.account.Account;
+import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
@@ -93,7 +94,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST
      */
     @JsonProperty("incoming_text_method")
-    private String incomingTextMethod;
+    private CallbackMethod incomingTextMethod;
 
     /**
      * URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter. Max. length: 256 characters
@@ -105,7 +106,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * HTTP method used for incoming_text_fallback_url requests. Max. length: 8 characters. Possible values: GET or POST
      */
     @JsonProperty("incoming_text_fallback_method")
-    private String incomingTextFallbackMethod;
+    private CallbackMethod incomingTextFallbackMethod;
 
     /**
      * Number to which voice calls will be forwarded
@@ -201,10 +202,11 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "id", getId());
         ifParamValidAddToBuilder(builder, "connector_id", getConnectorId());
         ifParamValidAddToBuilder(builder, "incoming_text_url", getIncomingTextUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod());
+        ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod().name());
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_url", getIncomingTextFallbackUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod());
+        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod().name());
         ifParamValidAddToBuilder(builder, "voice_forwarding_number", getVoiceForwardingNumber());
+        ifParamValidAddToBuilder(builder,"status_text_url", getStatusTextUrl());
     }
 
 
@@ -333,9 +335,9 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "status_text_url", getStatusTextUrl());
         ifParamValidAddToBuilder(builder, "connector_id", getConnectorId());
         ifParamValidAddToBuilder(builder, "incoming_text_url", getIncomingTextUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod());
+        ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod().name());
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_url", getIncomingTextFallbackUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod());
+        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod().name());
     }
 
     //TODO: Deprecate this
@@ -947,7 +949,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @return incoming text ulr value
      */
     @Override
-    public String getIncomingTextMethod() {
+    public CallbackMethod getIncomingTextMethod() {
         return incomingTextMethod;
     }
 
@@ -957,7 +959,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @param incomingTextMethod incoming text URL method.
      */
     @Override
-    public void setIncomingTextMethod(String incomingTextMethod) {
+    public void setIncomingTextMethod(CallbackMethod incomingTextMethod) {
         this.incomingTextMethod = incomingTextMethod;
     }
 
@@ -988,7 +990,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @return incoming text fallback method value
      */
     @Override
-    public String getIncomingTextFallbackMethod() {
+    public CallbackMethod getIncomingTextFallbackMethod() {
         return incomingTextFallbackMethod;
     }
 
@@ -998,7 +1000,7 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @param incomingTextFallbackMethod incoming text fallback method value
      */
     @Override
-    public void setIncomingTextFallbackMethod(String incomingTextFallbackMethod) {
+    public void setIncomingTextFallbackMethod(CallbackMethod incomingTextFallbackMethod) {
         this.incomingTextFallbackMethod = incomingTextFallbackMethod;
     }
 

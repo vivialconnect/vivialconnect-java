@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.vivialconnect.model.connector.*;
+import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.*;
@@ -1035,6 +1036,23 @@ public class MockData implements DataSource {
         }
 
         return messagesByDirection;
+    }
+
+    @Override
+    public List<User> getUsersByRoleType(RoleType roleType) throws VivialConnectException {
+        List<User> users = getUsers();
+        List<User> usersByRole = new ArrayList<User>();
+
+        for (User user : users) {
+            for (Role role : user.getRoles()) {
+                if (role.getRoleType() == roleType) {
+                    usersByRole.add(user);
+                    break;
+                }
+            }
+        }
+
+        return usersByRole;
     }
 
 }

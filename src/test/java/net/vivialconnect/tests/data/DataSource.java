@@ -6,6 +6,7 @@ import java.util.Date;
 
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.Message;
@@ -211,5 +212,9 @@ public interface DataSource {
     // Message Direction
 
     List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException;
+
+    // Role Type
+
+    List<User> getUsersByRoleType(RoleType roleType) throws VivialConnectException;
 
 }

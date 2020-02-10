@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.format.EmptyJson;
@@ -18,6 +19,7 @@ import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
+import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.format.JsonBodyBuilder;
 import net.vivialconnect.model.log.Log;
@@ -574,5 +576,22 @@ public class VivialConnectServer implements DataSource {
         }
 
         return messagesByDirection;
+    }
+
+    @Override
+    public List<User> getUsersByRoleType(RoleType roleType) throws VivialConnectException {
+        List<User> users = getUsers();
+        List<User> usersByRole = new ArrayList<User>();
+
+        for (User user : users) {
+            for (Role role : user.getRoles()) {
+                if (role.getRoleType() == roleType) {
+                    usersByRole.add(user);
+                    break;
+                }
+            }
+        }
+
+        return usersByRole;
     }
 }

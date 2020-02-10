@@ -5,7 +5,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.VivialConnectResource;
-import net.vivialconnect.model.error.VivialConnectException;
+import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.error.BadRequestException;
 import net.vivialconnect.model.error.ServerErrorException;
 import net.vivialconnect.model.error.ApiRequestException;
@@ -56,31 +56,7 @@ public class Callback extends VivialConnectResource {
      * The HTTP method which will be used for this callback
      */
     @JsonProperty
-    private String method;
-
-    /* public enum EventType {
-
-        INCOMING,
-        INCOMING_FALLBACK,
-        STATUS;
-
-        public String toString()
-        {
-                return this.name().toLowerCase();
-        }
-    }
-
-
-    public enum MessageType {
-
-        TEXT,
-        VOICE;
-
-        public String toString()
-        {
-                return this.name().toLowerCase();
-        }
-    } */
+    private CallbackMethod method;
 
     /**
      * Using the connector ID returns the callbacks associated to the connector
@@ -192,7 +168,7 @@ public class Callback extends VivialConnectResource {
      *
      * @return callback's method
      */
-    public String getMethod() {
+    public CallbackMethod getMethod() {
         return method;
     }
 
@@ -201,7 +177,7 @@ public class Callback extends VivialConnectResource {
      *
      * @param method callback's HTTP method
      */
-    public void setMethod(String method) {
+    public void setMethod(CallbackMethod method) {
         this.method = method;
     }
 }

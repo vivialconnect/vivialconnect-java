@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.HashMap;
+
+import net.vivialconnect.model.enums.RoleType;
+import net.vivialconnect.model.user.Role;
+import org.junit.Assume;
 import org.junit.Test;
 
 import net.vivialconnect.model.user.User;
@@ -59,6 +63,34 @@ public class UserTest extends BaseTestCase {
 
         assertTrue(getDataSource().deleteUser(newUser));
 
+    }
+
+    public void userRoleTypeBaseTest(RoleType roleType) throws VivialConnectException {
+
+        List<User> users = getDataSource().getUsersByRoleType(roleType);
+        Assume.assumeTrue("Users for role type not found: " + roleType.name(), users.size() > 0);
+
+        User user = users.get(0);
+        List<Role> roles = user.getRoles();
+
+        for (Role role : roles) {
+            if (role.getRoleType() == roleType) {
+                assertEquals(roleType, role.getRoleType());
+                return;
+            }
+        }
+
+        fail("Role not found: " + roleType);
+    }
+
+    @Test
+    public void test_system_role_type() throws VivialConnectException{
+        userRoleTypeBaseTest(RoleType.SYSTEM);
+    }
+
+    @Test
+    public void  test_client_role_type() throws  VivialConnectException{
+        userRoleTypeBaseTest(RoleType.CLIENT);
     }
 
 }

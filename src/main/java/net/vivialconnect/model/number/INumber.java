@@ -1,5 +1,7 @@
 package net.vivialconnect.model.number;
 
+import net.vivialconnect.model.enums.CallbackMethod;
+
 public interface INumber{
 	
     String getName();
@@ -14,13 +16,13 @@ public interface INumber{
     void setIncomingTextUrl(String incomingTextUrl);
 
 
-    void setIncomingTextMethod(String incomingTextMethod);
+    void setIncomingTextMethod(CallbackMethod incomingTextMethod);
 
 
     void setIncomingTextFallbackUrl(String incomingTextFallbackUrl);
 
 
-    void setIncomingTextFallbackMethod(String incomingTextFallbackMethod);
+    void setIncomingTextFallbackMethod(CallbackMethod incomingTextFallbackMethod);
 
 
     void setConnectorId(int connectorId);

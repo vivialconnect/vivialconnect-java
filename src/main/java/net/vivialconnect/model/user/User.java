@@ -13,7 +13,6 @@ import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.EmptyJson;
-import net.vivialconnect.model.format.JsonBodyBuilder;
 
 import net.vivialconnect.model.error.BadRequestException;
 import net.vivialconnect.model.error.ServerErrorException;
