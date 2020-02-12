@@ -3,6 +3,7 @@ package net.vivialconnect.model.user;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import net.vivialconnect.model.enums.RoleType;
 
 /**
  * An user has role that allow to operate over a Vivial Connect account.
@@ -52,7 +53,7 @@ public class Role {
      * Role's type
      */
     @JsonProperty("role_type")
-    private String roleType;
+    private RoleType roleType;
 
     /**
      * Unique identifier of the Role object
@@ -167,7 +168,7 @@ public class Role {
      *
      * @return type of the role value
      */
-    public String getRoleType() {
+    public RoleType getRoleType() {
         return roleType;
     }
 
@@ -176,7 +177,7 @@ public class Role {
      *
      * @param roleType role type value
      */
-    public void setRoleType(String roleType) {
+    public void setRoleType(RoleType roleType) {
         this.roleType = roleType;
     }
 }

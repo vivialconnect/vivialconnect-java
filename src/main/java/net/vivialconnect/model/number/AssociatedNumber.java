@@ -3,6 +3,7 @@ package net.vivialconnect.model.number;
 import java.util.Date;
 import java.util.Map;
 
+import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.error.BadRequestException;
 import net.vivialconnect.model.error.ServerErrorException;
@@ -165,7 +166,7 @@ public interface AssociatedNumber extends INumber {
      *
      * @return incoming text value
      */
-    String getIncomingTextMethod();
+    CallbackMethod getIncomingTextMethod();
 
     /**
      * Must return incoming fallback text
@@ -179,7 +180,7 @@ public interface AssociatedNumber extends INumber {
      *
      * @return incoming fallback method value
      */
-    String getIncomingTextFallbackMethod();
+    CallbackMethod getIncomingTextFallbackMethod();
 
     /**
      * Must return the connector ID

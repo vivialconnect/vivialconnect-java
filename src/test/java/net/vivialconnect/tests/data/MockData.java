@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.vivialconnect.model.connector.*;
+import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
+import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.*;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
@@ -403,7 +405,7 @@ public class MockData implements DataSource {
         checkForError(message);
 
         message.setId(getMessages(null).get(0).getId() + 1);
-        message.setDirection("outbound-api");
+        message.setDirection(MessageDirection.OUTBOUND_API);
         message.setStatus("accepted");
 
         Date dateCreated = new Date();
@@ -1018,5 +1020,39 @@ public class MockData implements DataSource {
         throw new MessageErrorException(10000,"Message body OR media_urls must be provided",400, cause);
     }
 
+
+
+    @Override
+    public List<Message> getMessageByDirection(MessageDirection direction) throws VivialConnectException {
+
+        List<Message> messagesByDirection = new ArrayList<Message>();
+
+        for (Message message : getMessages(null)) {
+
+            if (message.getDirection() == direction) {
+                messagesByDirection.add(message);
+            }
+
+        }
+
+        return messagesByDirection;
+    }
+
+    @Override
+    public List<User> getUsersByRoleType(RoleType roleType) throws VivialConnectException {
+        List<User> users = getUsers();
+        List<User> usersByRole = new ArrayList<User>();
+
+        for (User user : users) {
+            for (Role role : user.getRoles()) {
+                if (role.getRoleType() == roleType) {
+                    usersByRole.add(user);
+                    break;
+                }
+            }
+        }
+
+        return usersByRole;
+    }
 
 }

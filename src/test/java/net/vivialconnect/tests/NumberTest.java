@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
 import net.vivialconnect.tests.data.DataSource;
@@ -461,6 +463,32 @@ public class NumberTest extends BaseTestCase {
             assertFalse(number.getTags().containsKey(tagKey));
         }
     }
-      
 
+    @Test
+    public void test_number_callbacks() throws VivialConnectException {
+
+        DataSource dataSource = getDataSource();
+        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
+
+        AssociatedNumber associatedNumber = associatedNumbers.get(0);
+
+        Number number = (Number) associatedNumber;
+
+        number.setIncomingTextFallbackMethod(CallbackMethod.GET);
+        number.setIncomingTextFallbackUrl("http://www.sample.com/callback/fallback");
+
+        number.setIncomingTextMethod(CallbackMethod.POST);
+        number.setIncomingTextUrl("http://www.sample.com/callback/incoming");
+
+        number.setStatusTextUrl("http://www.sample.com/callback/status");
+
+        dataSource.updateNumber(number);
+
+        AssociatedNumber updatedNumber = dataSource.getNumberById(associatedNumber.getId());
+
+        assertEquals(updatedNumber.getIncomingTextMethod(), associatedNumber.getIncomingTextMethod());
+        assertEquals(updatedNumber.getIncomingTextFallbackMethod(), associatedNumber.getIncomingTextFallbackMethod());
+
+    }
+  
 }

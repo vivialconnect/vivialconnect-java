@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import net.vivialconnect.model.enums.CallbackMethod;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -69,7 +70,7 @@ public class ConnectorTest extends BaseTestCase {
 
         Callback callback = new Callback();
         callback.setEventType("status");
-        callback.setMethod("POST");
+        callback.setMethod(CallbackMethod.POST);
         callback.setMessageType("text");
         callback.setUrl("http://bfaa1a06.ngrok.io");
 
@@ -78,6 +79,7 @@ public class ConnectorTest extends BaseTestCase {
         assertEquals(connector.getId(), connWithCallbacks.getId());
         List<Callback> callbacks = connWithCallbacks.getCallbacks();
         assertTrue(callbacks.size() > 0);
+        assertEquals(CallbackMethod.POST, callback.getMethod());
     }
 
     @Test
@@ -86,13 +88,15 @@ public class ConnectorTest extends BaseTestCase {
         Connector connector = connectors.get(connectors.size() - 1);
 
         List<Callback> callbacks = connector.getCallbacks();
-        assertEquals(callbacks.size(), 1);
+        assertEquals(1, callbacks.size());
         Callback callback = callbacks.get(0);
         callback.setUrl("http://some.other.url");
+        callback.setMethod(CallbackMethod.GET);
 
         Connector connWithCallbacks = (Connector)getDataSource().updateCallbacks(connector);
         assertEquals(connector.getId(), connWithCallbacks.getId());
         assertEquals(connWithCallbacks.getCallbacks().get(0).getUrl(), "http://some.other.url");
+        assertEquals(CallbackMethod.GET, connWithCallbacks.getCallbacks().get(0).getMethod());
 
         TimeUnit.SECONDS.sleep(1);
     }
@@ -107,13 +111,13 @@ public class ConnectorTest extends BaseTestCase {
 
         Callback newCallback = new Callback();
         newCallback.setEventType("incoming");
-        newCallback.setMethod("POST");
+        newCallback.setMethod(CallbackMethod.POST);
         newCallback.setMessageType("text");
         connector.addCallback(newCallback);
 
         newCallback = new Callback();
         newCallback.setEventType("incoming_fallback");
-        newCallback.setMethod("POST");
+        newCallback.setMethod(CallbackMethod.POST);
         newCallback.setMessageType("text");
         connector.addCallback(newCallback);
 
