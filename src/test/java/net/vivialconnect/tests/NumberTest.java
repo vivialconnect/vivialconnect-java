@@ -110,9 +110,10 @@ public class NumberTest extends BaseTestCase {
             numIndex++;
         } while (boughtNumber == null && numIndex < numbersToTry);
 
+        assertTrue(getDataSource().delete(boughtNumber));
+
         assertNotNull(boughtNumber);
         assertEquals(availableNumber.getPhoneNumber(), boughtNumber.getPhoneNumber());
-        assertTrue(getDataSource().delete(boughtNumber));
     }
 
     @Test
@@ -137,9 +138,10 @@ public class NumberTest extends BaseTestCase {
             numIndex++;
         } while (boughtNumber == null && numIndex < numbersToTry);
 
+        assertTrue(getDataSource().delete(boughtNumber));
+
         assertNotNull(boughtNumber);
         assertEquals(availableNumber.getPhoneNumber(), boughtNumber.getPhoneNumber());
-        assertTrue(getDataSource().delete(boughtNumber));
     }
 
     @Ignore("Purchase phone numbers with area_code is not enabled in the API")
@@ -460,6 +462,5 @@ public class NumberTest extends BaseTestCase {
         }
     }
       
-//@Mgs.123
 
 }
