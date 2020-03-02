@@ -83,8 +83,8 @@ public class Account extends VivialConnectResource {
      *
      * @return account object
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -105,8 +105,8 @@ public class Account extends VivialConnectResource {
      *
      * @return this instance of {@link Account} with the updated properties
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */

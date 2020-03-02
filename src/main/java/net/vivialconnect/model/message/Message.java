@@ -198,8 +198,8 @@ public class Message extends VivialConnectResource {
      *
      * @return the message that was just sent
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #setBody(String)
@@ -272,8 +272,8 @@ public class Message extends VivialConnectResource {
      * @param messageId the id of the message to look up
      * @return the Message found, or null if not found
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getMessages()
@@ -288,8 +288,8 @@ public class Message extends VivialConnectResource {
      *
      * @return a list of messages
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getMessageById(int)
@@ -309,8 +309,8 @@ public class Message extends VivialConnectResource {
      *                        <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
      * @return a list of messages
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getMessages()
@@ -325,8 +325,8 @@ public class Message extends VivialConnectResource {
      *
      * @return message count
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -339,8 +339,8 @@ public class Message extends VivialConnectResource {
      *
      * @return an attachment list
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -353,8 +353,8 @@ public class Message extends VivialConnectResource {
      *
      * @return this Message instance with the body text redacted
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */

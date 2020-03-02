@@ -19,7 +19,7 @@ public class ConnectorCollection {
     /**
      * Returns a collection of connectors
      *
-     * @return
+     * @return list of connectors
      */
     public List<Connector> getConnectors() {
         return connectors;

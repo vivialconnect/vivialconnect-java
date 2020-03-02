@@ -9,7 +9,7 @@ Be sure to read the API documentation: https://www.vivialconnect.net/docs
 
 ### Requirements
 
-* [JDK 6 or latest](http://www.oracle.com/technetwork/java/javase/downloads/index.html)  
+* [JDK 7 or latest](http://www.oracle.com/technetwork/java/javase/downloads/index.html)  
 
 ### Maven Installation
 
@@ -18,7 +18,7 @@ Include the following dependency into your pom.xml:
 <dependency>
   <groupId>vivialconnect</groupId>
   <artifactId>vivialconnect-java</artifactId>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
 </dependency>
 ```
 ### Manual Installation

@@ -81,8 +81,8 @@ public class Attachment extends VivialConnectResource {
      * @param attachmentId the media attachmentId
      * @return the attachment found, or null if not found
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -96,8 +96,8 @@ public class Attachment extends VivialConnectResource {
      * @param messageId the messageId that contains the attachment
      * @return number of attachment in message
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -113,8 +113,8 @@ public class Attachment extends VivialConnectResource {
      *
      * @return a boolean value, indicating whether the attachment was deleted or not
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */

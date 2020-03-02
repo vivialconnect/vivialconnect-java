@@ -20,7 +20,11 @@ public interface AssociatedNumber extends INumber {
      * Must update the current values of the instance to the API
      *
      * @return AssociatedNumber instance
-     * @throws VivialConnectException if an error occurs updating the number properties to the API
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     AssociatedNumber update() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -28,7 +32,11 @@ public interface AssociatedNumber extends INumber {
      * Must update the current values of the instance to the API
      *
      * @return updated instance
-     * @throws VivialConnectException if an error occurs updating the number properties to the API
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     AssociatedNumber updateLocalNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -36,7 +44,11 @@ public interface AssociatedNumber extends INumber {
      * Must delete the object of the API.
      *
      * @return true if the deletion was successful, false otherwise.
-     * @throws VivialConnectException if an error occurs deleting the object from the API
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     boolean delete() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -44,15 +56,23 @@ public interface AssociatedNumber extends INumber {
      * Must delete the object of the API.
      *
      * @return true if the deletion was successful, false otherwise.
-     * @throws VivialConnectException if an error occurs deleting the object from the API
-     */
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     * */
     boolean deleteLocalNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
     /**
      * Must return information about the device type and carrier that is associated with a specific phone number
      *
      * @return Information about a phone number
-     * @throws VivialConnectException if an error occurs getting the info from the API
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     NumberInfo lookup() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -222,6 +242,11 @@ public interface AssociatedNumber extends INumber {
      *
      * @param tags String key-pair values with the tag names and values
      * @return Updated tags
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     TagCollection updateTags(Map<String, String> tags) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -229,6 +254,11 @@ public interface AssociatedNumber extends INumber {
      * Must pull the tags from the API and update them in the instance
      *
      * @return tags pulled from the API
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     TagCollection fetchTags() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 
@@ -237,6 +267,11 @@ public interface AssociatedNumber extends INumber {
      *
      * @param tags tags to delete
      * @return remaining tags, if any, otherwise an empty collection
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     TagCollection deleteTags(Map<String, String> tags) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException ;
 }

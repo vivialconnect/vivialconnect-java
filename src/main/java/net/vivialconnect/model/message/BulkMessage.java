@@ -170,8 +170,8 @@ public class BulkMessage extends VivialConnectResource {
      * @param bulkId ID of an existing bulk.
      * @return List of messages sent in a bulk.
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -185,8 +185,8 @@ public class BulkMessage extends VivialConnectResource {
      *
      * @return a BulkInfoCollection that contains: list of bulk sent,count of elements retrieved, number of pages, previous and next page.
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -196,11 +196,11 @@ public class BulkMessage extends VivialConnectResource {
 
     /**
      * Returns a collection of bulk sent. This method returns the "N" page of multiple pages.
-     *
+     * @param page page to return 
      * @return a BulkInfoCollection that contains: list of bulk sent,count of elements retrieved, number of pages, previous and next page.
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -216,8 +216,8 @@ public class BulkMessage extends VivialConnectResource {
      *
      * @return a BulkInfo with the ID of the bulk.
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * */

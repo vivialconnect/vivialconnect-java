@@ -190,7 +190,11 @@ public abstract class VivialConnectResource implements Serializable {
      * @param responseClass class type for map the response
      * @param <T>           Response class type
      * @return a response type defined
-     * @throws VivialConnectException if an error occurs at API-level
+     * @throws BadRequestException if the request params and/or payload are not valid
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     protected static <T> T request(VivialConnectResource.RequestMethod method,
                                    String url, String body, Map<String, String> queryParams,

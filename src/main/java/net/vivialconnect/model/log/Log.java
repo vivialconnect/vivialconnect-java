@@ -138,8 +138,8 @@ public class Log extends VivialConnectResource {
      * @param endTime   end date and time in ISO 8601 format like YYYYMMDDThhmmssZ
      * @return a list of log collection
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getLogs(Date, Date, Map)
@@ -169,8 +169,8 @@ public class Log extends VivialConnectResource {
      *                        <code>start_key</code> – Used for pagination: value of last_key from previous response
      * @return a list of log collection
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getLogs(Date, Date)
@@ -190,8 +190,8 @@ public class Log extends VivialConnectResource {
      * @param aggregatorType valid values are: minutes, hours, days, months, years
      * @return a list of log collection
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getAggregate(Date, Date, String, Map)
@@ -221,8 +221,8 @@ public class Log extends VivialConnectResource {
      *                        <code>start_key</code> – Used for pagination. Value of last_key from previous response
      * @return a list of log collection
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getAggregate(Date, Date, String)
