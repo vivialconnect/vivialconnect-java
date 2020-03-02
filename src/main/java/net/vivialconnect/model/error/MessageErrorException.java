@@ -7,7 +7,7 @@ package net.vivialconnect.model.error;
  * the exception in specific ways.
  *
  * The list of possible error codes is in the Vivial Connect Documentation in the section
- * <a href="https://dashboard.vivialconnect.net/docs/api/errors.html#">Error Codes & Rate Limits</a>
+ * <a href="https://dashboard.vivialconnect.net/docs/api/errors.html#">Error Codes and Rate Limits</a>
  *
  */
 public class MessageErrorException extends BadRequestException {

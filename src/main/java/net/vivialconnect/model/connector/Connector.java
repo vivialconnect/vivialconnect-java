@@ -127,8 +127,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @param connectorId the id of the connector to look up
      * @return the Connector that was found given the id
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getConnectors()
@@ -142,8 +142,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return a list of connectors
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see #getConnectorById(int)
@@ -157,8 +157,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return connector count
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -171,8 +171,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return the Connector that was created
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -191,8 +191,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
     /**
      * Updates this connector.
      * <p>
-     * The only property available for update is <tt>name</tt>. Therefore, be sure to call {@link #setName(String)}
-     * before calling this method if you want to update it. The <tt>id</tt> property should also be set.
+     * The only property available for update is <code>name</code>. Therefore, be sure to call {@link #setName(String)}
+     * before calling this method if you want to update it. The <code>id</code> property should also be set.
      * <p>
      * Keep in mind that this method does not update neither the callbacks nor the phone numbers. To do that, you have
      * to call {@link #updateCallbacks()} and/or {@link #updateAssociatedPhoneNumbers()}, which use separate resource
@@ -203,8 +203,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return this instance of {@link Connector} with the updated name
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -244,8 +244,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return a boolean value, indicating whether the contact was deleted or not
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
@@ -328,7 +328,11 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Move forward to the next page
      *
      * @return next page value
-     * @throws VivialConnectException if an error occurs at API level
+     * @throws BadRequestException if the request params and/or payload are not valid
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
     public int nextPage() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
@@ -346,7 +350,11 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * Move backward to the previous page
      *
      * @return previous page value
-     * @throws VivialConnectException if an error occurs at API level
+     * @throws BadRequestException if the request params and/or payload are not valid
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     @Override
     public int previousPage() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
@@ -550,8 +558,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of created callbacks
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see Callback
@@ -589,8 +597,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithCallbacks} holding the list of updated callbacks
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see Callback
@@ -619,8 +627,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithCallbacks} holding an empty list of callbacks
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see Callback
@@ -637,8 +645,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @param callback the callback to be removed
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see Callback
@@ -656,8 +664,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @param callbacks the callbacks to be removed
      * @return an instance {@link ConnectorWithCallbacks} holding the updated list of callbacks
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see Callback
@@ -759,8 +767,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of associated phone numbers
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
@@ -797,8 +805,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the list of updated phone numbers
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
@@ -822,8 +830,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      *
      * @return an instance {@link ConnectorWithPhoneNumbers} holding an empty list of phone numbers
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
@@ -841,8 +849,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @param phoneNumber the phone number to be removed
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber
@@ -860,8 +868,8 @@ public class Connector extends VivialConnectResource implements ConnectorWithCal
      * @param phoneNumbers the phone numbers to be removed
      * @return an instance {@link ConnectorWithPhoneNumbers} holding the updated list of phone numbers
      * @throws ForbiddenAccessException if the user does not have permission to the API resource
-     * @throws BadRequestException if the request params or/and payload  are not valid
-     * @throws UnauthorizedAccessException if the any of the auth properties: Account ID, API Key and API secret, are not valid
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      * @see PhoneNumber

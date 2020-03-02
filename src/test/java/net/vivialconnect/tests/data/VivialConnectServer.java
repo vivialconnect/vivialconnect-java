@@ -497,7 +497,7 @@ public class VivialConnectServer implements DataSource {
     /**
      * Throwing exception as is. The test case is not consistent to replicate using the API.
      *
-     * @throws VivialConnectException
+     * @throws VivialConnectException generic exception
      */
     @Override
     public void throwRateLimitException() throws VivialConnectException {

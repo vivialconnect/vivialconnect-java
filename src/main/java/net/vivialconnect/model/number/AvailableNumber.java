@@ -1,7 +1,5 @@
 package net.vivialconnect.model.number;
 
-import net.vivialconnect.model.error.VivialConnectException;
-
 import net.vivialconnect.model.error.BadRequestException;
 import net.vivialconnect.model.error.ServerErrorException;
 import net.vivialconnect.model.error.ApiRequestException;
@@ -27,11 +25,16 @@ public interface AvailableNumber extends INumber {
      * @see #setStatusTextUrl(java.lang.String)
      * @see #setConnectorId(int)
      * @see #setIncomingTextUrl(java.lang.String)
-     * @see #setIncomingTextMethod(java.lang.String)
+     * @see #setIncomingTextMethod(net.vivialconnect.model.enums.CallbackMethod)
      * @see #setIncomingTextFallbackUrl(java.lang.String)
-     * @see #setIncomingTextFallbackMethod(java.lang.String)
+     * @see #setIncomingTextFallbackMethod(net.vivialconnect.model.enums.CallbackMethod)
      * 
      * @return the newly-purchased number, associated to your account
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     AssociatedNumber buy() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException;
 }
