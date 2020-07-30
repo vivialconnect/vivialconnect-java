@@ -335,9 +335,13 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "status_text_url", getStatusTextUrl());
         ifParamValidAddToBuilder(builder, "connector_id", getConnectorId());
         ifParamValidAddToBuilder(builder, "incoming_text_url", getIncomingTextUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod().name());
+
+        String incomingMethod =  getIncomingTextMethod()  != null ? getIncomingTextMethod().name() : "";
+        String incomingFallbackMethod = getIncomingTextFallbackMethod() != null ? getIncomingTextFallbackMethod().name() : "";
+
+        ifParamValidAddToBuilder(builder, "incoming_text_method", incomingMethod);
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_url", getIncomingTextFallbackUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod().name());
+        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", incomingFallbackMethod);
     }
 
     //TODO: Deprecate this

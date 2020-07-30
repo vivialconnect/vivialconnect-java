@@ -95,7 +95,7 @@ public class MessageTest extends BaseTestCase {
 
     @Test
     public void test_get_messages() throws VivialConnectException {
-        assertEquals(getMessages().size(), messageCount());
+        assertFalse(getMessages().isEmpty());
     }
 
     @Test
