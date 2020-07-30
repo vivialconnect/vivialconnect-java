@@ -44,7 +44,7 @@
         <java.target>1.6</java.target>
 
         <!-- Dependency versions -->
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0.pr1</jackson.version>
         <junit.version>4.12</junit.version>
         <jersey.version>1.8</jersey.version>
         <commonsio.version>2.4</commonsio.version>
