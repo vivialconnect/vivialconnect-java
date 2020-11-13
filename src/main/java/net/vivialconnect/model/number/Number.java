@@ -204,9 +204,12 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "incoming_text_url", getIncomingTextUrl());
         ifParamValidAddToBuilder(builder, "incoming_text_method", getIncomingTextMethod().name());
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_url", getIncomingTextFallbackUrl());
-        ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod().name());
         ifParamValidAddToBuilder(builder, "voice_forwarding_number", getVoiceForwardingNumber());
         ifParamValidAddToBuilder(builder,"status_text_url", getStatusTextUrl());
+
+        if(getIncomingTextFallbackMethod() != null)
+            ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", getIncomingTextFallbackMethod().name());
+
     }
 
 
@@ -344,9 +347,16 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
         ifParamValidAddToBuilder(builder, "incoming_text_fallback_method", incomingFallbackMethod);
     }
 
-    //TODO: Deprecate this
-
     /**
+     *
+     * @deprecated This method is deprecated. The API discontinued purchasing random numbers using an area code.
+     * Internally this method will look up for an available number in the API and call {@link #buyLocalNumber(String, Map)} to keep existing functionality.
+     *
+     * If you provide a phone number and an area code, the phone number will be ignored.
+     *
+     * To purchase local numbers use {@link #buyLocalNumber(String, Map)} instead.
+     *
+     *
      * Purchases the specified phone number in this area code.
      *
      * @param phoneNumber    Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
@@ -359,9 +369,6 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      *                       <p>
      *                       <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
      *                       Max. length: 256 characters.
-     *                       <p>
-     *                       <code>connector_id</code> – Unique identifier of the connector this message was sent over, if any.
-     *                       <p>
      *                       <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
      *                       <p>
      *                       <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
@@ -377,21 +384,118 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
+    @Deprecated
     public static AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+
+        if(areaCode != null){
+            List<AvailableNumber> availableNumbers = findAvailableNumbersByAreaCode(areaCode);
+
+            if(availableNumbers.isEmpty())
+                throw new ApiRequestException(0,String.format("Not available numbers found for area code %s", areaCode), null);
+
+            phoneNumber = availableNumbers.get(0).getPhoneNumber();
+
+        }
+
+        return buyLocalNumber(phoneNumber, optionalParams);
+    }
+
+
+    /**
+     * Purchases the specified local phone number
+     *
+     * @param phoneNumber    Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+
+     * @param optionalParams a map of {@link String } and {@link Object } key-value pairs used to filter results, possible values are:
+     *                       <p>
+     *                       <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
+     *                       <p>
+     *                       <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *                       Max. length: 256 characters.
+     *                       <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     *                       <p>
+     *                       <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter.
+     *                       Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     * @return associated number
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public static AssociatedNumber buyLocalNumber(String phoneNumber, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
         if (optionalParams != null) {
             builder = builder.addParams(optionalParams);
         }
         ifParamValidAddToBuilder(builder, "phone_number", phoneNumber);
-        ifParamValidAddToBuilder(builder, "area_code", areaCode);
+        ifParamValidAddToBuilder(builder, "phone_number_type", "local");
 
-        return request(RequestMethod.POST, classURLWithSuffix(Number.class, "local"), builder.build(), null, Number.class);
+        return request(RequestMethod.POST, classURL(Number.class), builder.build(), null, Number.class);
     }
 
-    //TODO: Code revision for the random area code
 
     /**
+     * Purchases a toll-free phone number.
+     *
+     * @param phoneNumber    Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+     *
+     * @param optionalParams a map of {@link String } and {@link Object } key-value pairs used to filter results, possible values are:
+     *                       <p>
+     *                       <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
+     *                       <p>
+     *                       <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *                       Max. length: 256 characters.
+     *                       <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     *                       <p>
+     *                       <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter.
+     *                       Max. length: 256 characters.
+     *                       <p>
+     *                       <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     * @return associated number
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public static AssociatedNumber buyTollfreeNumber(String phoneNumber, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
+        if (optionalParams != null) {
+            builder = builder.addParams(optionalParams);
+        }
+        ifParamValidAddToBuilder(builder, "phone_number", phoneNumber);
+        ifParamValidAddToBuilder(builder, "phone_number_type", "tollfree");
+
+        return request(RequestMethod.POST, classURL(Number.class), builder.build(), null, Number.class);
+    }
+
+    /**
+     * Convenience method to #{@link #buyTollfreeNumber(String, Map)}.  Allow to purchase a tollfree number without optional params.
+     * @param phoneNumber phone number value
+     * @return associated number
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public static AssociatedNumber buyTollfreeNumber(String phoneNumber) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        return  buyTollfreeNumber(phoneNumber, null);
+    }
+    /**
+     * @deprecated  This method is deprecated. The API discontinued purchasing random numbers using an area code.  If you call this method with an area code,
+     * it will choose the first number returned by {@link #findAvailableNumbersByAreaCode(String)}. Also, if you provide a phone number and an area code, the phone number will be ignored.
+     * To purchase numbers use {@link #buy(String, String, Map)} instead.
+     *
      * Purchases the specified phone number in this area code with a phone number type.
+     *
      *
      * @param phoneNumber     Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
      *                        If you specify this parameter, the area_code parameter will be ignored.
@@ -422,13 +526,58 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      * @throws ServerErrorException if the server is unable to process the request
      * @throws ApiRequestException if an API error occurs
      */
+    @Deprecated
     public static AssociatedNumber buy(String phoneNumber, String areaCode, String phoneNumberType, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+
+        if(areaCode != null){
+            List<AvailableNumber> availableNumbers = findAvailableNumbersByAreaCode(areaCode);
+
+            if(availableNumbers.isEmpty())
+                throw new ApiRequestException(0,String.format("Not available numbers found for area code %s", areaCode), null);
+
+            phoneNumber = availableNumbers.get(0).getPhoneNumber();
+
+        }
+
+        return buy(phoneNumber, phoneNumberType, optionalParams);
+    }
+
+    /**
+     *
+     * Purchases the specified phone number.
+     *
+     *
+     * @param phoneNumber     Phone number you want to purchase in E.164 format (+country code +phone number). For US numbers, the format will be +1xxxyyyzzzz.
+     *                        If you specify this parameter, the area_code parameter will be ignored.
+     * @param phoneNumberType {@link String} with the phone number type i.e local
+     * @param optionalParams  a map of {@link String } anf {@link Object } key-value pairs used to filter results, possible values are:
+     *                        <p>
+     *                        <code>name</code> – New phone number as it is displayed to users. Default format: Friendly national format: (xxx) yyy-zzzz.
+     *                        <p>
+     *                        <code>status_text_url</code> – URL to receive message status callback requests for messages sent via the API using this associated phone number.
+     *                        Max. length: 256 characters.
+     *                        <p>
+     *                        <code>incoming_text_url</code> – URL for receiving SMS messages to the associated phone number. Max. length: 256 characters.
+     *                        <p>
+     *                        <code>incoming_text_method</code> – HTTP method used for the incoming_text_url requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     *                        <p>
+     *                        <code>incoming_text_fallback_url</code> – URL for receiving SMS messages if incoming_text_url fails. Only valid if you provide a value for the incoming_text_url parameter.
+     *                        Max. length: 256 characters.
+     *                        <p>
+     *                        <code>incoming_text_fallback_method</code> – HTTP method used for incoming_text_url_fallback requests. Max. length: 8 characters. Possible values: GET or POST. Default value: POST.
+     * @return associated number
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public static AssociatedNumber buy(String phoneNumber, String phoneNumberType, Map<String, Object> optionalParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         JsonBodyBuilder builder = JsonBodyBuilder.withCustomClassName("phone_number");
         if (optionalParams != null) {
             builder = builder.addParams(optionalParams);
         }
         ifParamValidAddToBuilder(builder, "phone_number", phoneNumber);
-        ifParamValidAddToBuilder(builder, "area_code", areaCode);
         ifParamValidAddToBuilder(builder, "phone_number_type", phoneNumberType);
 
         return request(RequestMethod.POST, classURL(Number.class), builder.build(), null, Number.class);
@@ -640,6 +789,33 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
      */
     public static List<AvailableNumber> findAvailableNumbersByPostalCode(String postalCode, Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, AVAILABLE_US_LOCAL), null, addQueryParam("in_postal_code", postalCode, queryParams), NumberCollection.class).getAvailableNumbers();
+    }
+
+    /**
+     *
+     * @param queryParams
+     * @return
+     * @throws ForbiddenAccessException
+     * @throws BadRequestException
+     * @throws UnauthorizedAccessException
+     * @throws ServerErrorException
+     * @throws ApiRequestException
+     */
+    public static List<AvailableNumber> findAvailableTollFreeNumber(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        return request(RequestMethod.GET, classURLWithSuffix(Number.class, "available/US/tollfree"), null, queryParams, NumberCollection.class).getAvailableNumbers();
+    }
+
+    /**
+     *
+     * @return
+     * @throws ForbiddenAccessException
+     * @throws BadRequestException
+     * @throws UnauthorizedAccessException
+     * @throws ServerErrorException
+     * @throws ApiRequestException
+     */
+    public static List<AvailableNumber> findAvailableTollFreeNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        return findAvailableTollFreeNumber(null);
     }
 
     /**

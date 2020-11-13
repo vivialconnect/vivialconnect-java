@@ -135,6 +135,11 @@ public class VivialConnectServer implements DataSource {
     }
 
     @Override
+    public AssociatedNumber buy(String phoneNumber, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException {
+        return Number.buy(phoneNumber, phoneNumberType,optionalParams);
+    }
+
+    @Override
     public AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws VivialConnectException {
         return Number.buyLocalNumber(phoneNumber, areaCode, optionalParams);
     }
@@ -182,6 +187,26 @@ public class VivialConnectServer implements DataSource {
     @Override
     public TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException {
         return associatedNumber.deleteTags(tags);
+    }
+
+    @Override
+    public List<AvailableNumber> findAvailableTollFree(Map<String, String> queryParams) throws VivialConnectException {
+        return Number.findAvailableTollFreeNumber(queryParams);
+    }
+
+    @Override
+    public List<AvailableNumber> findAvailableTollFree() throws VivialConnectException {
+        return Number.findAvailableTollFreeNumber();
+    }
+
+    @Override
+    public AssociatedNumber buyTollfreeNumber(String phoneNumber, Map<String, Object> optionalParams) throws VivialConnectException {
+        return  Number.buyTollfreeNumber(phoneNumber, optionalParams);
+    }
+
+    @Override
+    public AssociatedNumber buyTollfreeNumber(String phoneNumber) throws VivialConnectException {
+        return Number.buyTollfreeNumber(phoneNumber);
     }
 
     @Override
