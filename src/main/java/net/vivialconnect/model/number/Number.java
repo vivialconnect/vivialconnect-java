@@ -792,27 +792,30 @@ public class Number extends VivialConnectResource implements AssociatedNumber, A
     }
 
     /**
-     *
-     * @param queryParams
-     * @return
-     * @throws ForbiddenAccessException
-     * @throws BadRequestException
-     * @throws UnauthorizedAccessException
-     * @throws ServerErrorException
-     * @throws ApiRequestException
+     * Search available toll-free numbers.
+     * @param queryParams a map of {@link String } key-value pairs used to filter results, possible values are:
+     *   <p>
+     *     <code>limit</code> – Number of results to return per page. Default value: 50. Maximum value: 150.
+     *   <p>
+     * @return list of available toll-free numbers
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     public static List<AvailableNumber> findAvailableTollFreeNumber(Map<String, String> queryParams) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return request(RequestMethod.GET, classURLWithSuffix(Number.class, "available/US/tollfree"), null, queryParams, NumberCollection.class).getAvailableNumbers();
     }
 
     /**
-     *
-     * @return
-     * @throws ForbiddenAccessException
-     * @throws BadRequestException
-     * @throws UnauthorizedAccessException
-     * @throws ServerErrorException
-     * @throws ApiRequestException
+     * Convenient method to search toll-free numbers without passing params. This will returns the default response from the API.
+     * @return list of available toll-free numbers
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
      */
     public static List<AvailableNumber> findAvailableTollFreeNumber() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
         return findAvailableTollFreeNumber(null);
