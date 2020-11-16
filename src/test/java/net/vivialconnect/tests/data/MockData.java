@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.vivialconnect.model.connector.*;
+import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
@@ -27,8 +28,7 @@ import net.vivialconnect.model.log.LogCollection;
 
 public class MockData implements DataSource {
 
-    private List<AvailableNumber> availableNumbers;
-    private List<AssociatedNumber> associatedNumbers;
+    private List<AssociatedNumber> taggedNumbers = new ArrayList<AssociatedNumber>();
     private List<Contact> contacts;
     private List<User> users;
     private List<Attachment> attachments;
@@ -203,8 +203,6 @@ public class MockData implements DataSource {
         AssociatedNumber boughtNumber = new Number();
         boughtNumber.setPhoneNumber(number.getPhoneNumber());
         boughtNumber.setPhoneNumberType(number.getPhoneNumberType());
-        numberCountMod++;
-        associatedNumbers.add(boughtNumber);
         return boughtNumber;
     }
 
@@ -213,9 +211,12 @@ public class MockData implements DataSource {
         AssociatedNumber number = new Number();
         number.setPhoneNumber(phoneNumber);
         number.setPhoneNumberType(phoneNumberType);
-        numberCountMod++;
-        associatedNumbers.add(number);
         return number;
+    }
+
+    @Override
+    public AssociatedNumber buy(String phoneNumber, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException {
+        return buy(phoneNumber,null, phoneNumberType, optionalParams);
     }
 
     @Override
@@ -223,15 +224,12 @@ public class MockData implements DataSource {
         AssociatedNumber number = new Number();
         number.setPhoneNumber(phoneNumber);
         number.setPhoneNumberType("local");
-        numberCountMod++;
-        associatedNumbers.add(number);
         return number;
     }
 
     @Override
     public boolean delete(AssociatedNumber localNumber) throws VivialConnectException {
         loadAssociatedNumbersFromFixture().remove(localNumber);
-        numberCountMod--;
         return true;
     }
 
@@ -243,7 +241,6 @@ public class MockData implements DataSource {
         }
 
         loadAssociatedNumbersFromFixture().remove(localNumber);
-        numberCountMod--;
         return true;
     }
 
@@ -275,19 +272,18 @@ public class MockData implements DataSource {
     public TaggedNumberCollection getTaggedNumbers(Map<String, String> requestParams) throws VivialConnectException {
 
         List<Number> numbers = new ArrayList<Number>();
-        List<AssociatedNumber> associatedNumbers = this.getAssociatedNumbers();
 
         if (requestParams != null && requestParams.containsKey("notcontains")) {
             Number mockNumber = new Number();
             numbers.add(mockNumber);
         } else {
-            for (AssociatedNumber associatedNumber : associatedNumbers) {
+            for (AssociatedNumber associatedNumber : taggedNumbers) {
                 Number number = (Number) associatedNumber;
                 numbers.add(number);
             }
         }
 
-        TaggedNumberCollection numberCollection = new TaggedNumberCollection(associatedNumbers.size(), numbers,
+        TaggedNumberCollection numberCollection = new TaggedNumberCollection(taggedNumbers.size(), numbers,
                                                                     0, 1, 0);
 
         return numberCollection;
@@ -306,6 +302,8 @@ public class MockData implements DataSource {
         Map<String, String> tagsCopy = new HashMap<String, String>(tags);
         Number number = (Number) associatedNumber;
         number.setTags(tagsCopy);
+
+        taggedNumbers.add(number);
 
         TagCollection tagCollection = new TagCollection(tagsCopy);
 
@@ -334,6 +332,41 @@ public class MockData implements DataSource {
         TagCollection tagCollection = new TagCollection(number.getTags());
 
         return tagCollection;
+    }
+
+    @Override
+    public List<AvailableNumber> findAvailableTollFree(Map<String, String> queryParams) throws VivialConnectException {
+        return applyFilters(loadAvailableTollfreeNumbersFromFixture(), queryParams);
+    }
+
+    @Override
+    public List<AvailableNumber> findAvailableTollFree() throws VivialConnectException {
+        return loadAvailableTollfreeNumbersFromFixture();
+    }
+
+    @Override
+    public AssociatedNumber buyTollfreeNumber(String phoneNumber, Map<String, Object> optionalParams) throws VivialConnectException {
+        AssociatedNumber associatedNumber =  loadAssociatedTollfreeNumberFromFixture();
+
+        if(optionalParams != null) {
+            associatedNumber.setStatusTextUrl((String) optionalParams.get("status_text_url"));
+            associatedNumber.setName((String) optionalParams.get("name"));
+            associatedNumber.setIncomingTextUrl((String) optionalParams.get("incoming_text_url"));
+            associatedNumber.setIncomingTextFallbackUrl((String) optionalParams.get("incoming_text_fallback_url"));
+
+            if (optionalParams.get("incoming_text_method") != null)
+                associatedNumber.setIncomingTextMethod(CallbackMethod.valueOf((String) optionalParams.get("incoming_text_method")));
+
+            if( optionalParams.get("incoming_text_fallback_method") != null)
+                associatedNumber.setIncomingTextFallbackMethod(CallbackMethod.valueOf((String) optionalParams.get("incoming_text_fallback_method")));
+        }
+
+        return associatedNumber;
+    }
+
+    @Override
+    public AssociatedNumber buyTollfreeNumber(String phoneNumber) throws VivialConnectException {
+        return buyTollfreeNumber(phoneNumber, null);
     }
 
     @Override
@@ -475,19 +508,21 @@ public class MockData implements DataSource {
     }
 
     private List<AssociatedNumber> loadAssociatedNumbersFromFixture() {
-        if (associatedNumbers == null) {
-            associatedNumbers = loadFixture("associated-numbers", NumberCollection.class, false).getAssociatedNumbers();
-        }
-
-        return associatedNumbers;
+        return loadFixture("associated-numbers", NumberCollection.class, false).getAssociatedNumbers();
     }
 
-    private List<AvailableNumber> loadAvailableNumbersFromFixture() {
-        if (availableNumbers == null) {
-            availableNumbers = loadFixture("available-numbers", NumberCollection.class, false).getAvailableNumbers();
-        }
 
-        return availableNumbers;
+    private List<AvailableNumber> loadAvailableNumbersFromFixture() {
+        return loadFixture("available-numbers", NumberCollection.class, false).getAvailableNumbers();
+    }
+
+    private List<AvailableNumber> loadAvailableTollfreeNumbersFromFixture() {
+        return loadFixture("available-toll-free-numbers", NumberCollection.class, false).getAvailableNumbers();
+    }
+
+    private AssociatedNumber loadAssociatedTollfreeNumberFromFixture() {
+        AssociatedNumber associatedNumber = loadFixture("associated-toll-free-number", Number.class, true);
+        return associatedNumber;
     }
 
     private List<Message> loadMessagesFromFixture() {

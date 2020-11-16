@@ -94,25 +94,15 @@ public class NumberTest extends BaseTestCase {
 
     @Test
     public void test_buy_available_number() throws VivialConnectException {
-        int numbersToTry = 5;
         List<AvailableNumber> availableNumbers = getDataSource().findAvailableNumbersInRegion(
-                buyTestRegion, withLimitOf(numbersToTry));
+                buyTestRegion, withLimitOf(1));
 
-        if (availableNumbers.size() > 0) {
-            assertEquals(numbersToTry, availableNumbers.size());
-        }
+        AvailableNumber availableNumber = availableNumbers.get(0);
+        assertEquals(1, availableNumbers.size());
+        AssociatedNumber boughtNumber = getDataSource().buyAvailable(availableNumber);
 
-        AvailableNumber availableNumber = null;
-        AssociatedNumber boughtNumber = null;
-        int numIndex = 0;
-
-        do { // Try multiple numbers due to the BW bug causing unavailable numbers to show up as available
-            availableNumber = availableNumbers.get(numIndex);
-            boughtNumber = getDataSource().buyAvailable(availableNumber);
-            numIndex++;
-        } while (boughtNumber == null && numIndex < numbersToTry);
-
-        assertTrue(getDataSource().delete(boughtNumber));
+        // Number must be deleted before any assertion to reduce unnecessary numbers in tests accounts
+        getDataSource().delete(boughtNumber);
 
         assertNotNull(boughtNumber);
         assertEquals(availableNumber.getPhoneNumber(), boughtNumber.getPhoneNumber());
@@ -135,8 +125,7 @@ public class NumberTest extends BaseTestCase {
         do { // Try multiple numbers due to the BW bug causing unavailable numbers to show up as available
             availableNumber = availableNumbers.get(numIndex);
             String areaCode = availableNumber.getPhoneNumber().substring(2, 5);
-            boughtNumber = getDataSource().buy(availableNumber.getPhoneNumber(),
-                            areaCode, availableNumber.getPhoneNumberType(), null);
+            boughtNumber = getDataSource().buy(availableNumber.getPhoneNumber(), availableNumber.getPhoneNumberType(), null);
             numIndex++;
         } while (boughtNumber == null && numIndex < numbersToTry);
 
@@ -487,6 +476,87 @@ public class NumberTest extends BaseTestCase {
 
         assertEquals(updatedNumber.getIncomingTextMethod(), associatedNumber.getIncomingTextMethod());
         assertEquals(updatedNumber.getIncomingTextFallbackMethod(), associatedNumber.getIncomingTextFallbackMethod());
+
+    }
+
+    @Test
+    public void test_find_available_tollfree() throws VivialConnectException{
+
+        DataSource dataSource = getDataSource();
+        List<AvailableNumber> tollfreeNumbers = dataSource.findAvailableTollFree();
+
+        AvailableNumber number = tollfreeNumbers.get(0);
+        String numberType = number.getPhoneNumberType();
+
+        assertEquals("tollfree", numberType);
+        assertNotNull(number.getPhoneNumber());
+        assertTrue(tollfreeNumbers.size() > 10);
+    }
+
+    @Test
+    public void test_find_available_tollfree_number_with_query_params() throws VivialConnectException{
+
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("limit", "1");
+
+        DataSource dataSource = getDataSource();
+        List<AvailableNumber> tollfreeNumbers = dataSource.findAvailableTollFree(queryParams);
+
+        AvailableNumber number = tollfreeNumbers.get(0);
+        String numberType = number.getPhoneNumberType();
+
+        assertEquals("tollfree", numberType);
+        assertNotNull(number.getPhoneNumber());
+        assertEquals(1, tollfreeNumbers.size());
+
+    }
+
+    @Test
+    public void test_purchase_toll_free_number() throws VivialConnectException{
+
+        DataSource dataSource = getDataSource();
+
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("limit", "1");
+
+        List<AvailableNumber> tollfreeNumbers = dataSource.findAvailableTollFree(queryParams);
+        AvailableNumber number = tollfreeNumbers.get(0);
+
+        AssociatedNumber associatedNumber = dataSource.buyTollfreeNumber(number.getPhoneNumber());
+
+        assertNotNull(associatedNumber);
+        assertEquals(number.getPhoneNumber(), associatedNumber.getPhoneNumber());
+        assertTrue(associatedNumber.getId() != 0);
+        assertEquals("tollfree", associatedNumber.getPhoneNumberType());
+    }
+
+    @Test
+    public void test_purchase_tollfree_number_with_optional_params() throws VivialConnectException{
+
+        DataSource dataSource = getDataSource();
+
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("limit", "1");
+
+        List<AvailableNumber> tollfreeNumbers = dataSource.findAvailableTollFree(queryParams);
+        AvailableNumber number = tollfreeNumbers.get(0);
+
+        Map<String, Object> optionalParams = new HashMap<String, Object>();
+
+        optionalParams.put("name", "Test Tollfree number");
+        optionalParams.put("status_text_url", "https://www.test.io/status_text_url");
+        optionalParams.put("incoming_text_url", "https://www.test.io/incoming_text_url");
+        optionalParams.put("incoming_text_method", "POST");
+
+        AssociatedNumber associatedNumber = dataSource.buyTollfreeNumber(number.getPhoneNumber(), optionalParams);
+
+        assertNotNull(associatedNumber);
+        assertEquals(number.getPhoneNumber(), associatedNumber.getPhoneNumber());
+        assertEquals("tollfree", associatedNumber.getPhoneNumberType());
+        assertEquals("Test Tollfree number", associatedNumber.getName());
+        assertEquals("https://www.test.io/status_text_url", associatedNumber.getStatusTextUrl());
+        assertEquals("https://www.test.io/incoming_text_url", associatedNumber.getIncomingTextUrl());
+        assertEquals(CallbackMethod.POST, associatedNumber.getIncomingTextMethod());
 
     }
   

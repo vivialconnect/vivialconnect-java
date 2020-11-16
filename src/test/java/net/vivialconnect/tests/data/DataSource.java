@@ -55,6 +55,8 @@ public interface DataSource {
 
     AssociatedNumber buy(String phoneNumber, String areaCode, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException;
 
+    AssociatedNumber buy(String phoneNumber, String phoneNumberType, Map<String, Object> optionalParams) throws VivialConnectException;
+
     AssociatedNumber buyLocalNumber(String phoneNumber, String areaCode, Map<String, Object> optionalParams) throws VivialConnectException;
 
     boolean delete(AssociatedNumber localNumber) throws VivialConnectException;
@@ -74,6 +76,14 @@ public interface DataSource {
     TagCollection fetchTags(AssociatedNumber associatedNumber) throws VivialConnectException;
 
     TagCollection deleteTags(Map<String, String> tags, AssociatedNumber associatedNumber) throws VivialConnectException;
+
+    List<AvailableNumber> findAvailableTollFree(Map<String,String> queryParams) throws VivialConnectException;
+
+    List<AvailableNumber> findAvailableTollFree() throws VivialConnectException;
+
+    AssociatedNumber buyTollfreeNumber(String phoneNumber, Map<String, Object> optionalParams) throws VivialConnectException;
+
+    AssociatedNumber buyTollfreeNumber(String phoneNumber) throws VivialConnectException;
 
     // Message
 

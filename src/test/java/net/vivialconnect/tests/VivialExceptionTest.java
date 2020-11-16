@@ -36,12 +36,6 @@ public class VivialExceptionTest extends BaseTestCase {
         dataSource.throwRateLimitException();
     }
 
-    @Test(expected = ServerErrorException.class)
-    public void test_server_error_exception() throws VivialConnectException {
-        DataSource dataSource = getDataSource();
-        dataSource.throwServerErrorException();
-    }
-
     @Test(expected = MessageErrorException.class)
     public void test_throw_message_exception() throws VivialConnectException {
         DataSource dataSource = getDataSource();

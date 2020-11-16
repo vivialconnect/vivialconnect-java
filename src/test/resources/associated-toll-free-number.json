@@ -1,0 +1,34 @@
+{
+    "phone_number": {
+        "account_id": 10304,
+        "acquired_from": "provider",
+        "active": true,
+        "address_requirements": null,
+        "capabilities": {
+            "mms": true,
+            "sms": true,
+            "voice": true
+        },
+        "city": "EAGLE GROVE",
+        "date_created": "2020-11-12T20:15:22",
+        "date_modified": "2020-11-12T20:15:22",
+        "id": 1675950,
+        "incoming_text_auth_type": null,
+        "incoming_text_fallback_auth_type": null,
+        "incoming_text_fallback_method": null,
+        "incoming_text_fallback_url": null,
+        "incoming_text_method": null,
+        "incoming_text_url": null,
+        "lata": null,
+        "name": "(844) 396-9662",
+        "phone_number": "+18443969662",
+        "phone_number_type": "tollfree",
+        "rate_center": "EAGLEGROVE",
+        "region": "IA",
+        "status_text_auth_type": null,
+        "status_text_method": null,
+        "status_text_url": null,
+        "tags": {},
+        "voice_forwarding_number": null
+    }
+}
