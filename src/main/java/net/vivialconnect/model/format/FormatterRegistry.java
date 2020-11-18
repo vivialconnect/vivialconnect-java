@@ -19,6 +19,8 @@ public class FormatterRegistry{
         classToFormatterMap.put(ArrayList.class, new ListFormatter());
         classToFormatterMap.put(Callback.class, new CallbackFormatter());
         classToFormatterMap.put(PhoneNumber.class, new PhoneNumberFormatter());
+        classToFormatterMap.put(HashMap.class, new MapFormatter());
+        classToFormatterMap.put(Boolean.class, new BooleanFormatter());
     }
 
 

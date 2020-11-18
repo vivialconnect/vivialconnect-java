@@ -1,6 +1,6 @@
 package net.vivialconnect.model.format;
 
-public interface JsonValueFormatter{
+public interface JsonValueFormatter<T>{
 
-    String formatValue(Object value);
+    String formatValue(T value);
 }

@@ -19,6 +19,8 @@ import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
+import net.vivialconnect.model.user.Credential;
+import net.vivialconnect.model.user.CredentialUpdateField;
 import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.format.JsonBodyBuilder;
@@ -307,6 +309,31 @@ public class VivialConnectServer implements DataSource {
     @Override
     public int userCount() throws VivialConnectException {
         return User.count();
+    }
+
+    @Override
+    public Credential createCredentials(User user, String name) throws VivialConnectException {
+        return user.createCredential(name);
+    }
+
+    @Override
+    public List<Credential> getCredentials(User user) throws VivialConnectException {
+        return user.getCredentials();
+    }
+
+    @Override
+    public boolean deleteCredential(User user, int credentialId) throws VivialConnectException {
+        return user.deleteCredential(credentialId);
+    }
+
+    @Override
+    public Credential updateCredential(User user, int credentialId, Map<CredentialUpdateField, Object> updateInfo) throws VivialConnectException{
+        return user.updateCredential(credentialId, updateInfo);
+    }
+
+    @Override
+    public int countCredentials(User user) throws VivialConnectException {
+        return user.countCredentials();
     }
 
     @Override

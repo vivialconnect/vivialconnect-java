@@ -1,6 +1,7 @@
 package net.vivialconnect.model.user;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import net.vivialconnect.model.error.ServerErrorException;
 import net.vivialconnect.model.error.ApiRequestException;
 import net.vivialconnect.model.error.ForbiddenAccessException;
 import net.vivialconnect.model.error.UnauthorizedAccessException;
+import net.vivialconnect.model.format.JsonBodyBuilder;
 
 /**
  * class for get query and manage info about users of an account.
@@ -108,6 +110,103 @@ public class User extends VivialConnectResource {
     static {
         classesWithoutRootValue.add(EmptyJson.class);
         classesWithoutRootValue.add(UserCollection.class);
+    }
+
+    /**
+     * Returns the list of all API credentials associated with your user
+     * @return list of credentials
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public List<Credential> getCredentials() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException{
+        return request(RequestMethod.GET, classURLWithResourceSuffix(User.class, String.valueOf(this.id), "profile/credentials"), null, null, CredentialCollection.class).getCredentials();
+    }
+
+    /**
+     * Creates a credential using a name.
+     * @param name name of the credential
+     * @return new Credential created
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public Credential createCredential(String name) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        JsonBodyBuilder builder = JsonBodyBuilder.forClass(User.class);
+
+        Map<String, Object> credentialNameMap = new HashMap<String, Object>();
+        credentialNameMap.put("name", name == null ? "Default": name); // TODO: change default name to date pattern
+
+        builder.addParamPair("credential", credentialNameMap);
+
+        CredentialWrapperResponse response = request(RequestMethod.POST, classURLWithResourceSuffix(User.class, String.valueOf(this.id), "profile/credentials"),
+                builder.build(), null, CredentialWrapperResponse.class);
+
+        return response.getCredential();
+    }
+
+    /**
+     * Modify properties of a credential
+     * @param credentialId Credential ID
+     * @param updateData payload to update the credential
+     * @return Updated credential
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public Credential updateCredential(int credentialId, Map<CredentialUpdateField, Object> updateData) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+
+        HashMap<String, Object> data = new HashMap<String, Object>();
+
+        for(CredentialUpdateField field: updateData.keySet()){
+            data.put(field.getFieldName(), updateData.get(field));
+        }
+
+        JsonBodyBuilder builder = JsonBodyBuilder.forClass(User.class);
+        builder.addParamPair("credential", data);
+
+        CredentialWrapperResponse response = request(RequestMethod.PUT, classURLWithResourceSuffix(User.class, String.valueOf(this.id), String.format("profile/credentials/%d",credentialId)), builder.build(), null, CredentialWrapperResponse.class);
+
+        return response.getCredential();
+    }
+
+    /**
+     * Delete a credential from the API
+     * @param credentialId Credential ID
+     * @return true if credential was removed, false otherwise
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public boolean deleteCredential(int credentialId) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        try {
+            request(RequestMethod.DELETE, classURLWithResourceSuffix(User.class, String.valueOf(this.id), String.format("profile/credentials/%d",credentialId)), null, null, String.class);
+        } catch (NoContentException nce) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Total number of credentials associated with an user.
+     * @return number of credentials belonging to the user
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public int countCredentials() throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        return request(RequestMethod.GET, classURLWithResourceSuffix(User.class, String.valueOf(this.id), "profile/credentials/count"), null, null, ResourceCount.class).getCount();
     }
 
     /**

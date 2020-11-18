@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.HashMap;
-
 import net.vivialconnect.model.enums.RoleType;
+import net.vivialconnect.model.user.Credential;
+import net.vivialconnect.model.user.CredentialUpdateField;
 import net.vivialconnect.model.user.Role;
+import net.vivialconnect.tests.data.DataSource;
 import org.junit.Assume;
 import org.junit.Test;
 
@@ -15,6 +17,8 @@ import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.error.VivialConnectException;
 
 public class UserTest extends BaseTestCase {
+
+    private DataSource ds = getDataSource();
 
     @Test
     public void test_get_users() throws VivialConnectException {
@@ -92,5 +96,62 @@ public class UserTest extends BaseTestCase {
     public void  test_client_role_type() throws  VivialConnectException{
         userRoleTypeBaseTest(RoleType.CLIENT);
     }
+
+    @Test
+    public void test_list_credentials() throws VivialConnectException {
+        User testUser = getDataSource().getUsers().get(0);
+        List<Credential> userCredentials = ds.getCredentials(testUser);
+
+        assertNotNull(userCredentials);
+        assertFalse(userCredentials.isEmpty());
+
+        Credential credential = userCredentials.get(0);
+
+        assertNotNull(credential.getApiKey());
+    }
+
+    @Test
+    public void test_create_credentials() throws VivialConnectException{
+
+        User user = ds.getUsers().get(0);
+        Credential credential = ds.createCredentials(user, "Java SDK Credentials");
+
+        assertNotNull(credential);
+        assertNotNull(credential.getApiKey());
+        assertNotNull(credential.getApiSecret());
+    }
+
+    @Test
+    public void test_update_credentials() throws VivialConnectException{
+        User user = ds.getUsers().get(0);
+        Credential credential = ds.getCredentials(user).get(0);
+
+        Map<CredentialUpdateField, Object> infoToUpdate = new HashMap<CredentialUpdateField, Object>();
+        infoToUpdate.put(CredentialUpdateField.NAME, "Test");
+        infoToUpdate.put(CredentialUpdateField.ACTIVE, false);
+
+        Credential updatedCredential = ds.updateCredential(user, credential.getId(),  infoToUpdate);
+
+        assertEquals("Test",updatedCredential.getName());
+        assertFalse(updatedCredential.isActive());
+    }
+
+    @Test
+    public void test_count_credentials() throws VivialConnectException{
+        User user = ds.getUsers().get(0);
+        int count = ds.countCredentials(user);
+
+        assertTrue(count > 0);
+    }
+
+    @Test
+    public void test_delete_credential() throws VivialConnectException{
+        User user = ds.getUsers().get(0);
+        Credential credential = ds.createCredentials(user, "Java SDK Credentials");
+        boolean wasDeleted = ds.deleteCredential(user, credential.getId());
+
+        assertTrue(wasDeleted);
+    }
+
 
 }
