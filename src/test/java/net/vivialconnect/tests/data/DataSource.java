@@ -15,6 +15,8 @@ import net.vivialconnect.model.message.BulkInfo;
 import net.vivialconnect.model.message.BulkMessage;
 import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.number.*;
+import net.vivialconnect.model.user.Credential;
+import net.vivialconnect.model.user.CredentialUpdateField;
 import net.vivialconnect.model.user.User;
 import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.connector.Connector;
@@ -132,6 +134,16 @@ public interface DataSource {
     User getUserById(int userId) throws VivialConnectException;
 
     int userCount() throws VivialConnectException;
+
+    Credential createCredentials(User user, String name) throws VivialConnectException;
+
+    List<Credential> getCredentials(User user) throws VivialConnectException;
+
+    boolean deleteCredential(User user, int credentialId) throws VivialConnectException;
+
+    Credential updateCredential(User user, int credentialId, Map<CredentialUpdateField,Object> updateInfo) throws VivialConnectException;
+
+    int countCredentials(User user) throws VivialConnectException;
 
     // Logs
 

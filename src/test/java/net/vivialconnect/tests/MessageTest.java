@@ -274,49 +274,6 @@ public class MessageTest extends BaseTestCase {
 
     }
 
-
-    @Test
-    public void test_error_code_10005() throws VivialConnectException {
-
-        DataSource dataSource = getDataSource();
-
-        List<AssociatedNumber> associatedNumbers = dataSource.getLocalAssociatedNumbers();
-
-        String fromNumber = associatedNumbers.get(0).getPhoneNumber();
-        String toNumber = associatedNumbers.get(1).getPhoneNumber();
-
-        Message message = new Message();
-        message.setFromNumber(fromNumber);
-        message.setToNumber(toNumber);
-        message.setBody("STOP");
-
-        dataSource.sendMessage(message);
-
-        message = new Message();
-        message.setFromNumber(toNumber);
-        message.setToNumber(fromNumber);
-        // Note: Do not change this message value. This message is used as a flag for raise an exception for mock data.
-        message.setBody("OPTOUT TEST MESSAGE");
-
-        expectedException.expect(MessageErrorException.class);
-        expectedException.expect(Matchers.hasProperty("errorCode", Matchers.is(10005)));
-        expectedException.expectMessage("to_number is opted out for messages from from_number");
-
-        try {
-            dataSource.sendMessage(message);
-        } catch (MessageErrorException me) {
-            throw me;
-        } finally {
-            message = new Message();
-            message.setFromNumber(fromNumber);
-            message.setToNumber(toNumber);
-            message.setBody("UNSTOP");
-
-            dataSource.sendMessage(message);
-        }
-
-    }
-
     @Test
     public void test_error_code_10008() throws VivialConnectException {
 

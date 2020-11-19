@@ -15,14 +15,12 @@ import net.vivialconnect.model.enums.MessageDirection;
 import net.vivialconnect.model.message.*;
 import net.vivialconnect.model.number.*;
 import net.vivialconnect.model.number.Number;
+import net.vivialconnect.model.user.*;
 import org.apache.commons.io.IOUtils;
 import net.vivialconnect.model.ResourceCount;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
-import net.vivialconnect.model.user.Role;
 import net.vivialconnect.model.account.ContactCollection;
-import net.vivialconnect.model.user.User;
-import net.vivialconnect.model.user.UserCollection;
 import net.vivialconnect.tests.BaseTestCase;
 import net.vivialconnect.model.log.LogCollection;
 
@@ -414,10 +412,6 @@ public class MockData implements DataSource {
             throw new MessageErrorException(10003, "Message body must be less than 2048 characters", 400, null);
         }
 
-        if (message.getBody() != null && message.getBody().equals("OPTOUT TEST MESSAGE")) {
-            throw new MessageErrorException(10005, "to_number is opted out for messages from from_number", 400, null);
-        }
-
         if (message.getFromNumber() != null && message.getFromNumber().equals("+16162000000")) {
             throw new MessageErrorException(10008, "from_number invalid, inactive, or not owned", 400, null);
         }
@@ -719,6 +713,48 @@ public class MockData implements DataSource {
         return loadFixture("user-count", ResourceCount.class, false).getCount();
     }
 
+    @Override
+    public Credential createCredentials(User user, String name) throws VivialConnectException {
+        CredentialWrapperResponse credentialWrapper = loadFixture("create-credential",CredentialWrapperResponse.class);
+
+        Credential credential = credentialWrapper.getCredential();
+        credential.setName(name);
+        credential.setUser(user);
+
+        return credential;
+    }
+
+    @Override
+    public List<Credential> getCredentials(User user) {
+        List<Credential> credentials = loadFixture("list-credentials",CredentialCollection.class).getCredentials();
+        return credentials;
+    }
+
+    @Override
+    public boolean deleteCredential(User user, int credentialId) throws VivialConnectException {
+        // Simulate successful server response
+        return true;
+    }
+
+    @Override
+    public Credential updateCredential(User user, int credentialId, Map<CredentialUpdateField, Object> updateInfo) {
+        Credential credential = loadFixture("single-credential",CredentialWrapperResponse.class).getCredential();
+
+        if(updateInfo.containsKey(CredentialUpdateField.ACTIVE))
+            credential.setActive((Boolean)updateInfo.get(CredentialUpdateField.ACTIVE));
+
+        if(updateInfo.containsKey(CredentialUpdateField.NAME))
+            credential.setName((String) updateInfo.get(CredentialUpdateField.NAME));
+
+        return credential;
+    }
+
+    @Override
+    public int countCredentials(User user) throws VivialConnectException {
+        List<Credential> credentials = loadFixture("list-credentials",CredentialCollection.class).getCredentials();
+        return credentials.size();
+    }
+
     private List<User> loadUsersFromFixture() {
         if (users == null) {
             users = loadFixture("users", UserCollection.class, false).getUsers();
@@ -726,8 +762,6 @@ public class MockData implements DataSource {
 
         return users;
     }
-
-
 
     @Override
     public LogCollection getLogs(Date startTime, Date endTime) throws VivialConnectException {
