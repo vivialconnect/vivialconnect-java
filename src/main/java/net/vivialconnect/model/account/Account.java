@@ -1,14 +1,15 @@
 package net.vivialconnect.model.account;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import net.vivialconnect.model.VivialConnectResource;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
-import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.error.BadRequestException;
 import net.vivialconnect.model.error.ServerErrorException;
 import net.vivialconnect.model.error.ApiRequestException;
@@ -73,10 +74,6 @@ public class Account extends VivialConnectResource {
     @JsonProperty
     private List<Service> services;
 
-    static {
-        classesWithoutRootValue.add(LogCollection.class);
-        classesWithoutRootValue.add(ContactCollection.class);
-    }
 
     /**
      * Retrieve the information for this Account.
@@ -142,6 +139,87 @@ public class Account extends VivialConnectResource {
         this.dateModified = updatedAccount.getDateModified();
         this.contacts = updatedAccount.getContacts();
         this.services = updatedAccount.getServices();
+    }
+
+    /**
+     * Returns a list of transactions between a time interval
+     * @param startTime Start date and time in ISO 8601 format like YYYYMMDDThhmmssZ.
+     * @param endTime End date and time in ISO 8601 format like YYYYMMDDThhmmssZ
+     * @return list of transactions
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public List<Transaction> getTransactions(String startTime, String endTime) throws BadRequestException, ForbiddenAccessException, ServerErrorException, ApiRequestException, UnauthorizedAccessException {
+        return getTransactions(startTime, endTime, null, 0, 0);
+    }
+
+    /**
+     * Returns a list of transactions between a time interval, using paging and quanity limit.
+     * @param startTime Start date and time in ISO 8601 format like YYYYMMDDThhmmssZ.
+     * @param endTime End date and time in ISO 8601 format like YYYYMMDDThhmmssZ
+     * @param page page number to retrieve
+     * @param limit quantity of transactions to return
+     * @return list of transactions
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public List<Transaction> getTransactions(String startTime, String endTime, int page, int limit) throws BadRequestException, ForbiddenAccessException, ServerErrorException, ApiRequestException, UnauthorizedAccessException {
+        return getTransactions(startTime, endTime, null, page, limit);
+    }
+
+    /**
+     * Returns a list of transactions between a time interval filtering by transaction_type
+     * @param startTime Start date and time in ISO 8601 format like YYYYMMDDThhmmssZ.
+     * @param endTime End date and time in ISO 8601 format like YYYYMMDDThhmmssZ
+     * @param transactionType page number to retrieve
+     * @return list of transactions
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public List<Transaction> getTransactions(String startTime, String endTime,TransactionType transactionType) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+        return getTransactions(startTime, endTime, transactionType, 0, 0);
+    }
+
+    /**
+     * Returns a list of transactions between a time interval filtering by transaction_type, using pagination and limit
+     * @param startTime Start date and time in ISO 8601 format like YYYYMMDDThhmmssZ.
+     * @param endTime End date and time in ISO 8601 format like YYYYMMDDThhmmssZ
+     * @param transactionType page number to retrieve
+     * @param page page number to retrieve
+     * @param limit quantity of transactions to return
+     * @return list of transactions
+     * @throws ForbiddenAccessException if the user does not have permission to the API resource
+     * @throws BadRequestException if the request params and/or payload  are not valid
+     * @throws UnauthorizedAccessException if any of the auth properties account ID, API Key and/or API secret are not valid
+     * @throws ServerErrorException if the server is unable to process the request
+     * @throws ApiRequestException if an API error occurs
+     */
+    public List<Transaction> getTransactions(String startTime, String endTime,TransactionType transactionType, int page, int limit) throws ForbiddenAccessException, BadRequestException, UnauthorizedAccessException, ServerErrorException, ApiRequestException {
+
+        Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("start_time", startTime);
+        queryParams.put("end_time", endTime);
+
+        if(page > 0)
+           queryParams.put("page", String.valueOf(page));
+
+        if(limit > 0)
+            queryParams.put("limit", String.valueOf(limit));
+
+        if(transactionType != null)
+            queryParams.put("include_types[]", transactionType.name().toLowerCase());
+
+        TransactionResponse response = request(RequestMethod.GET, classURLWithoutSuffix(Transaction.class), null, queryParams, TransactionResponse.class);
+        return response.getTransactions();
     }
 
     /**

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.model.account.Account;
 import net.vivialconnect.model.account.Contact;
+import net.vivialconnect.model.account.Transaction;
+import net.vivialconnect.model.account.TransactionType;
 import net.vivialconnect.model.enums.RoleType;
 import net.vivialconnect.model.error.*;
 import net.vivialconnect.model.enums.MessageDirection;
@@ -79,6 +81,26 @@ public class VivialConnectServer implements DataSource {
     @Override
     public void updateAccount(Account account) throws VivialConnectException {
         account.update();
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime) throws VivialConnectException{
+        return account.getTransactions(startTime, endTime);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, int page, int limit) throws VivialConnectException{
+        return account.getTransactions(startTime, endTime, page, limit);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, TransactionType transactionType) throws VivialConnectException{
+        return account.getTransactions(startTime, endTime, transactionType);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, TransactionType transactionType, int page, int limit) throws VivialConnectException{
+        return account.getTransactions(startTime, endTime, transactionType, page, limit);
     }
 
     @Override
