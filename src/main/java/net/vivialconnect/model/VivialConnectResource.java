@@ -35,9 +35,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.vivialconnect.client.VivialConnectClient;
 import net.vivialconnect.http.CanonicalRequestBuilder;
 import net.vivialconnect.model.account.Account;
+import net.vivialconnect.model.account.ContactCollection;
+import net.vivialconnect.model.account.TransactionResponse;
 import net.vivialconnect.model.error.NoContentException;
 import net.vivialconnect.model.error.VivialConnectException;
 import net.vivialconnect.model.format.JsonBodyBuilder;
+import net.vivialconnect.model.log.LogCollection;
 import net.vivialconnect.model.message.BulkInfo;
 import net.vivialconnect.model.message.BulkInfoCollection;
 import net.vivialconnect.model.message.MessageCollection;
@@ -73,6 +76,10 @@ public abstract class VivialConnectResource implements Serializable {
         classesWithoutRootValue.add(BulkInfo.class);
         classesWithoutRootValue.add(BulkInfoCollection.class);
         classesWithoutRootValue.add(MessageCollection.class);
+        classesWithoutRootValue.add(LogCollection.class);
+        classesWithoutRootValue.add(ContactCollection.class);
+        classesWithoutRootValue.add(TransactionResponse.class);
+
 
     }
 
@@ -153,6 +160,15 @@ public abstract class VivialConnectResource implements Serializable {
         return String.format("%s/accounts/%d/%s", VivialConnectClient.getApiBaseUrl(),
                 VivialConnectClient.getAccountId(),
                 ReflectionUtils.className(clazz).toLowerCase());
+    }
+
+    /**
+     * Create an final URL using a given class type.
+     * @param clazz class type
+     * @return URL ending with <code>.json</code> suffix
+     */
+    protected static String classURLWithoutSuffix(Class<?> clazz){
+        return String.format("%ss.json", singleClassURL(clazz));
     }
 
     /**

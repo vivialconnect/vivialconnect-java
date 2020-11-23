@@ -7,6 +7,7 @@ import java.lang.Integer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.vivialconnect.model.account.*;
 import net.vivialconnect.model.connector.*;
 import net.vivialconnect.model.enums.CallbackMethod;
 import net.vivialconnect.model.enums.RoleType;
@@ -18,9 +19,6 @@ import net.vivialconnect.model.number.Number;
 import net.vivialconnect.model.user.*;
 import org.apache.commons.io.IOUtils;
 import net.vivialconnect.model.ResourceCount;
-import net.vivialconnect.model.account.Account;
-import net.vivialconnect.model.account.Contact;
-import net.vivialconnect.model.account.ContactCollection;
 import net.vivialconnect.tests.BaseTestCase;
 import net.vivialconnect.model.log.LogCollection;
 
@@ -124,6 +122,26 @@ public class MockData implements DataSource {
     @Override
     public void updateAccount(Account account) throws VivialConnectException {
         account.setDateModified(new Date());
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime) throws VivialConnectException {
+        return loadFixture("transactions", TransactionResponse.class, false).getTransactions();
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, int page, int limit) throws VivialConnectException {
+        return getTransactions(account, startTime, endTime).subList(0, limit);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, TransactionType transactionType) throws VivialConnectException {
+        return loadFixture("transactions-by-type", TransactionResponse.class, false).getTransactions();
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Account account, String startTime, String endTime, TransactionType transactionType, int page, int limit) throws VivialConnectException {
+        return getTransactions(account, startTime,endTime, transactionType).subList(0, limit);
     }
 
     @Override
